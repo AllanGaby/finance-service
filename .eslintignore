@@ -1,0 +1,9 @@
+node_modules
+public
+coverage
+.kusky
+.scannerwork
+.vscode
+*.json
+*.pem
+yarn.lock

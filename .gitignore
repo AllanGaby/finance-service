@@ -1,0 +1,10 @@
+node_modules
+public
+coverage
+.scannerwork
+.serverless
+serverless
+.vscode
+*.lock
+*-lock.json
+.env
