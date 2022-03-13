@@ -2,8 +2,8 @@ import { CommonTypeORMRepository } from './common-typeorm.repository'
 import { CustomFilterConditional, mockCustomFilterModel, mockEntityModel, OrderDirection } from '@/domain/common'
 import { InvalidForeignKeyError, MissingParamError, RepositoryError, RepositoryErrorType, ViolateUniqueKeyError } from '@/data/common/errors'
 import { mockListEntitiesRepositoryDTO } from '@/protocols/repositories'
-import { DefaultEntity } from '@/infrastructure/repositories'
-import { TypeOrmRepositorySpy } from '@/infrastructure/repositories/typeorm/mocks'
+import { DefaultEntity, CommonRepositorySettingsModel } from '@/infrastructure/repositories'
+import { TypeOrmRepositorySpy, mockTypeOrmRepositorySettingsModel } from '@/infrastructure/repositories/typeorm/mocks'
 import { TypeORMConnection } from '@/infrastructure/repositories/typeorm/connection'
 import TypeOrm, { getRepository, JoinOptions, In } from 'typeorm'
 import { database, datatype, random } from 'faker'
@@ -30,8 +30,8 @@ type sutTypes = {
   sut: CommonTypeORMRepository<DefaultEntity>
 }
 
-const makeSut = (): sutTypes => {
-  const sut = new CommonTypeORMRepository<DefaultEntity>(DefaultEntity)
+const makeSut = (settings?: CommonRepositorySettingsModel): sutTypes => {
+  const sut = new CommonTypeORMRepository<DefaultEntity>(DefaultEntity, settings)
   jest.spyOn(TypeORMConnection, 'getConnection').mockImplementation(jest.fn())
   sut.repositoryTypeORM = getRepository<DefaultEntity>(DefaultEntity)
   return {
@@ -40,6 +40,68 @@ const makeSut = (): sutTypes => {
 }
 
 describe('CommonTypeORMRepository', () => {
+  describe('Constructor', () => {
+    describe('Join', () => {
+      test('Should set correct join if join is provided', () => {
+        const settings = mockTypeOrmRepositorySettingsModel()
+        const { sut } = makeSut(settings)
+        expect(sut.join).toBe(settings.join)
+      })
+
+      test('Should set correct join if join is not provided', () => {
+        const settings = mockTypeOrmRepositorySettingsModel()
+        delete settings.join
+        const { sut } = makeSut(settings)
+        expect(sut.join).toBeFalsy()
+      })
+    })
+
+    describe('CompleteJoin', () => {
+      test('Should set correct completeJoin if completeJoin is provided', () => {
+        const settings = mockTypeOrmRepositorySettingsModel()
+        const { sut } = makeSut(settings)
+        expect(sut.completeJoin).toBe(settings.completeJoin)
+      })
+
+      test('Should set correct completeJoin if completeJoin is not provided', () => {
+        const settings = mockTypeOrmRepositorySettingsModel()
+        delete settings.completeJoin
+        const { sut } = makeSut(settings)
+        expect(sut.completeJoin).toBeFalsy()
+      })
+    })
+
+    describe('UseSoftDelete', () => {
+      test('Should set correct useSoftDelete if useSoftDelete is provided', () => {
+        const settings = mockTypeOrmRepositorySettingsModel()
+        const { sut } = makeSut(settings)
+        expect(sut.useSoftDelete).toBe(settings.useSoftDelete)
+      })
+
+      test('Should set correct useSoftDelete if useSoftDelete is not provided', () => {
+        const settings = mockTypeOrmRepositorySettingsModel()
+        delete settings.useSoftDelete
+        const { sut } = makeSut(settings)
+        expect(sut.useSoftDelete).toBeFalsy()
+      })
+    })
+
+    describe('ColumnsToFilter', () => {
+      test('Should set correct columnsToFilter if columnsToFilter is provided', () => {
+        const settings = mockTypeOrmRepositorySettingsModel()
+        const { sut } = makeSut(settings)
+        expect(sut.columnsToFilter).toBe(settings.columnsToFilter)
+      })
+
+      test('Should set correct columnsToFilter if columnsToFilter is not provided', () => {
+        const settings = mockTypeOrmRepositorySettingsModel()
+        delete settings.columnsToFilter
+        const { sut } = makeSut(settings)
+        expect(sut.columnsToFilter).toEqual([])
+      })
+    })
+  })
+
   describe('GetRepositoryTypeORM Method', () => {
     test('Should not call GetConnection is repositoryTypeORM is provided', async () => {
       const { sut } = makeSut()
@@ -306,6 +368,7 @@ describe('CommonTypeORMRepository', () => {
       expect(conditional).toBe(where)
     })
   })
+
   describe('GetPostgresSQLConditional Method', () => {
     test('Should return correct value if conditional is equal', () => {
       const { sut } = makeSut()

@@ -1,16 +1,24 @@
 import { EntityModel } from '@/domain/common'
-import { RepositoryType, CommonRepositoryType } from '@/infrastructure/repositories'
+import { RepositoryType, CommonRepositoryType, TypeOrmRepositorySettingsModel } from '@/infrastructure/repositories'
 import { CommonTypeORMRepository } from './typeorm'
 import { CommonMemoryRepository } from './memory'
 import { EntityTarget } from 'typeorm'
 
+export type CommonRepositorySettingsModel = TypeOrmRepositorySettingsModel
+
 export class CommonRepositoryFactory {
-  static getRepository<EntityType extends EntityModel>(repositoryType: RepositoryType, entityClass: EntityTarget<EntityType>): CommonRepositoryType<EntityType> {
+  static getRepository<
+    EntityType extends EntityModel,
+    EntityRepositoryType extends CommonRepositoryType<EntityType>>(
+    repositoryType: RepositoryType,
+    entityClass: EntityTarget<EntityType>,
+    settings?: CommonRepositorySettingsModel
+  ): EntityRepositoryType {
     switch (repositoryType) {
       case RepositoryType.Memory:
-        return CommonMemoryRepository.getRepository<EntityType>() as CommonRepositoryType<EntityType>
+        return CommonMemoryRepository.getRepository<EntityType>() as unknown as EntityRepositoryType
       case RepositoryType.TypeOrm:
-        return new CommonTypeORMRepository<EntityType>(entityClass) as CommonRepositoryType<EntityType>
+        return new CommonTypeORMRepository<EntityType>(entityClass, settings) as unknown as EntityRepositoryType
     }
   }
 }

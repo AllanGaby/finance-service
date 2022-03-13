@@ -14,7 +14,7 @@ import {
 import { CreateEntityDTO, CustomFilterConditional, CustomFilterModel, OrderDirection } from '@/domain/common'
 import { InvalidForeignKeyError, MissingParamError, RepositoryError, RepositoryErrorType, ViolateUniqueKeyError } from '@/data/common/errors'
 import { TypeORMConnection } from '@/infrastructure/repositories/typeorm/connection'
-import { DefaultEntity } from '@/infrastructure/repositories'
+import { DefaultEntity, TypeOrmRepositorySettingsModel } from '@/infrastructure/repositories'
 import { DeepPartial, EntityTarget, FindManyOptions, getRepository, In, JoinOptions, Repository } from 'typeorm'
 
 export class CommonTypeORMRepository<EntityType extends DefaultEntity>
@@ -31,11 +31,18 @@ UpdateEntityRepository<EntityType> {
   public repositoryTypeORM: Repository<EntityType>
   public columnsToFilter: string[] = []
   public join?: JoinOptions
+  public completeJoin?: JoinOptions
   public useSoftDelete: boolean = false
 
   constructor (
-    private readonly entityClass: EntityTarget<EntityType>
-  ) {}
+    private readonly entityClass: EntityTarget<EntityType>,
+    private readonly settings?: TypeOrmRepositorySettingsModel
+  ) {
+    this.join = this.settings?.join
+    this.completeJoin = this.settings?.completeJoin
+    this.useSoftDelete = this.settings?.useSoftDelete || false
+    this.columnsToFilter = this.settings?.columnsToFilter || []
+  }
 
   createRepositoryTypeORM (): Repository<EntityType> {
     return getRepository<EntityType>(this.entityClass)

@@ -1,1 +1,6 @@
+export * from './create-entity.use-case.factory'
+export * from './delete-entity-by-id.use-case.factory'
 export * from './get-custom-filter.use-case.factory'
+export * from './get-entity-by-id.use-case.factory'
+export * from './list-entities.use-case.factory'
+export * from './update-entity-by-id.use-case.factory'

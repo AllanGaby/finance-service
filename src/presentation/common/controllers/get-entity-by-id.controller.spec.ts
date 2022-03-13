@@ -1,4 +1,4 @@
-import { ShowEntityController } from './show-entity.controller'
+import { GetEntityByIdController } from './get-entity-by-id.controller'
 import { GetEntityByIdUseCaseSpy, EntityModel } from '@/domain/common'
 import { EntityIsNotFoundError } from '@/data/common/errors'
 import { CommonIdParamsRequest } from '@/presentation/common/requests'
@@ -6,20 +6,20 @@ import { mockCommonIdParamsRequest } from '@/presentation/common/mocks'
 import { HttpHelper } from '@/protocols/http'
 
 type sutTypes = {
-  sut: ShowEntityController<EntityModel, CommonIdParamsRequest>
+  sut: GetEntityByIdController<EntityModel, CommonIdParamsRequest>
   getEntityByIdUseCase: GetEntityByIdUseCaseSpy<EntityModel>
 }
 
 const makeSut = (): sutTypes => {
   const getEntityByIdUseCase = new GetEntityByIdUseCaseSpy()
-  const sut = new ShowEntityController<EntityModel, CommonIdParamsRequest>(getEntityByIdUseCase, 'id')
+  const sut = new GetEntityByIdController<EntityModel, CommonIdParamsRequest>(getEntityByIdUseCase, 'id')
   return {
     sut,
     getEntityByIdUseCase
   }
 }
 
-describe('ShowEntityController', () => {
+describe('GetEntityByIdController', () => {
   test('Should call GetEntityByIdUseCase with correct value', async () => {
     const { sut, getEntityByIdUseCase } = makeSut()
     const getByIdSPy = jest.spyOn(getEntityByIdUseCase, 'getById')
