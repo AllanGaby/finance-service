@@ -4,7 +4,7 @@ import { UpdateEntityByIdUseCaseProps, makeUpdateEntityByIdUseCase } from '@/mai
 import { EntityTarget } from 'typeorm'
 
 export type UpdateEntityByIdControllerProps = UpdateEntityByIdUseCaseProps & {
-  paramId: string
+  paramName: string
 }
 
 export const makeUpdateEntityByIdController = <EntityType extends EntityModel>(
@@ -13,5 +13,5 @@ export const makeUpdateEntityByIdController = <EntityType extends EntityModel>(
 ): UpdateEntityByIdController<EntityType> =>
     new UpdateEntityByIdController(
       makeUpdateEntityByIdUseCase<EntityType>(props, entityClass),
-      props.paramId
+      props.paramName
     )

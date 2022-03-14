@@ -9,9 +9,11 @@ export class FieldValidationMiddleware implements MiddlewareProtocol<any, any> {
   ) {}
 
   async handle (request: HttpRequest<any>): Promise<HttpResponse<any>> {
-    const errors = this.validator.validate(this.fieldToValidation, Object(request[this.fieldValidationType]))
-    if (errors) {
-      return HttpHelper.unprocessableEntity(errors)
+    if (this.fieldToValidation?.length > 0) {
+      const errors = this.validator.validate(this.fieldToValidation, Object(request[this.fieldValidationType]))
+      if (errors) {
+        return HttpHelper.unprocessableEntity(errors)
+      }
     }
     return HttpHelper.ok(request.body, request.headers)
   }

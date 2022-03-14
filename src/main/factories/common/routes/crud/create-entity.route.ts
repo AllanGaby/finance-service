@@ -17,4 +17,4 @@ export const makeCreateEntityRoute = <EntityType extends EntityModel>(
     Router()
       .post('/',
         ExpressMiddlewareAdapter(makeCommonFieldValidationMiddleware(fieldsValidation)),
-        ExpressControllerAdapter(makeCreateEntityController<EntityModel>(props, entityClass)))
+        ExpressControllerAdapter(makeCreateEntityController<EntityType>(props, entityClass)))

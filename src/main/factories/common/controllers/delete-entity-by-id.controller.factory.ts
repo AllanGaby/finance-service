@@ -4,7 +4,7 @@ import { DeleteEntityByIdUseCaseProps, makeDeleteEntityByIdUseCase } from '@/mai
 import { EntityTarget } from 'typeorm'
 
 export type DeleteEntityByIdControllerProps = DeleteEntityByIdUseCaseProps & {
-  paramId: string
+  paramName: string
 }
 
 export const makeDeleteEntityByIdController = <EntityType extends EntityModel>(
@@ -13,5 +13,5 @@ export const makeDeleteEntityByIdController = <EntityType extends EntityModel>(
 ): DeleteEntityController<EntityType> =>
     new DeleteEntityController(
       makeDeleteEntityByIdUseCase<EntityType>(props, entityClass),
-      props.paramId
+      props.paramName
     )
