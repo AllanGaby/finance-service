@@ -61,5 +61,13 @@ export const AuthenticationModuleAccessRules: Array<CreateEntityDTO<Omit<ModuleA
   {
     rule_key: AuthenticationAccessRules.DeleteAccessProfiles,
     title: 'Excluir perfis de acesso'
+  },
+  {
+    rule_key: AuthenticationAccessRules.UpdateAuthenticationSettings,
+    title: 'Atualizar configurações do módulo de autenticação'
+  },
+  {
+    rule_key: AuthenticationAccessRules.ShowAuthenticationSettings,
+    title: 'Visualizar dados detalhados de configurações do módulo de autenticação'
   }
 ]

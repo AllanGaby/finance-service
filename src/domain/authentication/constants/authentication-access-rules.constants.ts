@@ -13,5 +13,7 @@ export enum AuthenticationAccessRules {
   UpdateAccessProfiles = 'update_access_profile',
   ListAccessProfiles = 'list_access_profile',
   ShowAccessProfiles = 'show_access_profile',
-  DeleteAccessProfiles = 'delete_access_profile'
+  DeleteAccessProfiles = 'delete_access_profile',
+  UpdateAuthenticationSettings = 'update_authentication_setting',
+  ShowAuthenticationSettings = 'show_authentication_setting'
 }

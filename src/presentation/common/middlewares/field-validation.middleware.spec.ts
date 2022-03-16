@@ -10,15 +10,19 @@ type sutTypes = {
   fieldValidationType: FieldValidationType
 }
 
-const makeSut = (defineFieldValidationType: boolean = true): sutTypes => {
+const mockFieldsToValidation = (): FieldValidationModel[] => ([
+  mockFieldValidationModel(),
+  mockFieldValidationModel(),
+  mockFieldValidationModel(),
+  mockFieldValidationModel()
+])
+
+const makeSut = (
+  fieldToValidation: FieldValidationModel[],
+  defineFieldValidationType: boolean = true
+): sutTypes => {
   const validator = new RequestValidatorSpy()
   const fieldValidationType = defineFieldValidationType ? mockFieldValidationType() : undefined
-  const fieldToValidation: FieldValidationModel[] = [
-    mockFieldValidationModel(),
-    mockFieldValidationModel(),
-    mockFieldValidationModel(),
-    mockFieldValidationModel()
-  ]
   const sut = new FieldValidationMiddleware(validator, fieldToValidation, fieldValidationType)
   return {
     sut,
@@ -29,8 +33,28 @@ const makeSut = (defineFieldValidationType: boolean = true): sutTypes => {
 }
 
 describe('FieldValidationMiddleware', () => {
+  test('Should not call Validator if fieldValidation is not provided', async () => {
+    const { sut, validator, fieldValidationType } = makeSut(undefined)
+    const data = mockEntityModel()
+    const validateSpy = jest.spyOn(validator, 'validate')
+    await sut.handle({
+      [fieldValidationType]: data
+    })
+    expect(validateSpy).not.toHaveBeenCalled()
+  })
+
+  test('Should not call Validator if fieldValidation is a empty list', async () => {
+    const { sut, validator, fieldValidationType } = makeSut([])
+    const data = mockEntityModel()
+    const validateSpy = jest.spyOn(validator, 'validate')
+    await sut.handle({
+      [fieldValidationType]: data
+    })
+    expect(validateSpy).not.toHaveBeenCalled()
+  })
+
   test('Should call Validator with correct value if fieldValidationType is provided', async () => {
-    const { sut, validator, fieldToValidation, fieldValidationType } = makeSut()
+    const { sut, validator, fieldToValidation, fieldValidationType } = makeSut(mockFieldsToValidation())
     const data = mockEntityModel()
     const validateSpy = jest.spyOn(validator, 'validate')
     await sut.handle({
@@ -39,8 +63,8 @@ describe('FieldValidationMiddleware', () => {
     expect(validateSpy).toHaveBeenCalledWith(fieldToValidation, data)
   })
 
-  test('Should call Validator with correct value if fieldValidationType is provided', async () => {
-    const { sut, validator, fieldToValidation } = makeSut(false)
+  test('Should call Validator with correct value if fieldValidationType is not provided', async () => {
+    const { sut, validator, fieldToValidation } = makeSut(mockFieldsToValidation(), false)
     const data = mockEntityModel()
     const validateSpy = jest.spyOn(validator, 'validate')
     await sut.handle({
@@ -50,7 +74,7 @@ describe('FieldValidationMiddleware', () => {
   })
 
   test('Should return unprocessableEntity Status Code (422) if Validator fails', async () => {
-    const { sut, validator } = makeSut()
+    const { sut, validator } = makeSut(mockFieldsToValidation())
     const validationErrors = [
       mockRequestValidatorModel(),
       mockRequestValidatorModel(),
@@ -64,7 +88,7 @@ describe('FieldValidationMiddleware', () => {
   })
 
   test('Should return Ok Status Code (200) if Validator succeeds', async () => {
-    const { sut, validator } = makeSut()
+    const { sut, validator } = makeSut(mockFieldsToValidation())
     const body = mockEntityModel()
     const headers = mockEntityModel()
     jest.spyOn(validator, 'validate').mockReturnValue(undefined)
