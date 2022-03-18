@@ -1,6 +1,6 @@
 export * from './entity-columns-to-export.dto.mock'
 export * from './entity-model-columns-to-export-csv-file.dto.mock'
 export * from './export-entities-to-file.dto'
-export * from './get-custom-filter.dto.mock'
 export * from './list-entities-and-export-to-file.dto.mock'
 export * from './list-entities.dto.mock'
+export * from './mapper-custom-filter.dto.mock'

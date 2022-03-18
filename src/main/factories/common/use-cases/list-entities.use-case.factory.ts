@@ -10,9 +10,9 @@ export type ListEntitiesUseCaseProps = CommonUseCaseProps
 export const makeListEntitiesUseCase = <EntityType extends EntityModel>(
   props: ListEntitiesUseCaseProps,
   entityClass: EntityTarget<EntityType>
-):
-  ListEntitiesUseCase<EntityType> =>
-    new DbListEntitiesUseCase<EntityType>(
-      CommonRepositoryFactory.getRepository<EntityType, CountEntitiesRepository<EntityType>>(props.repositoryType, entityClass, props.repositorySettings),
-      CommonRepositoryFactory.getRepository<EntityType, ListEntitiesRepository<EntityType>>(props.repositoryType, entityClass, props.repositorySettings)
-    )
+): ListEntitiesUseCase<EntityType> => {
+  return new DbListEntitiesUseCase<EntityType>(
+    CommonRepositoryFactory.getRepository<EntityType, CountEntitiesRepository<EntityType>>(props.repositoryType, entityClass, props.repositorySettings),
+    CommonRepositoryFactory.getRepository<EntityType, ListEntitiesRepository<EntityType>>(props.repositoryType, entityClass, props.repositorySettings)
+  )
+}

@@ -10,19 +10,19 @@ export const mockListEntitiesRequest = (): HttpRequest<any, any, ListEntitiesReq
     size: datatype.number(),
     order: database.column(),
     direction: mockOrderDirection(),
-    f: [
+    field: [
       database.column(),
       database.column()
     ],
-    v: [
+    value: [
       datatype.uuid(),
       datatype.uuid()
     ],
-    o: [
+    operator: [
       mockCustomFilterOperator(),
       mockCustomFilterOperator()
     ],
-    c: [
+    conditional: [
       mockCustomFilterConditional(),
       mockCustomFilterConditional()
     ]

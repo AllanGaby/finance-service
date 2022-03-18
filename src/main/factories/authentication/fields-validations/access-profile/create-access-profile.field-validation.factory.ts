@@ -9,6 +9,13 @@ export const makeCreateAccessProfileFieldsValidations = (): FieldValidationModel
     required: true
   },
   {
+    name: 'access_profile_key',
+    type: TypeFieldValidation.String,
+    min: 3,
+    max: 100,
+    required: true
+  },
+  {
     name: 'enabled',
     type: TypeFieldValidation.Boolean
   },

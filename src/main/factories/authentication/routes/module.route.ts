@@ -1,6 +1,6 @@
 import { Router } from 'express'
 import {
-  ModuleModel
+  ModuleModel, RepositoryModuleFilter, RequestModuleFilter
 } from '@/domain/authentication'
 import {
   ModuleEntity,
@@ -15,6 +15,8 @@ export const makeModuleRoute = (props: ModuleRouteProps): Router =>
     .use('/module',
       makeCrudEntityRoute<ModuleModel>({
         ...props,
+        validRepositoryColumns: Object.values(RepositoryModuleFilter),
+        validRequestColumns: Object.values(RequestModuleFilter),
         repositorySettings: ModuleRepositorySettings
       }, {
         entityClass: ModuleEntity,

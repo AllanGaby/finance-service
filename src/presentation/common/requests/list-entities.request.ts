@@ -6,8 +6,8 @@ export type ListEntitiesRequest = {
   size?: number
   order?: string
   direction?: OrderDirection
-  f?: string | string[]
-  o?: CustomFilterOperator | CustomFilterOperator[]
-  c?: CustomFilterConditional | CustomFilterConditional[]
-  v?: string | string[]
+  field?: string | string[]
+  operator?: CustomFilterOperator | CustomFilterOperator[]
+  conditional?: CustomFilterConditional | CustomFilterConditional[]
+  value?: string | string[]
 }

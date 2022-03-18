@@ -13,6 +13,9 @@ export class AccessProfileEntity extends DefaultEntity implements AccessProfileM
   enabled: boolean
 
   @Column()
+  access_profile_key: string
+
+  @Column()
   module_id: string
 
   @OneToOne(() => ModuleEntity)

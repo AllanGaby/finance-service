@@ -1,11 +1,11 @@
-import { GetCustomFilterUseCase } from '@/domain/common'
-import { MemoryGetCustomFilterUseCase } from '@/data/common/use-cases'
+import { MapperCustomFilterUseCase } from '@/domain/common'
+import { MemoryMapperCustomFilterUseCase } from '@/data/common/use-cases'
 
-export type GetCustomFilterUseCaseProps = {
-  validParamsColumns: string[]
+export type MapperCustomFilterUseCaseProps = {
+  validRequestColumns: string[]
   validRepositoryColumns: string[]
 }
 
-export const makeGetCustomFilterUseCase = ({ validParamsColumns, validRepositoryColumns }: GetCustomFilterUseCaseProps): GetCustomFilterUseCase => {
-  return new MemoryGetCustomFilterUseCase(validParamsColumns, validRepositoryColumns)
+export const makeMapperCustomFilterUseCase = ({ validRequestColumns, validRepositoryColumns }: MapperCustomFilterUseCaseProps): MapperCustomFilterUseCase => {
+  return new MemoryMapperCustomFilterUseCase(validRequestColumns, validRepositoryColumns)
 }

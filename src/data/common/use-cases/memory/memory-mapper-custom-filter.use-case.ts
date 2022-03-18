@@ -1,6 +1,6 @@
-import { GetCustomFilterUseCase, GetCustomFilterDTO, CustomFilterModel, CustomFilterOperator, CustomFilterConditional } from '@/domain/common'
+import { MapperCustomFilterUseCase, MapperCustomFilterDTO, CustomFilterModel, CustomFilterOperator, CustomFilterConditional } from '@/domain/common'
 
-export class MemoryGetCustomFilterUseCase implements GetCustomFilterUseCase {
+export class MemoryMapperCustomFilterUseCase implements MapperCustomFilterUseCase {
   constructor (
     private readonly validParamsColumns: string[],
     private readonly validRepositoryColumns: string[]
@@ -13,14 +13,14 @@ export class MemoryGetCustomFilterUseCase implements GetCustomFilterUseCase {
     return defaultValue
   }
 
-  async getFilter ({ f, o, v, c }: GetCustomFilterDTO): Promise<CustomFilterModel[]> {
+  async mapperFilters ({ fields, operators, values, conditionals }: MapperCustomFilterDTO): Promise<CustomFilterModel[]> {
     const filters: CustomFilterModel[] = []
-    f?.forEach((field, index) => {
+    fields?.forEach((field, index) => {
       if (this.validParamsColumns.includes(field)) {
         const repositoryField = this.validRepositoryColumns[this.validParamsColumns.indexOf(field)]
-        const operator = this.getValue<CustomFilterOperator>(o, index, CustomFilterOperator.and)
-        const conditional = this.getValue<CustomFilterConditional>(c, index, CustomFilterConditional.equal)
-        const value = this.getValue<string>(v, index, undefined)
+        const operator = this.getValue<CustomFilterOperator>(operators, index, CustomFilterOperator.and)
+        const conditional = this.getValue<CustomFilterConditional>(conditionals, index, CustomFilterConditional.equal)
+        const value = this.getValue<string>(values, index, undefined)
         const filter: CustomFilterModel = {
           field: repositoryField,
           conditional,

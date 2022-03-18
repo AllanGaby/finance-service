@@ -1,3 +1,7 @@
+import {
+  RequestAccessProfileFilter,
+  RepositoryAccessProfileFilter
+} from '@/domain/authentication'
 import { CreateAccessProfileRouteProps, makeCreateAccessProfileRoute } from './create-access-profile.route'
 import { UpdateAccessProfileByIdRouteProps, makeUpdateAccessProfileByIdRoute } from './update-access-profile-by-id.route'
 import {
@@ -26,6 +30,8 @@ export const makeAccessProfileRoute = (
   props: AccessProfileRouteProps
 ): Router => {
   props.repositorySettings = AccessProfileRepositorySettings
+  props.validRepositoryColumns = Object.values(RepositoryAccessProfileFilter)
+  props.validRequestColumns = Object.values(RequestAccessProfileFilter)
   return Router()
     .use('/', makeCreateAccessProfileRoute(props, makeCreateAccessProfileFieldsValidations()))
     .use('/', makeDeleteEntityByIdRoute(props, AccessProfileEntity, 'access_profile_id'))

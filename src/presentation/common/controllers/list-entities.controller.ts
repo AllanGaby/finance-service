@@ -1,23 +1,32 @@
 import { ControllerProtocol, HttpRequest, HttpResponse, HttpHelper } from '@/protocols/http'
-import { EntityModel, GetCustomFilterUseCase, ListEntitiesUseCase } from '@/domain/common'
+import { EntityModel, MapperCustomFilterUseCase, ListEntitiesUseCase } from '@/domain/common'
 import { ListEntitiesRequest } from '@/presentation/common/requests'
 
 type ListEntitiesResponse<EntityType extends EntityModel> = EntityType[] | Error | object
 
 export class ListEntitiesController<EntityType extends EntityModel> implements ControllerProtocol<any, ListEntitiesResponse<EntityType>, any, ListEntitiesRequest> {
   constructor (
-    private readonly getCustomFilterUseCase: GetCustomFilterUseCase,
+    private readonly mapperCustomFilterUseCase: MapperCustomFilterUseCase,
     private readonly listEntitiesUseCase: ListEntitiesUseCase<EntityType>
   ) {}
 
   async handle (request: HttpRequest<any, any, ListEntitiesRequest>): Promise<HttpResponse<ListEntitiesResponse<EntityType>>> {
-    const { page, search, size, order, direction, f = [], v = [], o = [], c = [] } = request.queryParams
-
-    const filters = await this.getCustomFilterUseCase.getFilter({
-      f: Array.isArray(f) ? f : [f],
-      c: Array.isArray(c) ? c : [c],
-      o: Array.isArray(o) ? o : [o],
-      v: Array.isArray(v) ? v : [v]
+    const {
+      page,
+      search,
+      size,
+      order,
+      direction,
+      field = [],
+      value = [],
+      operator = [],
+      conditional = []
+    } = request.queryParams
+    const filters = await this.mapperCustomFilterUseCase.mapperFilters({
+      fields: Array.isArray(field) ? field : [field],
+      conditionals: Array.isArray(conditional) ? conditional : [conditional],
+      operators: Array.isArray(operator) ? operator : [operator],
+      values: Array.isArray(value) ? value : [value]
     })
     const list = await this.listEntitiesUseCase.list({
       page,

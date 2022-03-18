@@ -1,129 +1,164 @@
 import { ListEntitiesController } from './list-entities.controller'
-import { EntityModel, ListEntitiesUseCaseSpy, GetCustomFilterUseCaseSpy, mockCustomFilterConditional, mockCustomFilterOperator } from '@/domain/common'
+import { EntityModel, ListEntitiesUseCaseSpy, MapperCustomFilterUseCaseSpy, mockCustomFilterConditional, mockCustomFilterOperator } from '@/domain/common'
 import { mockListEntitiesRequest } from '@/presentation/common/mocks'
 import { HttpHelper } from '@/protocols/http'
 import { datatype } from 'faker'
 
 type sutTypes = {
   sut: ListEntitiesController<EntityModel>
-  getCustomFilterUseCase: GetCustomFilterUseCaseSpy
+  MapperCustomFilterUseCase: MapperCustomFilterUseCaseSpy
   listEntitiesUseCase: ListEntitiesUseCaseSpy<EntityModel>
 }
 
 const makeSut = (): sutTypes => {
   const listEntitiesUseCase = new ListEntitiesUseCaseSpy()
-  const getCustomFilterUseCase = new GetCustomFilterUseCaseSpy()
-  const sut = new ListEntitiesController(getCustomFilterUseCase, listEntitiesUseCase)
+  const MapperCustomFilterUseCase = new MapperCustomFilterUseCaseSpy()
+  const sut = new ListEntitiesController(MapperCustomFilterUseCase, listEntitiesUseCase)
   return {
     sut,
-    getCustomFilterUseCase,
+    MapperCustomFilterUseCase,
     listEntitiesUseCase
   }
 }
 
 describe('ListEntitiesController', () => {
-  describe('Call GetCustomFilterUseCase', () => {
-    test('Should call GetCustomFilterUseCase with correct value if all filters is provided', async () => {
-      const { sut, getCustomFilterUseCase } = makeSut()
+  describe('Call MapperCustomFilterUseCase', () => {
+    test('Should call MapperCustomFilterUseCase with correct value if all filters is provided', async () => {
+      const { sut, MapperCustomFilterUseCase } = makeSut()
       const request = mockListEntitiesRequest()
       await sut.handle(request)
-      const { f, c, o, v } = request.queryParams
-      expect(getCustomFilterUseCase.params).toEqual({
-        f, c, o, v
+      const { field, conditional, operator, value } = request.queryParams
+      expect(MapperCustomFilterUseCase.params).toEqual({
+        fields: field,
+        conditionals: conditional,
+        operators: operator,
+        values: value
       })
     })
 
-    test('Should call GetCustomFilterUseCase with correct value if f is not provided', async () => {
-      const { sut, getCustomFilterUseCase } = makeSut()
-      const request = mockListEntitiesRequest()
-      delete request.queryParams.f
-      await sut.handle(request)
-      const { c, o, v } = request.queryParams
-      expect(getCustomFilterUseCase.params).toEqual({
-        f: [], c, o, v
+    describe('Fields', () => {
+      test('Should call MapperCustomFilterUseCase with correct value if field is not provided', async () => {
+        const { sut, MapperCustomFilterUseCase } = makeSut()
+        const request = mockListEntitiesRequest()
+        delete request.queryParams.field
+        await sut.handle(request)
+        const { conditional, operator, value } = request.queryParams
+        expect(MapperCustomFilterUseCase.params).toEqual({
+          fields: [],
+          conditionals: conditional,
+          operators: operator,
+          values: value
+        })
+      })
+
+      test('Should call MapperCustomFilterUseCase with correct value if field is a string', async () => {
+        const { sut, MapperCustomFilterUseCase } = makeSut()
+        const request = mockListEntitiesRequest()
+        request.queryParams.field = datatype.uuid()
+        await sut.handle(request)
+        const { field, conditional, operator, value } = request.queryParams
+        expect(MapperCustomFilterUseCase.params).toEqual({
+          fields: [field],
+          conditionals: conditional,
+          operators: operator,
+          values: value
+        })
       })
     })
 
-    test('Should call GetCustomFilterUseCase with correct value if f is a string', async () => {
-      const { sut, getCustomFilterUseCase } = makeSut()
-      const request = mockListEntitiesRequest()
-      request.queryParams.f = datatype.uuid()
-      await sut.handle(request)
-      const { f, c, o, v } = request.queryParams
-      expect(getCustomFilterUseCase.params).toEqual({
-        f: [f], c, o, v
+    describe('Conditional', () => {
+      test('Should call MapperCustomFilterUseCase with correct value if conditional is not provided', async () => {
+        const { sut, MapperCustomFilterUseCase } = makeSut()
+        const request = mockListEntitiesRequest()
+        delete request.queryParams.conditional
+        await sut.handle(request)
+        const { field, operator, value } = request.queryParams
+        expect(MapperCustomFilterUseCase.params).toEqual({
+          fields: field,
+          conditionals: [],
+          operators: operator,
+          values: value
+        })
+      })
+
+      test('Should call MapperCustomFilterUseCase with correct value if conditional a string', async () => {
+        const { sut, MapperCustomFilterUseCase } = makeSut()
+        const request = mockListEntitiesRequest()
+        request.queryParams.conditional = mockCustomFilterConditional()
+        await sut.handle(request)
+        const { field, operator, value, conditional } = request.queryParams
+        expect(MapperCustomFilterUseCase.params).toEqual({
+          fields: field,
+          conditionals: [conditional],
+          operators: operator,
+          values: value
+        })
       })
     })
 
-    test('Should call GetCustomFilterUseCase with correct value if c is not provided', async () => {
-      const { sut, getCustomFilterUseCase } = makeSut()
-      const request = mockListEntitiesRequest()
-      delete request.queryParams.c
-      await sut.handle(request)
-      const { f, o, v } = request.queryParams
-      expect(getCustomFilterUseCase.params).toEqual({
-        f, c: [], o, v
+    describe('Operator', () => {
+      test('Should call MapperCustomFilterUseCase with correct value if operator is not provided', async () => {
+        const { sut, MapperCustomFilterUseCase } = makeSut()
+        const request = mockListEntitiesRequest()
+        delete request.queryParams.operator
+        await sut.handle(request)
+        const { field, conditional, value } = request.queryParams
+        expect(MapperCustomFilterUseCase.params).toEqual({
+          fields: field,
+          conditionals: conditional,
+          operators: [],
+          values: value
+        })
+      })
+
+      test('Should call MapperCustomFilterUseCase with correct value if operator is a string', async () => {
+        const { sut, MapperCustomFilterUseCase } = makeSut()
+        const request = mockListEntitiesRequest()
+        request.queryParams.operator = mockCustomFilterOperator()
+        await sut.handle(request)
+        const { field, conditional, value, operator } = request.queryParams
+        expect(MapperCustomFilterUseCase.params).toEqual({
+          fields: field,
+          conditionals: conditional,
+          operators: [operator],
+          values: value
+        })
       })
     })
 
-    test('Should call GetCustomFilterUseCase with correct value if c a string', async () => {
-      const { sut, getCustomFilterUseCase } = makeSut()
-      const request = mockListEntitiesRequest()
-      request.queryParams.c = mockCustomFilterConditional()
-      await sut.handle(request)
-      const { f, o, v, c } = request.queryParams
-      expect(getCustomFilterUseCase.params).toEqual({
-        f, c: [c], o, v
+    describe('Value', () => {
+      test('Should call MapperCustomFilterUseCase with correct value if value is not provided', async () => {
+        const { sut, MapperCustomFilterUseCase } = makeSut()
+        const request = mockListEntitiesRequest()
+        delete request.queryParams.value
+        await sut.handle(request)
+        const { field, operator, conditional } = request.queryParams
+        expect(MapperCustomFilterUseCase.params).toEqual({
+          fields: field,
+          conditionals: conditional,
+          operators: operator,
+          values: []
+        })
       })
-    })
 
-    test('Should call GetCustomFilterUseCase with correct value if o is not provided', async () => {
-      const { sut, getCustomFilterUseCase } = makeSut()
-      const request = mockListEntitiesRequest()
-      delete request.queryParams.o
-      await sut.handle(request)
-      const { f, c, v } = request.queryParams
-      expect(getCustomFilterUseCase.params).toEqual({
-        f, c, o: [], v
-      })
-    })
-
-    test('Should call GetCustomFilterUseCase with correct value if o is a string', async () => {
-      const { sut, getCustomFilterUseCase } = makeSut()
-      const request = mockListEntitiesRequest()
-      request.queryParams.o = mockCustomFilterOperator()
-      await sut.handle(request)
-      const { f, c, v, o } = request.queryParams
-      expect(getCustomFilterUseCase.params).toEqual({
-        f, c, o: [o], v
-      })
-    })
-
-    test('Should call GetCustomFilterUseCase with correct value if v is not provided', async () => {
-      const { sut, getCustomFilterUseCase } = makeSut()
-      const request = mockListEntitiesRequest()
-      delete request.queryParams.v
-      await sut.handle(request)
-      const { f, o, c } = request.queryParams
-      expect(getCustomFilterUseCase.params).toEqual({
-        f, c, o, v: []
-      })
-    })
-
-    test('Should call GetCustomFilterUseCase with correct value if v is a string', async () => {
-      const { sut, getCustomFilterUseCase } = makeSut()
-      const request = mockListEntitiesRequest()
-      request.queryParams.v = datatype.uuid()
-      await sut.handle(request)
-      const { f, o, c, v } = request.queryParams
-      expect(getCustomFilterUseCase.params).toEqual({
-        f, c, o, v: [v]
+      test('Should call MapperCustomFilterUseCase with correct value if value is a string', async () => {
+        const { sut, MapperCustomFilterUseCase } = makeSut()
+        const request = mockListEntitiesRequest()
+        request.queryParams.value = datatype.uuid()
+        await sut.handle(request)
+        const { field, operator, conditional, value } = request.queryParams
+        expect(MapperCustomFilterUseCase.params).toEqual({
+          fields: field,
+          conditionals: conditional,
+          operators: operator,
+          values: [value]
+        })
       })
     })
   })
 
   test('Should call ListEntitiesUseCase with correct value', async () => {
-    const { sut, listEntitiesUseCase, getCustomFilterUseCase } = makeSut()
+    const { sut, listEntitiesUseCase, MapperCustomFilterUseCase } = makeSut()
     const request = mockListEntitiesRequest()
     await sut.handle(request)
     expect(listEntitiesUseCase.filter).toEqual({
@@ -132,7 +167,7 @@ describe('ListEntitiesController', () => {
       recordsPerPage: request.queryParams.size,
       orderColumn: request.queryParams.order,
       orderDirection: request.queryParams.direction,
-      filters: getCustomFilterUseCase.filters
+      filters: MapperCustomFilterUseCase.filters
     })
   })
 

@@ -21,6 +21,8 @@ export type CRUDEntityRouteOptions<EntityType extends EntityModel> = {
   entityName: string
   createFieldsValidation?: FieldValidationModel[]
   updateFieldsValidation?: FieldValidationModel[]
+  validRequestColumns?: string[]
+  validRepositoryColumns?: string[]
 }
 
 export const makeCrudEntityRoute = <EntityType extends EntityModel>(

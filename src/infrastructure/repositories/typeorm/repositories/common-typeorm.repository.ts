@@ -202,11 +202,20 @@ UpdateEntityRepository<EntityType> {
     return repository.count(options)
   }
 
-  async list ({ textToSearch, skip, recordsPerPage, orderDirection, orderColumn, filters }: ListEntitiesRepositoryDTO): Promise<EntityType[]> {
+  async list (filter?: ListEntitiesRepositoryDTO): Promise<EntityType[]> {
+    const textToSearch: string = filter?.textToSearch || ''
+    const skip: number = filter?.skip || 0
+    const recordsPerPage: number = filter?.recordsPerPage || 0
+    const orderDirection: OrderDirection = filter?.orderDirection || OrderDirection.ASC
+    const orderColumn: string = filter?.orderColumn || 'created_at'
+    const filters = filter?.filters
+
     const repository = await this.getRepositoryTypeORM()
     const options: FindManyOptions = {
-      skip,
-      take: recordsPerPage
+      skip
+    }
+    if (recordsPerPage > 0) {
+      options.take = recordsPerPage
     }
     const where = this.getWhere(filters, textToSearch)
     if (where) {
@@ -215,14 +224,8 @@ UpdateEntityRepository<EntityType> {
     if (this.join) {
       options.join = this.join
     }
-    if (orderColumn) {
-      options.order = {
-        [orderColumn]: orderDirection || OrderDirection.ASC
-      }
-    } else {
-      options.order = {
-        id: OrderDirection.ASC
-      }
+    options.order = {
+      [orderColumn]: orderDirection
     }
     return repository.find(options)
   }

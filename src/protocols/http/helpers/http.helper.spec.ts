@@ -1,4 +1,4 @@
-import { HttpHelper } from './http-helper'
+import { HttpHelper } from './http.helper'
 import { HttpStatusCode, HttpResponse } from '@/protocols/http'
 import { random } from 'faker'
 

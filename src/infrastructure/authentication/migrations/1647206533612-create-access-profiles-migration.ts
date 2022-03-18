@@ -23,6 +23,11 @@ export class createAccessProfilesMigration1647206533612 implements MigrationInte
           default: true
         },
         {
+          name: 'access_profile_key',
+          type: 'varchar',
+          length: '100'
+        },
+        {
           name: 'module_id',
           type: 'uuid'
         },

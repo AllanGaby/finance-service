@@ -6,6 +6,6 @@ export enum RepositoryAccessProfileRuleFilter {
   ModuleAccessRuleId = '"access_profile_rule"."module_access_rule_id"',
   ModuleAccessRuleTitle = '"module_access_rules"."title"',
   ModuleAccessRuleKey = '"module_access_rules"."rule_key"',
-  CreatedAt = '"access_profile_rule"."created_at"',
-  UpdatedAt = '"access_profile_rule"."updated_at"',
+  CreatedAt = 'date_trunc(\'day\',"access_profile_rule"."created_at")::text',
+  UpdatedAt = 'date_trunc(\'day\',"access_profile_rule"."updated_at")::text'
 }
