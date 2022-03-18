@@ -15,6 +15,6 @@ ModuleRouteProps
 
 export const AuthenticationModuleRoute = (props: AuthenticationRouteProps): Router =>
   Router()
-    .use(makeAccessProfileRoute(props))
+    .use('/access-profile', makeAccessProfileRoute(props))
     .use(makeModuleAccessRuleRoute(props))
     .use(makeModuleRoute(props))

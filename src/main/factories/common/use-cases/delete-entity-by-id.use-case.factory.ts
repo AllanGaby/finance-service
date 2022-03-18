@@ -2,7 +2,7 @@ import { DeleteEntityByIdUseCase, EntityModel } from '@/domain/common'
 import { DbDeleteEntityByIdUseCase } from '@/data/common/use-cases'
 import { DeleteEntityByIdRepository } from '@/protocols/repositories'
 import { CommonRepositoryFactory } from '@/infrastructure/repositories'
-import { CommonUseCaseProps } from '@/infrastructure/common/use-cases'
+import { CommonUseCaseProps } from '@/infrastructure/common'
 import { EntityTarget } from 'typeorm'
 
 export type DeleteEntityByIdUseCaseProps = CommonUseCaseProps

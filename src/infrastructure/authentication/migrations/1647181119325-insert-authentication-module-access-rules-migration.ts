@@ -12,7 +12,6 @@ export class insertAuthenticationModuleAccessRulesMigration1647181119325 impleme
        where module_key = \'authentication_module\'
         `) as ModuleModel[]
     const module = moduleList[0]
-    console.log(module)
     for (const accessRule of AuthenticationModuleAccessRules) {
       await queryRunner.query(`
         insert into module_access_rules (module_id, title, rule_key) 

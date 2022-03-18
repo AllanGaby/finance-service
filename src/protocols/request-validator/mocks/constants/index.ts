@@ -1,1 +1,1 @@
-export * from './type-field-validation-mock'
+export * from './type-field-validation.constants.mock'

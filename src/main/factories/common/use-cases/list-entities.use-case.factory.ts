@@ -2,7 +2,7 @@ import { EntityModel, ListEntitiesUseCase } from '@/domain/common'
 import { DbListEntitiesUseCase } from '@/data/common/use-cases'
 import { CountEntitiesRepository, ListEntitiesRepository } from '@/protocols/repositories'
 import { CommonRepositoryFactory } from '@/infrastructure/repositories'
-import { CommonUseCaseProps } from '@/infrastructure/common/use-cases'
+import { CommonUseCaseProps } from '@/infrastructure/common'
 import { EntityTarget } from 'typeorm'
 
 export type ListEntitiesUseCaseProps = CommonUseCaseProps

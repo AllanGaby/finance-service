@@ -2,7 +2,7 @@ import { UpdateEntityDTO, UpdateEntityByIdUseCase, EntityModel } from '@/domain/
 import { DbUpdateEntityByIdUseCase } from '@/data/common/use-cases'
 import { UpdateEntityRepository, GetEntityByIdRepository } from '@/protocols/repositories'
 import { CommonRepositoryFactory } from '@/infrastructure/repositories'
-import { CommonUseCaseProps } from '@/infrastructure/common/use-cases'
+import { CommonUseCaseProps } from '@/infrastructure/common'
 import { EntityTarget } from 'typeorm'
 
 export type UpdateEntityByIdUseCaseProps = CommonUseCaseProps & {

@@ -1,7 +1,7 @@
 {
-  "name": "node-ts-skeleton",
+  "name": "authentication-service",
   "version": "1.0.0",
-  "description": "Backend do Food Hall",
+  "description": "Serviço de autenticação",
   "main": "index.js",
   "scripts": {
     "build": "rimraf public && npm run compile-to-public",
@@ -11,7 +11,7 @@
     "test:ci": "npm run test --coverage",
     "test:staged": "npm run test --silent",
     "typeorm": "node ./node_modules/typeorm/cli.js",
-    "sonar:scanner": "npm run test:ci && npx sonar-scanner -Dsonar.host.url=$SONAR_HOST -Dsonar.projectKey=NODE-TS-SKELETON",
+    "sonar:scanner": "npm run test:ci && npx sonar-scanner -Dsonar.host.url=$SONAR_HOST -Dsonar.projectKey=AUTHENTICATION-SERVICE",
     "server:debug": "nodemox -L --watch ./public --inspect=0.0.0.0:$DEBUG_PORT --ignore node_modules public/main/application/http/server.js",
     "server:up": "nodemon --ignore node_modules public/main/application/http/server.js",
     "server:up:prod": "nodemon --watch public/main public/main/application/http/server.js"

@@ -1,3 +1,4 @@
+import { RepositoryAccessProfileRuleFilter } from '@/domain/authentication'
 import { CommonRepositorySettingsModel } from '@/infrastructure/repositories'
 
 export const AccessProfileRuleRepositorySettings: CommonRepositorySettingsModel = {
@@ -5,7 +6,8 @@ export const AccessProfileRuleRepositorySettings: CommonRepositorySettingsModel 
     alias: 'access_profile_rule',
     innerJoinAndSelect: {
       access_profile: 'access_profile_rule.access_profile',
-      module_access_rules: 'access_profile_rule.module_access_rules'
+      module_access_rule: 'access_profile_rule.module_access_rule'
     }
-  }
+  },
+  columnsToFilter: Object.values(RepositoryAccessProfileRuleFilter)
 }
