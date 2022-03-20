@@ -1,5 +1,7 @@
 export * from './repository-access-profile-rule.filter'
 export * from './repository-access-profile.filter'
+export * from './repository-access-session.filter'
+export * from './repository-account-access-module.filter'
 export * from './repository-account.filter'
 export * from './repository-module-access-rule.filter'
 export * from './repository-module.filter'

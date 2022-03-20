@@ -14,7 +14,7 @@ import {
 import {
   makeCreateAccountFieldsValidations
 } from '@/main/factories/authentication/fields-validations'
-import { AccountEntity } from '@/infrastructure/authentication'
+import { AccountEntity, AccountRepositorySettings } from '@/infrastructure/authentication'
 import { Router } from 'express'
 
 export type AccountRouteProps =
@@ -28,6 +28,7 @@ export const makeAccountRoute = (
 ): Router => {
   props.validRepositoryColumns = Object.values(RepositoryAccountFilter)
   props.validRequestColumns = Object.values(RequestAccountFilter)
+  props.repositorySettings = AccountRepositorySettings
   return Router()
     .use('/', makeCreateAccountRoute(props, makeCreateAccountFieldsValidations()))
     .use('/', makeDeleteEntityByIdRoute(props, AccountEntity, 'account_id'))

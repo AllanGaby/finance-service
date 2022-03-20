@@ -1,5 +1,5 @@
 import { mockOrderDirection, mockCustomFilterConditional, mockCustomFilterOperator } from '@/domain/common'
-import { ListEntitiesRequest } from '@/presentation/common/requests'
+import { ListEntitiesRequest } from '@/presentation/common'
 import { HttpRequest } from '@/protocols/http'
 import { datatype, database } from 'faker'
 

@@ -5,8 +5,10 @@ import {
   DeleteEntitiesByListIdRepository,
   DeleteEntityByIdRepository,
   GetEntityByIdRepository,
+  GetOneEntityRepository,
   ListEntitiesRepository,
   ListEntitiesRepositoryDTO,
+  RepositoryOptionsModel,
   SoftDeleteEntitiesByListIdRepository,
   SoftDeleteEntityByIdRepository,
   UpdateEntityRepository
@@ -17,6 +19,12 @@ import { TypeORMConnection } from '@/infrastructure/repositories/typeorm/connect
 import { DefaultEntity, TypeOrmRepositorySettingsModel } from '@/infrastructure/repositories'
 import { DeepPartial, EntityTarget, FindManyOptions, getRepository, In, JoinOptions, Repository } from 'typeorm'
 
+export const defaultRepositoryOptionsModel: RepositoryOptionsModel = {
+  returnDeletedEntities: false,
+  returnCompleteData: false,
+  useJoin: true
+}
+
 export class CommonTypeORMRepository<EntityType extends DefaultEntity>
 implements CountEntitiesRepository<EntityType>,
 CreateEntityInBulkRepository<EntityType>,
@@ -24,6 +32,7 @@ CreateEntityRepository<EntityType>,
 DeleteEntitiesByListIdRepository<EntityType>,
 DeleteEntityByIdRepository<EntityType>,
 GetEntityByIdRepository<EntityType>,
+GetOneEntityRepository<EntityType>,
 ListEntitiesRepository<EntityType>,
 SoftDeleteEntitiesByListIdRepository<EntityType>,
 SoftDeleteEntityByIdRepository<EntityType>,
@@ -46,6 +55,13 @@ UpdateEntityRepository<EntityType> {
 
   createRepositoryTypeORM (): Repository<EntityType> {
     return getRepository<EntityType>(this.entityClass)
+  }
+
+  getJoin (returnCompleteData: boolean): JoinOptions {
+    if ((returnCompleteData) && (this.completeJoin)) {
+      return this.completeJoin
+    }
+    return this.join
   }
 
   async getRepositoryTypeORM (): Promise<Repository<EntityType>> {
@@ -132,6 +148,7 @@ UpdateEntityRepository<EntityType> {
   }
 
   throwCorrectError (error: RepositoryError): void {
+    console.log(error)
     switch (error.code) {
       case RepositoryErrorType.NotNull:
         throw new MissingParamError(error.column)
@@ -140,6 +157,30 @@ UpdateEntityRepository<EntityType> {
       case RepositoryErrorType.UniqueKey:
         throw new ViolateUniqueKeyError(error.constraint)
     }
+  }
+
+  async getOne (filters: CustomFilterModel[], options?: RepositoryOptionsModel): Promise<EntityType> {
+    let useJoin = defaultRepositoryOptionsModel.useJoin
+    let returnCompleteData = defaultRepositoryOptionsModel.returnCompleteData
+    let returnDeletedEntities = defaultRepositoryOptionsModel.returnDeletedEntities
+    if ((options) && (Object.keys(options).includes('useJoin'))) {
+      useJoin = options.useJoin
+    }
+    if ((options) && (Object.keys(options).includes('returnCompleteData'))) {
+      returnCompleteData = options.returnCompleteData
+    }
+    if ((options) && (Object.keys(options).includes('returnDeletedEntities'))) {
+      returnDeletedEntities = options.returnDeletedEntities
+    }
+    const repository = await this.getRepositoryTypeORM()
+    const where = this.getWhere(filters, undefined)
+    return repository.findOne({
+      join: useJoin
+        ? this.getJoin(returnCompleteData)
+        : undefined,
+      withDeleted: returnDeletedEntities,
+      where
+    })
   }
 
   async getById (entityId: string): Promise<EntityType> {

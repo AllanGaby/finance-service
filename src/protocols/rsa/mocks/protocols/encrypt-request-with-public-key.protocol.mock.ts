@@ -1,7 +1,7 @@
 import { EncryptRequestWithPublicKeyProtocol } from '@/protocols/rsa'
 import faker from 'faker'
 
-export class EncryptRequestWithPublicKeySpy implements EncryptRequestWithPublicKeyProtocol {
+export class EncryptRequestWithPublicKeyProtocolSpy implements EncryptRequestWithPublicKeyProtocol {
   payload: string
   token: string = faker.datatype.uuid()
 

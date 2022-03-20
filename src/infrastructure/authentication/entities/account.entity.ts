@@ -1,7 +1,8 @@
 import 'module-alias/register'
 import { AccountModel } from '@/domain/authentication'
 import { DefaultEntity } from '@/infrastructure/repositories'
-import { Entity, Column } from 'typeorm'
+import { AccountAccessModuleEntity } from '@/infrastructure/authentication'
+import { Entity, Column, OneToMany } from 'typeorm'
 
 @Entity('accounts')
 export class AccountEntity extends DefaultEntity implements AccountModel {
@@ -19,4 +20,7 @@ export class AccountEntity extends DefaultEntity implements AccountModel {
 
   @Column()
   account_hash: string
+
+  @OneToMany(() => AccountAccessModuleEntity, accountAccessModule => accountAccessModule.account)
+  modules?: AccountAccessModuleEntity[]
 }

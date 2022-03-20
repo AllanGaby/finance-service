@@ -30,11 +30,8 @@ export const makeCreateAccountFieldsValidations = (): FieldValidationModel[] => 
     required: true
   },
   {
-    name: 'confirmation_password',
+    name: 'password_confirmation',
     type: TypeFieldValidation.String,
-    min: 6,
-    max: 20,
-    required: true,
     sameTo: 'password'
   }
 ])

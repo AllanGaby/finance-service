@@ -5,6 +5,5 @@ export const mockCreateAccountDTO = (): CreateAccountDTO => ({
   name: datatype.string(),
   email: internet.email(),
   identification: datatype.uuid(),
-  password: internet.password(),
-  account_hash: datatype.uuid()
+  password: internet.password()
 })

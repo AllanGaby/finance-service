@@ -1,7 +1,7 @@
-import { CommonTypeORMRepository } from './common-typeorm.repository'
+import { CommonTypeORMRepository, defaultRepositoryOptionsModel } from './common-typeorm.repository'
 import { CustomFilterConditional, mockCustomFilterModel, mockEntityModel, OrderDirection } from '@/domain/common'
 import { InvalidForeignKeyError, MissingParamError, RepositoryError, RepositoryErrorType, ViolateUniqueKeyError } from '@/data/common/errors'
-import { mockListEntitiesRepositoryDTO } from '@/protocols/repositories'
+import { mockListEntitiesRepositoryDTO, mockRepositoryOptionsModel } from '@/protocols/repositories'
 import { DefaultEntity, CommonRepositorySettingsModel } from '@/infrastructure/repositories'
 import { TypeOrmRepositorySpy, mockTypeOrmRepositorySettingsModel } from '@/infrastructure/repositories/typeorm/mocks'
 import { TypeORMConnection } from '@/infrastructure/repositories/typeorm/connection'
@@ -99,6 +99,30 @@ describe('CommonTypeORMRepository', () => {
         const { sut } = makeSut(settings)
         expect(sut.columnsToFilter).toEqual([])
       })
+    })
+  })
+
+  describe('GetJoin Method', () => {
+    test('Should return join if returnCompleteData is false', () => {
+      const { sut } = makeSut()
+      sut.join = random.objectElement<JoinOptions>()
+      const result = sut.getJoin(false)
+      expect(result).toEqual(sut.join)
+    })
+
+    test('Should return join if returnCompleteData is true but completeJoin is undefined', () => {
+      const { sut } = makeSut()
+      delete sut.completeJoin
+      sut.join = random.objectElement<JoinOptions>()
+      const result = sut.getJoin(true)
+      expect(result).toEqual(sut.join)
+    })
+
+    test('Should return completeJoin if returnCompleteData is true but completeJoin is provided', () => {
+      const { sut } = makeSut()
+      sut.completeJoin = random.objectElement<JoinOptions>()
+      const result = sut.getJoin(true)
+      expect(result).toEqual(sut.completeJoin)
     })
   })
 
@@ -216,6 +240,163 @@ describe('CommonTypeORMRepository', () => {
       await sut.getById(entityId)
       expect(findOneSpy).toHaveBeenCalledWith(entityId, {
         join: sut.join
+      })
+    })
+
+    test('Should return same FindOne return', async () => {
+      const { sut } = makeSut()
+      const entity = mockEntityModel()
+      jest.spyOn(sut.repositoryTypeORM, 'findOne').mockResolvedValue(entity as DefaultEntity)
+      const findEntity = await sut.getById(entity.id)
+      expect(findEntity).toEqual(entity)
+    })
+  })
+
+  describe('GetByOne Method', () => {
+    test('Should call GetRepositoryTypeORM method', async () => {
+      const { sut } = makeSut()
+      const getRepositoryTypeORMSpy = jest.spyOn(sut, 'getRepositoryTypeORM')
+      await sut.getOne([mockCustomFilterModel()])
+      expect(getRepositoryTypeORMSpy).toHaveBeenCalledTimes(1)
+    })
+
+    test('Should call GetWhere with correct value', async () => {
+      const { sut } = makeSut()
+      const getWhereSpy = jest.spyOn(sut, 'getWhere')
+      const filters = [mockCustomFilterModel()]
+      await sut.getOne(filters)
+      expect(getWhereSpy).toHaveBeenCalledWith(filters, undefined)
+    })
+
+    describe('Options is provided', () => {
+      describe('Join', () => {
+        test('Should call getJoin with correct value if useJoin is true', async () => {
+          const { sut } = makeSut()
+          const options = mockRepositoryOptionsModel()
+          options.useJoin = true
+          const getJoinSpy = jest.spyOn(sut, 'getJoin')
+          await sut.getOne([mockCustomFilterModel()], options)
+          expect(getJoinSpy).toHaveBeenCalledWith(options.returnCompleteData)
+        })
+
+        test('Should call getJoin with correct value if useJoin is not provided', async () => {
+          const { sut } = makeSut()
+          const options = mockRepositoryOptionsModel()
+          delete options.useJoin
+          const getJoinSpy = jest.spyOn(sut, 'getJoin')
+          await sut.getOne([mockCustomFilterModel()], options)
+          expect(getJoinSpy).toHaveBeenCalledWith(options.returnCompleteData)
+        })
+
+        test('Should not call getJoin if useJoin is false', async () => {
+          const { sut } = makeSut()
+          const options = mockRepositoryOptionsModel()
+          options.useJoin = false
+          const getJoinSpy = jest.spyOn(sut, 'getJoin')
+          await sut.getOne([mockCustomFilterModel()], options)
+          expect(getJoinSpy).not.toHaveBeenCalled()
+        })
+
+        test('Should call FindOne with correct value if getJoin is called', async () => {
+          const { sut } = makeSut()
+          const options = mockRepositoryOptionsModel()
+          options.useJoin = true
+          const join = random.objectElement<JoinOptions>()
+          const where = datatype.string()
+          jest.spyOn(sut, 'getWhere').mockReturnValue(where)
+          jest.spyOn(sut, 'getJoin').mockReturnValue(join)
+          const findOneSpy = jest.spyOn(sut.repositoryTypeORM, 'findOne')
+          await sut.getOne([mockCustomFilterModel()], options)
+          expect(findOneSpy).toHaveBeenCalledWith({
+            join,
+            withDeleted: options.returnDeletedEntities,
+            where
+          })
+        })
+
+        test('Should call FindOne with correct value if getJoin is not called', async () => {
+          const { sut } = makeSut()
+          const options = mockRepositoryOptionsModel()
+          options.useJoin = false
+          const where = datatype.string()
+          jest.spyOn(sut, 'getWhere').mockReturnValue(where)
+          const findOneSpy = jest.spyOn(sut.repositoryTypeORM, 'findOne')
+          await sut.getOne([mockCustomFilterModel()], options)
+          expect(findOneSpy).toHaveBeenCalledWith({
+            join: undefined,
+            withDeleted: defaultRepositoryOptionsModel.returnDeletedEntities,
+            where
+          })
+        })
+
+        describe('ReturnCompleteData', () => {
+          test('Should call getJoin with correct value if ReturnCompleteData is provided', async () => {
+            const { sut } = makeSut()
+            const options = mockRepositoryOptionsModel()
+            options.useJoin = true
+            const getJoinSpy = jest.spyOn(sut, 'getJoin')
+            await sut.getOne([mockCustomFilterModel()], options)
+            expect(getJoinSpy).toHaveBeenCalledWith(options.returnCompleteData)
+          })
+
+          test('Should call getJoin with correct value if ReturnCompleteData is not provided', async () => {
+            const { sut } = makeSut()
+            const options = mockRepositoryOptionsModel()
+            delete options.returnCompleteData
+            options.useJoin = true
+            const getJoinSpy = jest.spyOn(sut, 'getJoin')
+            await sut.getOne([mockCustomFilterModel()], options)
+            expect(getJoinSpy).toHaveBeenCalledWith(defaultRepositoryOptionsModel.returnCompleteData)
+          })
+        })
+      })
+
+      describe('ReturnDeletedEntities', () => {
+        test('Should call FindOne with correct value if ReturnDeletedEntities is provided', async () => {
+          const { sut } = makeSut()
+          const options = mockRepositoryOptionsModel()
+          const where = datatype.string()
+          jest.spyOn(sut, 'getWhere').mockReturnValue(where)
+          const findOneSpy = jest.spyOn(sut.repositoryTypeORM, 'findOne')
+          await sut.getOne([mockCustomFilterModel()], options)
+          expect(findOneSpy).toHaveBeenCalledWith({
+            join: undefined,
+            withDeleted: options.returnDeletedEntities,
+            where
+          })
+        })
+
+        test('Should call FindOne with correct value if ReturnDeletedEntities is not provided', async () => {
+          const { sut } = makeSut()
+          const options = mockRepositoryOptionsModel()
+          delete options.returnDeletedEntities
+          const where = datatype.string()
+          jest.spyOn(sut, 'getWhere').mockReturnValue(where)
+          const findOneSpy = jest.spyOn(sut.repositoryTypeORM, 'findOne')
+          await sut.getOne([mockCustomFilterModel()], options)
+          expect(findOneSpy).toHaveBeenCalledWith({
+            join: undefined,
+            withDeleted: defaultRepositoryOptionsModel.returnDeletedEntities,
+            where
+          })
+        })
+      })
+    })
+
+    describe('Options is not provided', () => {
+      test('Should call FindOne with correct value', async () => {
+        const { sut } = makeSut()
+        const join = random.objectElement<JoinOptions>()
+        const where = datatype.string()
+        jest.spyOn(sut, 'getWhere').mockReturnValue(where)
+        jest.spyOn(sut, 'getJoin').mockReturnValue(join)
+        const findOneSpy = jest.spyOn(sut.repositoryTypeORM, 'findOne')
+        await sut.getOne([mockCustomFilterModel()])
+        expect(findOneSpy).toHaveBeenCalledWith({
+          join,
+          withDeleted: defaultRepositoryOptionsModel.returnDeletedEntities,
+          where
+        })
       })
     })
 

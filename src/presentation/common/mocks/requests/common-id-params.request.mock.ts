@@ -1,4 +1,4 @@
-import { CommonIdParamsRequest } from '@/presentation/common/requests'
+import { CommonIdParamsRequest } from '@/presentation/common'
 import { HttpRequest } from '@/protocols/http'
 import { datatype } from 'faker'
 

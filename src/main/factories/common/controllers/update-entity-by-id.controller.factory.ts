@@ -1,5 +1,5 @@
 import { EntityModel } from '@/domain/common'
-import { UpdateEntityByIdController } from '@/presentation/common/controllers'
+import { UpdateEntityByIdController } from '@/presentation/common'
 import { UpdateEntityByIdUseCaseProps, makeUpdateEntityByIdUseCase } from '@/main/factories/common/use-cases'
 import { EntityTarget } from 'typeorm'
 

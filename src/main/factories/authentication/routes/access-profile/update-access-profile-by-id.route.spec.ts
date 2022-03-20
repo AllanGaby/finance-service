@@ -74,63 +74,63 @@ describe('PUT /authentication/access-profile/:access-profile_id - Update a Acces
 
     describe('Name validations', () => {
       test('Should return Unprocessable entity status code (422) if name is not provided', async () => {
-        await RouteHelpers.BodyRequiredValueValidation(agent, `${url}/${currentAccessProfile.id}`, HttpMethod.put, 'name', updateAccessProfileDTO)
+        await RouteHelpers.BodyRequiredValueValidation({ agent, url: `${url}/${currentAccessProfile.id}`, method: HttpMethod.put, field: 'name', body: updateAccessProfileDTO })
       })
 
       test('Should return Unprocessable entity status code (422) if name length is smaller than', async () => {
-        await RouteHelpers.BodySmallerStringValidation(agent, `${url}/${currentAccessProfile.id}`, HttpMethod.put, 'name', 3, updateAccessProfileDTO)
+        await RouteHelpers.BodySmallerStringValidation({ agent, url: `${url}/${currentAccessProfile.id}`, method: HttpMethod.put, field: 'name', minLength: 3, body: updateAccessProfileDTO })
       })
 
       test('Should return Unprocessable entity status code (422) if name length is bigger than', async () => {
-        await RouteHelpers.BodyBiggerStringValidation(agent, `${url}/${currentAccessProfile.id}`, HttpMethod.put, 'name', 100, updateAccessProfileDTO)
+        await RouteHelpers.BodyBiggerStringValidation({ agent, url: `${url}/${currentAccessProfile.id}`, method: HttpMethod.put, field: 'name', maxLength: 100, body: updateAccessProfileDTO })
       })
     })
 
     describe('AccessProfileKey validations', () => {
       test('Should return Unprocessable entity status code (422) if access_profile_key is not provided', async () => {
-        await RouteHelpers.BodyRequiredValueValidation(agent, `${url}/${currentAccessProfile.id}`, HttpMethod.put, 'access_profile_key', updateAccessProfileDTO)
+        await RouteHelpers.BodyRequiredValueValidation({ agent, url: `${url}/${currentAccessProfile.id}`, method: HttpMethod.put, field: 'access_profile_key', body: updateAccessProfileDTO })
       })
 
       test('Should return Unprocessable entity status code (422) if access_profile_key length is smaller than', async () => {
-        await RouteHelpers.BodySmallerStringValidation(agent, `${url}/${currentAccessProfile.id}`, HttpMethod.put, 'access_profile_key', 3, updateAccessProfileDTO)
+        await RouteHelpers.BodySmallerStringValidation({ agent, url: `${url}/${currentAccessProfile.id}`, method: HttpMethod.put, field: 'access_profile_key', minLength: 3, body: updateAccessProfileDTO })
       })
 
       test('Should return Unprocessable entity status code (422) if access_profile_key length is bigger than', async () => {
-        await RouteHelpers.BodyBiggerStringValidation(agent, `${url}/${currentAccessProfile.id}`, HttpMethod.put, 'access_profile_key', 100, updateAccessProfileDTO)
+        await RouteHelpers.BodyBiggerStringValidation({ agent, url: `${url}/${currentAccessProfile.id}`, method: HttpMethod.put, field: 'access_profile_key', maxLength: 100, body: updateAccessProfileDTO })
       })
     })
 
     describe('Enabled validations', () => {
       test('Should return Unprocessable entity status code (422) if enabled is not a boolean', async () => {
-        await RouteHelpers.BodyBooleanValidation(agent, `${url}/${currentAccessProfile.id}`, HttpMethod.put, 'enabled', updateAccessProfileDTO)
+        await RouteHelpers.BodyBooleanValidation({ agent, url: `${url}/${currentAccessProfile.id}`, method: HttpMethod.put, field: 'enabled', body: updateAccessProfileDTO })
       })
     })
 
     describe('ModuleId validations', () => {
       test('Should return Unprocessable entity status code (422) if module_id is not provided', async () => {
-        await RouteHelpers.BodyRequiredValueValidation(agent, `${url}/${currentAccessProfile.id}`, HttpMethod.put, 'module_id', updateAccessProfileDTO)
+        await RouteHelpers.BodyRequiredValueValidation({ agent, url: `${url}/${currentAccessProfile.id}`, method: HttpMethod.put, field: 'module_id', body: updateAccessProfileDTO })
       })
 
       test('Should return Unprocessable entity status code (422) if module_id is not a uuid', async () => {
-        await RouteHelpers.BodyUuidValidation(agent, `${url}/${currentAccessProfile.id}`, HttpMethod.put, 'module_id', updateAccessProfileDTO)
+        await RouteHelpers.BodyUuidValidation({ agent, url: `${url}/${currentAccessProfile.id}`, method: HttpMethod.put, field: 'module_id', body: updateAccessProfileDTO })
       })
     })
 
     describe('RulesId validations', () => {
       test('Should return Unprocessable entity status code (422) if rules_id is not provided', async () => {
-        await RouteHelpers.BodyRequiredValueValidation(agent, `${url}/${currentAccessProfile.id}`, HttpMethod.put, 'rules_id', updateAccessProfileDTO)
+        await RouteHelpers.BodyRequiredValueValidation({ agent, url: `${url}/${currentAccessProfile.id}`, method: HttpMethod.put, field: 'rules_id', body: updateAccessProfileDTO })
       })
 
       test('Should return Unprocessable entity status code (422) if rules_id is a empty list', async () => {
-        await RouteHelpers.BodyArrayRequiredValidation(agent, `${url}/${currentAccessProfile.id}`, HttpMethod.put, 'rules_id', updateAccessProfileDTO)
+        await RouteHelpers.BodyArrayRequiredValidation({ agent, url: `${url}/${currentAccessProfile.id}`, method: HttpMethod.put, field: 'rules_id', body: updateAccessProfileDTO })
       })
 
       test('Should return Unprocessable entity status code (422) if rules_id is not a array', async () => {
-        await RouteHelpers.BodyArrayValidation(agent, `${url}/${currentAccessProfile.id}`, HttpMethod.put, 'rules_id', updateAccessProfileDTO)
+        await RouteHelpers.BodyArrayValidation({ agent, url: `${url}/${currentAccessProfile.id}`, method: HttpMethod.put, field: 'rules_id', body: updateAccessProfileDTO })
       })
 
       test('Should return Unprocessable entity status code (422) if rules_id is a invalid array', async () => {
-        await RouteHelpers.BodyArrayUuidValidation(agent, `${url}/${currentAccessProfile.id}`, HttpMethod.put, 'rules_id', updateAccessProfileDTO)
+        await RouteHelpers.BodyArrayUuidValidation({ agent, url: `${url}/${currentAccessProfile.id}`, method: HttpMethod.put, field: 'rules_id', body: updateAccessProfileDTO })
       })
     })
   })

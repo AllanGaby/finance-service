@@ -1,5 +1,5 @@
 import { EntityModel } from '@/domain/common'
-import { CreateEntityController } from '@/presentation/common/controllers'
+import { CreateEntityController } from '@/presentation/common'
 import { CreateEntityUseCaseProps, makeCreateEntityUseCase } from '@/main/factories/common/use-cases'
 import { EntityTarget } from 'typeorm'
 

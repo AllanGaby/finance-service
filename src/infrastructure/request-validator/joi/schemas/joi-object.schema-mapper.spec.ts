@@ -98,4 +98,20 @@ describe('JoiObjectSchemaMapper', () => {
       }
     })
   })
+
+  test('Should call correct Joi Schema if sameTo is provided', () => {
+    const fields = mockListFieldValidationModel()
+    for (let index = 0; index < 10; index++) {
+      fields[index].sameTo = datatype.uuid()
+    }
+    const refSpy = jest.spyOn(Joi, 'ref')
+    JoiObjectSchemaMapper.getSchema(fields)
+    fields.forEach(field => {
+      if (field.sameTo) {
+        expect(refSpy).toHaveBeenCalledWith(field.sameTo)
+      } else {
+        expect(refSpy).not.toHaveBeenCalledWith(field.sameTo)
+      }
+    })
+  })
 })

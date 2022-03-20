@@ -1,5 +1,5 @@
 import { mockEntityModel } from '@/domain/common'
-import { AccessProfileModel, mockModuleModel } from '@/domain/authentication'
+import { AccessProfileModel, mockModuleModel, mockModuleAccessRuleModel } from '@/domain/authentication'
 import { datatype } from 'faker'
 
 export const mockAccessProfileModel = (): AccessProfileModel => ({
@@ -8,5 +8,13 @@ export const mockAccessProfileModel = (): AccessProfileModel => ({
   enabled: datatype.boolean(),
   access_profile_key: datatype.uuid(),
   module_id: datatype.uuid(),
-  module: mockModuleModel()
+  module: mockModuleModel(),
+  module_access_rules: [
+    mockModuleAccessRuleModel(),
+    mockModuleAccessRuleModel(),
+    mockModuleAccessRuleModel(),
+    mockModuleAccessRuleModel(),
+    mockModuleAccessRuleModel(),
+    mockModuleAccessRuleModel()
+  ]
 })

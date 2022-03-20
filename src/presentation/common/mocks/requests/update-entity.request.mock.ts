@@ -1,4 +1,4 @@
-import { UpdateEntityRequest, CommonIdParamsRequest } from '@/presentation/common/requests'
+import { UpdateEntityRequest, CommonIdParamsRequest } from '@/presentation/common'
 import { HttpRequest } from '@/protocols/http'
 import { EntityModel, UpdateEntityDTO } from '@/domain/common'
 import { datatype, random } from 'faker'

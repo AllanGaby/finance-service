@@ -11,7 +11,6 @@ export const mockFieldValidationModel = (type: TypeFieldValidation = mockTypeFie
     min: datatype.number(),
     max: datatype.number(),
     required: datatype.boolean(),
-    sameTo: database.column(),
     array: datatype.boolean(),
     pattern: new RegExp(datatype.uuid())
   }

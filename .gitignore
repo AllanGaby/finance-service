@@ -8,3 +8,4 @@ serverless
 *.lock
 *-lock.json
 .env
+create-token.ts

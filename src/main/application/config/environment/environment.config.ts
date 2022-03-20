@@ -9,11 +9,43 @@ dotenv.config({
   path: path.resolve(__dirname, '..', '..', '..', '..', '..', '.env')
 })
 
-const getPublicKey = async (): Promise<string> => {
-  if (process.env.SECURITY_PUBLIC_KEY) {
-    return process.env.SECURITY_PUBLIC_KEY
+let privateKey: string
+let publicKey: string
+
+const readFileKey = async (filePath: string): Promise<string> => {
+  let fileContent =
+    fs.readFileSync(filePath).toString()
+  const isPublicKey = fileContent.includes('BEGIN PUBLIC KEY')
+  fileContent = fileContent
+    .replace('-----BEGIN PUBLIC KEY-----', '')
+    .replace('-----END PUBLIC KEY-----', '')
+    .replace('-----BEGIN RSA PRIVATE KEY-----', '')
+    .replace('-----END RSA PRIVATE KEY-----', '')
+    .replace(/\n/g, ' ')
+  let keyContent: string = ''
+  fileContent.split(' ').filter(line => Boolean(line) && line !== '\n').forEach((lineContent, index) => {
+    keyContent = `${keyContent}\n${lineContent.replace('\n', ' ')}`
+  })
+  if (isPublicKey) {
+    keyContent = `-----BEGIN PUBLIC KEY-----${keyContent}\n-----END PUBLIC KEY-----\n`
+  } else {
+    keyContent = `-----BEGIN RSA PRIVATE KEY-----${keyContent}\n-----END RSA PRIVATE KEY-----\n`
   }
-  return fs.readFileSync(path.resolve(__dirname, '..', '..', '..', '..', '..', 'public_key.pem')).toString()
+  return keyContent
+}
+
+const getPrivateKey = async (): Promise<string> => {
+  if (!privateKey) {
+    privateKey = await readFileKey(path.resolve(__dirname, '..', '..', '..', '..', '..', 'private_key.pem'))
+  }
+  return privateKey
+}
+
+const getPublicKey = async (): Promise<string> => {
+  if (!publicKey) {
+    publicKey = await readFileKey(path.resolve(__dirname, '..', '..', '..', '..', '..', 'public_key.pem'))
+  }
+  return publicKey
 }
 
 export const ConfigSetup = (): ConfigurationModel => {
@@ -35,6 +67,7 @@ export const ConfigSetup = (): ConfigurationModel => {
     security: {
       salt: Number(process.env.SECURITY_SALT),
       getPublicKey,
+      getPrivateKey,
       jwtSecret: process.env.SECURITY_JWT_SECRET,
       accessTokenValidityInMinutes: Number(process.env.SECURITY_ACCESS_TOKEN_VALIDITY),
       refreshTokenValidityInMinutes: Number(process.env.SECURITY_REFRESH_TOKEN_VALIDITY)

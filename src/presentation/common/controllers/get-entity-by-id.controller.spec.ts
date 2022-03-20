@@ -1,8 +1,8 @@
 import { GetEntityByIdController } from './get-entity-by-id.controller'
 import { GetEntityByIdUseCaseSpy, EntityModel } from '@/domain/common'
 import { EntityIsNotFoundError } from '@/data/common/errors'
-import { CommonIdParamsRequest } from '@/presentation/common/requests'
-import { mockCommonIdParamsRequest } from '@/presentation/common/mocks'
+import { CommonIdParamsRequest } from '@/presentation/common'
+import { mockCommonIdParamsRequest } from '@/presentation/common'
 import { HttpHelper } from '@/protocols/http'
 
 type sutTypes = {

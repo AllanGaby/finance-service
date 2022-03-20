@@ -21,7 +21,8 @@ module.exports = {
     '!**/**.path.ts',
     '!**/**.seeds.ts',
     '!**/**.setup.ts',
-    '!**/connection.ts'
+    '!**/connection.ts',
+    '!**/create-token.ts'
   ],
   testResultsProcessor: 'jest-sonar-reporter',
   collectCoverage: true,

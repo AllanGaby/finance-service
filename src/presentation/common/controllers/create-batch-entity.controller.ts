@@ -1,6 +1,6 @@
 import { ControllerProtocol, HttpRequest, HttpResponse, HttpHelper } from '@/protocols/http'
 import { EntityModel, CreateEntityUseCase, CreateEntityDTO } from '@/domain/common'
-import { CreateEntityRequest } from '@/presentation/common/requests'
+import { CreateEntityRequest } from '@/presentation/common'
 import { RequestValidatorProtocol, FieldValidationModel, RequestValidatorModel } from '@/protocols/request-validator'
 
 type CreateEntityResponse<EntityType> = EntityType[] | Error | object

@@ -47,63 +47,63 @@ describe('POST /authentication/access-profile/ - Create a new AccessProfile', ()
   describe('Unprocessable entity status code (422)', () => {
     describe('Name validations', () => {
       test('Should return Unprocessable entity status code (422) if name is not provided', async () => {
-        await RouteHelpers.BodyRequiredValueValidation(agent, url, HttpMethod.post, 'name', createAccessProfileDTO)
+        await RouteHelpers.BodyRequiredValueValidation({ agent, url, method: HttpMethod.post, field: 'name', body: createAccessProfileDTO })
       })
 
       test('Should return Unprocessable entity status code (422) if name length is smaller than', async () => {
-        await RouteHelpers.BodySmallerStringValidation(agent, url, HttpMethod.post, 'name', 3, createAccessProfileDTO)
+        await RouteHelpers.BodySmallerStringValidation({ agent, url, method: HttpMethod.post, field: 'name', minLength: 3, body: createAccessProfileDTO })
       })
 
       test('Should return Unprocessable entity status code (422) if name length is bigger than', async () => {
-        await RouteHelpers.BodyBiggerStringValidation(agent, url, HttpMethod.post, 'name', 100, createAccessProfileDTO)
+        await RouteHelpers.BodyBiggerStringValidation({ agent, url, method: HttpMethod.post, field: 'name', maxLength: 100, body: createAccessProfileDTO })
       })
     })
 
     describe('AccessProfileKey validations', () => {
       test('Should return Unprocessable entity status code (422) if access_profile_key is not provided', async () => {
-        await RouteHelpers.BodyRequiredValueValidation(agent, url, HttpMethod.post, 'access_profile_key', createAccessProfileDTO)
+        await RouteHelpers.BodyRequiredValueValidation({ agent, url, method: HttpMethod.post, field: 'access_profile_key', body: createAccessProfileDTO })
       })
 
       test('Should return Unprocessable entity status code (422) if access_profile_key length is smaller than', async () => {
-        await RouteHelpers.BodySmallerStringValidation(agent, url, HttpMethod.post, 'access_profile_key', 3, createAccessProfileDTO)
+        await RouteHelpers.BodySmallerStringValidation({ agent, url, method: HttpMethod.post, field: 'access_profile_key', minLength: 3, body: createAccessProfileDTO })
       })
 
       test('Should return Unprocessable entity status code (422) if access_profile_key length is bigger than', async () => {
-        await RouteHelpers.BodyBiggerStringValidation(agent, url, HttpMethod.post, 'access_profile_key', 100, createAccessProfileDTO)
+        await RouteHelpers.BodyBiggerStringValidation({ agent, url, method: HttpMethod.post, field: 'access_profile_key', maxLength: 100, body: createAccessProfileDTO })
       })
     })
 
     describe('Enabled validations', () => {
       test('Should return Unprocessable entity status code (422) if enabled is not a boolean', async () => {
-        await RouteHelpers.BodyBooleanValidation(agent, url, HttpMethod.post, 'enabled', createAccessProfileDTO)
+        await RouteHelpers.BodyBooleanValidation({ agent, url, method: HttpMethod.post, field: 'enabled', body: createAccessProfileDTO })
       })
     })
 
     describe('ModuleId validations', () => {
       test('Should return Unprocessable entity status code (422) if module_id is not provided', async () => {
-        await RouteHelpers.BodyRequiredValueValidation(agent, url, HttpMethod.post, 'module_id', createAccessProfileDTO)
+        await RouteHelpers.BodyRequiredValueValidation({ agent, url, method: HttpMethod.post, field: 'module_id', body: createAccessProfileDTO })
       })
 
       test('Should return Unprocessable entity status code (422) if module_id is not a uuid', async () => {
-        await RouteHelpers.BodyUuidValidation(agent, url, HttpMethod.post, 'module_id', createAccessProfileDTO)
+        await RouteHelpers.BodyUuidValidation({ agent, url, method: HttpMethod.post, field: 'module_id', body: createAccessProfileDTO })
       })
     })
 
     describe('RulesId validations', () => {
       test('Should return Unprocessable entity status code (422) if rules_id is not provided', async () => {
-        await RouteHelpers.BodyRequiredValueValidation(agent, url, HttpMethod.post, 'rules_id', createAccessProfileDTO)
+        await RouteHelpers.BodyRequiredValueValidation({ agent, url, method: HttpMethod.post, field: 'rules_id', body: createAccessProfileDTO })
       })
 
       test('Should return Unprocessable entity status code (422) if rules_id is a empty list', async () => {
-        await RouteHelpers.BodyArrayRequiredValidation(agent, url, HttpMethod.post, 'rules_id', createAccessProfileDTO)
+        await RouteHelpers.BodyArrayRequiredValidation({ agent, url, method: HttpMethod.post, field: 'rules_id', body: createAccessProfileDTO })
       })
 
       test('Should return Unprocessable entity status code (422) if rules_id is not a array', async () => {
-        await RouteHelpers.BodyArrayValidation(agent, url, HttpMethod.post, 'rules_id', createAccessProfileDTO)
+        await RouteHelpers.BodyArrayValidation({ agent, url, method: HttpMethod.post, field: 'rules_id', body: createAccessProfileDTO })
       })
 
       test('Should return Unprocessable entity status code (422) if rules_id is a invalid array', async () => {
-        await RouteHelpers.BodyArrayUuidValidation(agent, url, HttpMethod.post, 'rules_id', createAccessProfileDTO)
+        await RouteHelpers.BodyArrayUuidValidation({ agent, url, method: HttpMethod.post, field: 'rules_id', body: createAccessProfileDTO })
       })
     })
   })

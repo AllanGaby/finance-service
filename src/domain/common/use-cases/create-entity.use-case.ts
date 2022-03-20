@@ -1,5 +1,5 @@
-import { CreateEntityDTO, EntityModel } from '@/domain/common'
+import { CreateEntityDTO } from '@/domain/common'
 
-export interface CreateEntityUseCase<EntityType extends EntityModel, CreateEntityDTOType = CreateEntityDTO<EntityType>> {
+export interface CreateEntityUseCase<EntityType, CreateEntityDTOType = CreateEntityDTO<EntityType>> {
   create: (params: CreateEntityDTOType) => Promise<EntityType | EntityType[]>
 }

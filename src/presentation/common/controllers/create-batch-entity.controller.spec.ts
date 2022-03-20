@@ -1,6 +1,6 @@
 import { CreateBatchEntityController } from './create-batch-entity.controller'
 import { CreateEntityUseCaseSpy, EntityModel, mockEntityModel } from '@/domain/common'
-import { mockCreateBatchEntityRequest } from '@/presentation/common/mocks'
+import { mockCreateBatchEntityRequest } from '@/presentation/common'
 import { RequestValidatorSpy, mockRequestValidatorModel, mockFieldValidationModel, FieldValidationModel } from '@/protocols/request-validator'
 import { HttpHelper } from '@/protocols/http'
 

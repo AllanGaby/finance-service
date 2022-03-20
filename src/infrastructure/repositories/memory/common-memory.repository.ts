@@ -5,13 +5,14 @@ import {
   DeleteEntitiesByListIdRepository,
   DeleteEntityByIdRepository,
   GetEntityByIdRepository,
+  GetOneEntityRepository,
   ListEntitiesRepository,
   ListEntitiesRepositoryDTO,
   SoftDeleteEntitiesByListIdRepository,
   SoftDeleteEntityByIdRepository,
   UpdateEntityRepository
 } from '@/protocols/repositories'
-import { EntityModel, CreateEntityDTO, UpdateEntityDTO } from '@/domain/common'
+import { EntityModel, CreateEntityDTO, UpdateEntityDTO, CustomFilterModel } from '@/domain/common'
 import { v4 } from 'uuid'
 
 export class CommonMemoryRepository<EntityType extends EntityModel>
@@ -21,6 +22,7 @@ CreateEntityRepository<EntityType>,
 DeleteEntitiesByListIdRepository<EntityType>,
 DeleteEntityByIdRepository<EntityType>,
 GetEntityByIdRepository<EntityType>,
+GetOneEntityRepository<EntityType>,
 ListEntitiesRepository<EntityType>,
 SoftDeleteEntitiesByListIdRepository<EntityType>,
 SoftDeleteEntityByIdRepository<EntityType>,
@@ -50,6 +52,10 @@ UpdateEntityRepository<EntityType> {
 
   async getById (entityId: string): Promise<EntityType> {
     return this.entities.find(entity => entity.id === entityId)
+  }
+
+  async getOne (filter: CustomFilterModel[]): Promise<EntityType> {
+    return this.entities[0]
   }
 
   async deleteById (entityId: string): Promise<EntityType | undefined> {

@@ -1,5 +1,13 @@
-import { ConditionalMissingParamError, EntityIsNotFoundError, InvalidForeignKeyError, MissingParamError, ViolateUniqueKeyError } from '@/data/common/errors'
+import {
+  ConditionalMissingParamError,
+  EntityAlreadyExistsError,
+  EntityIsNotFoundError,
+  InvalidForeignKeyError,
+  MissingParamError,
+  ViolateUniqueKeyError
+} from '@/data/common/errors'
 import { HttpStatusCode, ControllerProtocol, HttpRequest } from '@/protocols/http'
+import { CorruptedAccountError, InvalidCredentialsError } from '@/data/authentication/errors'
 import { Request, Response } from 'express'
 
 export const ExpressControllerAdapter = <RequestBody = any, ResponseBody = any>(controller: ControllerProtocol<RequestBody, ResponseBody | Error>) =>
@@ -28,6 +36,12 @@ export const ExpressControllerAdapter = <RequestBody = any, ResponseBody = any>(
         .json(httpResponse.body)
       return response
     } catch (error) {
+      if (error instanceof CorruptedAccountError) {
+        return SetErrorResponse(HttpStatusCode.forbidden, error)
+      }
+      if (error instanceof InvalidCredentialsError) {
+        return SetErrorResponse(HttpStatusCode.forbidden, error)
+      }
       if (error instanceof EntityIsNotFoundError) {
         return SetErrorResponse(HttpStatusCode.notFound, error)
       }
@@ -36,6 +50,9 @@ export const ExpressControllerAdapter = <RequestBody = any, ResponseBody = any>(
       }
       if (error instanceof ConditionalMissingParamError) {
         return SetErrorResponse(HttpStatusCode.unprocessableEntity, error)
+      }
+      if (error instanceof EntityAlreadyExistsError) {
+        return SetErrorResponse(HttpStatusCode.conflict, error)
       }
       if (error instanceof InvalidForeignKeyError) {
         return SetErrorResponse(HttpStatusCode.conflict, error)

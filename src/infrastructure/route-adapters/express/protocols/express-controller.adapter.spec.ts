@@ -1,5 +1,6 @@
 import { ExpressControllerAdapter } from './express-controller.adapter'
-import { ConditionalMissingParamError, EntityIsNotFoundError, InvalidForeignKeyError, MissingParamError, ViolateUniqueKeyError } from '@/data/common/errors'
+import { ConditionalMissingParamError, EntityAlreadyExistsError, EntityIsNotFoundError, InvalidForeignKeyError, MissingParamError, ViolateUniqueKeyError } from '@/data/common/errors'
+import { CorruptedAccountError, InvalidCredentialsError } from '@/data/authentication/errors'
 import { mockPartialExpressRequest, mockPartialExpressResponse } from '@/infrastructure/route-adapters/express/mocks'
 import { HttpStatusCode, ControllerSpy, mockHttpFailStatusCode, mockHttpSuccessStatusCode } from '@/protocols/http'
 import { Request, Response } from 'express'
@@ -90,6 +91,24 @@ describe('ExpressControllerAdapter', () => {
   })
 
   describe('Controller Throws', () => {
+    test('Should return Forbidden Status Code (403) if controller return CorruptedAccountError', async () => {
+      const { sut, controller, request, response } = makeSut()
+      const error = new CorruptedAccountError()
+      const statusSpy = jest.spyOn(response, 'status')
+      jest.spyOn(controller, 'handle').mockRejectedValue(error)
+      await sut(request, response)
+      expect(statusSpy).toHaveBeenCalledWith(HttpStatusCode.forbidden)
+    })
+
+    test('Should return Forbidden Status Code (403) if controller return InvalidCredentialsError', async () => {
+      const { sut, controller, request, response } = makeSut()
+      const error = new InvalidCredentialsError()
+      const statusSpy = jest.spyOn(response, 'status')
+      jest.spyOn(controller, 'handle').mockRejectedValue(error)
+      await sut(request, response)
+      expect(statusSpy).toHaveBeenCalledWith(HttpStatusCode.forbidden)
+    })
+
     test('Should return NotFound Status Code (404) if controller return EntityIsNotFoundError', async () => {
       const { sut, controller, request, response } = makeSut()
       const error = new EntityIsNotFoundError(datatype.uuid())
@@ -97,6 +116,15 @@ describe('ExpressControllerAdapter', () => {
       jest.spyOn(controller, 'handle').mockRejectedValue(error)
       await sut(request, response)
       expect(statusSpy).toHaveBeenCalledWith(HttpStatusCode.notFound)
+    })
+
+    test('Should return Conflict Status Code (409) if controller return EntityAlreadyExistsError', async () => {
+      const { sut, controller, request, response } = makeSut()
+      const error = new EntityAlreadyExistsError(datatype.uuid())
+      const statusSpy = jest.spyOn(response, 'status')
+      jest.spyOn(controller, 'handle').mockRejectedValue(error)
+      await sut(request, response)
+      expect(statusSpy).toHaveBeenCalledWith(HttpStatusCode.conflict)
     })
 
     test('Should return Conflict Status Code (409) if controller return InvalidForeignKeyError', async () => {

@@ -1,5 +1,7 @@
 export * from './access-profile-rule.model.mock'
 export * from './access-profile.model.mock'
+export * from './access-session-module.model.mock'
+export * from './access-session.model.mock'
 export * from './account-access-module.model.mock'
 export * from './account.model.mock'
 export * from './module.model.mock'

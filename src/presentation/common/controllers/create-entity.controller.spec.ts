@@ -1,6 +1,6 @@
 import { CreateEntityController } from './create-entity.controller'
 import { CreateEntityUseCaseSpy, EntityModel, mockEntityModel } from '@/domain/common'
-import { mockCreateEntityRequest } from '@/presentation/common/mocks'
+import { mockCreateEntityRequest } from '@/presentation/common'
 import { HttpHelper } from '@/protocols/http'
 
 type sutTypes = {

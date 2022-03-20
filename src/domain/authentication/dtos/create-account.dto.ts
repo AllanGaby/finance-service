@@ -3,5 +3,4 @@ export type CreateAccountDTO = {
   email: string
   identification?: string
   password: string
-  account_hash?: string
 }

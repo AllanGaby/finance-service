@@ -19,6 +19,7 @@ export type ConfigurationModel = {
   security: {
     salt: number
     getPublicKey: () => Promise<string>
+    getPrivateKey: () => Promise<string>
     accessTokenValidityInMinutes: number
     refreshTokenValidityInMinutes: number
     jwtSecret: string

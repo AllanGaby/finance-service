@@ -1,11 +1,14 @@
 import { HttpStatusCode, HttpResponse } from '@/protocols/http'
 
 export class HttpHelper {
-  static ok<BodyType, HeadersType = any>(data: BodyType, headers: HeadersType = undefined): HttpResponse<BodyType, HeadersType> {
+  static ok<BodyType, HeadersType = any, RequestQueryParams = any, ParamsType = any>
+  (data: BodyType, headers: HeadersType = undefined, queryParams: RequestQueryParams = undefined, params: ParamsType = undefined): HttpResponse<BodyType, HeadersType, RequestQueryParams, ParamsType> {
     return {
       statusCode: HttpStatusCode.ok,
       body: data,
-      headers
+      headers,
+      params,
+      queryParams
     }
   }
 

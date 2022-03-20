@@ -1,6 +1,6 @@
 import { ListEntitiesController } from './list-entities.controller'
 import { EntityModel, ListEntitiesUseCaseSpy, MapperCustomFilterUseCaseSpy, mockCustomFilterConditional, mockCustomFilterOperator } from '@/domain/common'
-import { mockListEntitiesRequest } from '@/presentation/common/mocks'
+import { mockListEntitiesRequest } from '@/presentation/common'
 import { HttpHelper } from '@/protocols/http'
 import { datatype } from 'faker'
 

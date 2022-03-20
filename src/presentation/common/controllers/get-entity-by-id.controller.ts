@@ -1,6 +1,6 @@
 import { ControllerProtocol, HttpRequest, HttpResponse, HttpHelper } from '@/protocols/http'
 import { GetEntityByIdUseCase, EntityModel } from '@/domain/common'
-import { CommonIdParamsRequest } from '@/presentation/common/requests'
+import { CommonIdParamsRequest } from '@/presentation/common'
 
 type GetEntityByIdResponse<EntityType extends EntityModel> = EntityType | Error | object
 

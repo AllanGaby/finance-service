@@ -1,5 +1,7 @@
 export * from './request-access-profile-rule.filter'
 export * from './request-access-profile.filter'
+export * from './request-access-session.filter'
+export * from './request-account-access-module.filter'
 export * from './request-account.filter'
 export * from './request-module-access-rule.filter'
 export * from './request-module.filter'

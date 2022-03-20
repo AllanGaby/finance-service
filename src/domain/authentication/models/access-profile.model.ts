@@ -1,5 +1,5 @@
 import { EntityModel } from '@/domain/common'
-import { ModuleModel } from '@/domain/authentication'
+import { ModuleModel, ModuleAccessRuleModel } from '@/domain/authentication'
 
 export type AccessProfileModel = EntityModel & {
   name: string
@@ -7,4 +7,5 @@ export type AccessProfileModel = EntityModel & {
   access_profile_key: string
   module_id: string
   module?: ModuleModel
+  module_access_rules?: ModuleAccessRuleModel[]
 }

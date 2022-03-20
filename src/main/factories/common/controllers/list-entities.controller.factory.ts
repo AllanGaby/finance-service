@@ -1,5 +1,5 @@
 import { EntityModel } from '@/domain/common'
-import { ListEntitiesController } from '@/presentation/common/controllers'
+import { ListEntitiesController } from '@/presentation/common'
 import { makeMapperCustomFilterUseCase, ListEntitiesUseCaseProps, makeListEntitiesUseCase } from '@/main/factories/common/use-cases'
 import { EntityTarget } from 'typeorm'
 

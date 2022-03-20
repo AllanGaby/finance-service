@@ -1,3 +1,4 @@
+export * from './body.request.mock'
 export * from './create-batch-entity.request.mock'
 export * from './create-entity.request.mock'
 export * from './common-id-params.request.mock'

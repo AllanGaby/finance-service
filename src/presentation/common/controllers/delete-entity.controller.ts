@@ -1,6 +1,6 @@
 import { ControllerProtocol, HttpRequest, HttpResponse, HttpHelper } from '@/protocols/http'
 import { DeleteEntityByIdUseCase, EntityModel } from '@/domain/common'
-import { CommonIdParamsRequest } from '@/presentation/common/requests'
+import { CommonIdParamsRequest } from '@/presentation/common'
 
 type DeleteEntityResponse = undefined | Error | object
 

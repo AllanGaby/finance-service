@@ -1,5 +1,5 @@
 import { AccessProfileModel } from '@/domain/authentication'
-import { UpdateEntityByIdController } from '@/presentation/common/controllers'
+import { UpdateEntityByIdController } from '@/presentation/common'
 import { UpdateAccessProfileByIdUseCaseProps, makeUpdateAccessProfileByIdUseCase } from '@/main/factories/authentication/use-cases'
 
 export type UpdateAccessProfileByIdControllerProps = UpdateAccessProfileByIdUseCaseProps & {

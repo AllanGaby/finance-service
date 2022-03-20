@@ -1,8 +1,8 @@
 import { UpdateEntityByIdController, UpdateEntityByIdRequestDefault } from './update-entity-by-id.controller'
 import { EntityModel, UpdateEntityDTO, UpdateEntityByIdUseCaseSpy } from '@/domain/common'
-import { mockUpdateEntityRequest } from '@/presentation/common/mocks'
+import { mockUpdateEntityRequest } from '@/presentation/common'
 import { HttpRequest, HttpHelper } from '@/protocols/http'
-import { UpdateEntityRequest } from '@/presentation/common/requests'
+import { UpdateEntityRequest } from '@/presentation/common'
 
 type sutTypes = {
   sut: UpdateEntityByIdController<EntityModel>

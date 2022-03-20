@@ -1,4 +1,5 @@
 import { EntityModel } from '@/domain/common'
+import { AccountAccessModuleModel } from '@/domain/authentication'
 
 export type AccountModel = EntityModel & {
   name: string
@@ -6,4 +7,5 @@ export type AccountModel = EntityModel & {
   identification?: string
   password: string
   account_hash: string
+  modules?: AccountAccessModuleModel[]
 }

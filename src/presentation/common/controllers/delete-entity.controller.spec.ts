@@ -1,6 +1,6 @@
 import { DeleteEntityController } from './delete-entity.controller'
 import { DeleteEntityByIdUseCaseSpy, EntityModel } from '@/domain/common'
-import { mockCommonIdParamsRequest } from '@/presentation/common/mocks'
+import { mockCommonIdParamsRequest } from '@/presentation/common'
 import { HttpHelper } from '@/protocols/http'
 
 type sutTypes = {

@@ -1,6 +1,6 @@
 import { ControllerProtocol, HttpRequest, HttpResponse, HttpHelper } from '@/protocols/http'
 import { UpdateEntityByIdUseCase, EntityModel, UpdateEntityDTO } from '@/domain/common'
-import { UpdateEntityRequest } from '@/presentation/common/requests'
+import { UpdateEntityRequest } from '@/presentation/common'
 
 export type UpdateEntityByIdRequestDefault = {
   id: string

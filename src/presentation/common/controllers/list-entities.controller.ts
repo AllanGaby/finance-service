@@ -1,6 +1,6 @@
 import { ControllerProtocol, HttpRequest, HttpResponse, HttpHelper } from '@/protocols/http'
 import { EntityModel, MapperCustomFilterUseCase, ListEntitiesUseCase } from '@/domain/common'
-import { ListEntitiesRequest } from '@/presentation/common/requests'
+import { ListEntitiesRequest } from '@/presentation/common'
 
 type ListEntitiesResponse<EntityType extends EntityModel> = EntityType[] | Error | object
 

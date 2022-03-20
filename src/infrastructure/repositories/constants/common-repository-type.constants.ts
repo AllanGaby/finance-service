@@ -5,6 +5,7 @@ import {
   DeleteEntitiesByListIdRepository,
   DeleteEntityByIdRepository,
   GetEntityByIdRepository,
+  GetOneEntityRepository,
   ListEntitiesRepository,
   SoftDeleteEntitiesByListIdRepository,
   SoftDeleteEntityByIdRepository,
@@ -19,6 +20,7 @@ export type CommonRepositoryType<EntityType extends EntityModel> =
 | DeleteEntitiesByListIdRepository<EntityType>
 | DeleteEntityByIdRepository<EntityType>
 | GetEntityByIdRepository<EntityType>
+| GetOneEntityRepository<EntityType>
 | ListEntitiesRepository<EntityType>
 | SoftDeleteEntitiesByListIdRepository<EntityType>
 | SoftDeleteEntityByIdRepository<EntityType>

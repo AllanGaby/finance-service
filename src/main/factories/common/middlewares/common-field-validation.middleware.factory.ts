@@ -1,4 +1,4 @@
-import { FieldValidationMiddleware } from '@/presentation/common/middlewares'
+import { FieldValidationMiddleware } from '@/presentation/common'
 import { RequestValidatorFactory } from '@/infrastructure/request-validator'
 import { FieldValidationModel } from '@/protocols/request-validator'
 import { FieldValidationType } from '@/protocols/http'

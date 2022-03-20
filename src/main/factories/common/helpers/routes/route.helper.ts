@@ -1,9 +1,30 @@
 import { HttpMethod, HttpResponse, HttpStatusCode } from '@/protocols/http'
 import { RequestValidatorModel } from '@/protocols/request-validator'
-import { datatype, random } from 'faker'
+import { CreatePublicEncryptedToken } from '@/protocols/rsa'
+import {
+  BiggerValidationRouteHelperDTO,
+  CommonRouteHelperDTO,
+  PasswordConfirmationValidationRouteHelperDTO,
+  SmallerValidationRouteHelperDTO
+} from '@/main/factories/common/helpers'
+import { datatype, internet, random } from 'faker'
 import { SuperAgentTest } from 'supertest'
 
 export class RouteHelpers {
+  public static GetBody (
+    currentBody: Object,
+    cryptography: boolean = false,
+    tokenField: string = 'token',
+    publicKey: string = ''
+  ): Object {
+    if (!cryptography) {
+      return currentBody
+    }
+    return {
+      [tokenField]: CreatePublicEncryptedToken(publicKey, currentBody)
+    }
+  }
+
   public static async GetHttpResponse (
     agent: SuperAgentTest,
     url: string,
@@ -29,139 +50,196 @@ export class RouteHelpers {
     }
   }
 
-  public static async BodyRequiredValueValidation (
-    agent: SuperAgentTest,
-    url: string,
-    method: HttpMethod,
-    field: string,
-    body: Object
-  ): Promise<void> {
+  public static async BodyRequiredValueValidation ({
+    agent,
+    url,
+    method,
+    field,
+    body,
+    cryptography,
+    tokenField,
+    publicKey
+  }: CommonRouteHelperDTO): Promise<void> {
     const bodyWithoutValue = {}
     Object.keys(body)
       .filter(key => key !== field)
       .forEach(key => {
         bodyWithoutValue[key] = body[key]
       })
-    const response: HttpResponse = await RouteHelpers.GetHttpResponse(agent, url, method, bodyWithoutValue)
+    const response: HttpResponse = await RouteHelpers.GetHttpResponse(agent, url, method, RouteHelpers.GetBody(bodyWithoutValue, cryptography, tokenField, publicKey))
     expect(response.statusCode).toEqual(HttpStatusCode.unprocessableEntity)
-    expect(response.body).toEqual({
-      error: [
-        { path: field, message: `"${field}" is required` }
-      ]
-    })
+    const validations = response.body.error as RequestValidatorModel[]
+    expect(validations).toContainEqual(
+      { path: field, message: `"${field}" is required` }
+    )
   }
 
-  public static async BodySmallerStringValidation (
-    agent: SuperAgentTest,
-    url: string,
-    method: HttpMethod,
-    field: string,
-    minLength: number,
-    body: Object
-  ): Promise<void> {
+  public static async BodySmallerStringValidation ({
+    agent,
+    url,
+    method,
+    field,
+    minLength,
+    body,
+    cryptography,
+    tokenField,
+    publicKey
+  }: SmallerValidationRouteHelperDTO): Promise<void> {
     body[field] = random.alphaNumeric(datatype.number({ min: 1, max: minLength - 1 }))
-    const response: HttpResponse = await RouteHelpers.GetHttpResponse(agent, url, method, body)
+    const response: HttpResponse = await RouteHelpers.GetHttpResponse(agent, url, method, RouteHelpers.GetBody(body, cryptography, tokenField, publicKey))
     expect(response.statusCode).toEqual(HttpStatusCode.unprocessableEntity)
-    expect(response.body).toEqual({
-      error: [
-        { path: field, message: `"${field}" length must be at least ${minLength} characters long` }
-      ]
-    })
+    const validations = response.body.error as RequestValidatorModel[]
+    expect(validations).toContainEqual(
+      { path: field, message: `"${field}" length must be at least ${minLength} characters long` }
+    )
   }
 
-  public static async BodyBiggerStringValidation (
-    agent: SuperAgentTest,
-    url: string,
-    method: HttpMethod,
-    field: string,
-    maxLength: number,
-    body: Object
-  ): Promise<void> {
+  public static async BodyBiggerStringValidation ({
+    agent,
+    url,
+    method,
+    field,
+    maxLength,
+    body,
+    cryptography,
+    tokenField,
+    publicKey
+  }: BiggerValidationRouteHelperDTO): Promise<void> {
     body[field] = random.alphaNumeric(datatype.number({ min: maxLength + 1, max: maxLength + 100 }))
-    const response: HttpResponse = await RouteHelpers.GetHttpResponse(agent, url, method, body)
+    const response: HttpResponse = await RouteHelpers.GetHttpResponse(agent, url, method, RouteHelpers.GetBody(body, cryptography, tokenField, publicKey))
     expect(response.statusCode).toEqual(HttpStatusCode.unprocessableEntity)
-    expect(response.body).toEqual({
-      error: [
-        { path: field, message: `"${field}" length must be less than or equal to ${maxLength} characters long` }
-      ]
-    })
+    const validations = response.body.error as RequestValidatorModel[]
+    expect(validations).toContainEqual(
+      { path: field, message: `"${field}" length must be less than or equal to ${maxLength} characters long` }
+    )
   }
 
-  public static async BodyUuidValidation (
-    agent: SuperAgentTest,
-    url: string,
-    method: HttpMethod,
-    field: string,
-    body: Object
-  ): Promise<void> {
+  public static async BodyEmailValidation ({
+    agent,
+    url,
+    method,
+    field,
+    body,
+    cryptography,
+    tokenField,
+    publicKey
+  }: CommonRouteHelperDTO): Promise<void> {
     body[field] = datatype.number().toString()
-    const response: HttpResponse = await RouteHelpers.GetHttpResponse(agent, url, method, body)
+    const response: HttpResponse = await RouteHelpers.GetHttpResponse(agent, url, method, RouteHelpers.GetBody(body, cryptography, tokenField, publicKey))
     expect(response.statusCode).toEqual(HttpStatusCode.unprocessableEntity)
-    expect(response.body).toEqual({
-      error: [
-        { path: field, message: `"${field}" must be a valid GUID` }
-      ]
-    })
+    const validations = response.body.error as RequestValidatorModel[]
+    expect(validations).toContainEqual(
+      { path: field, message: `"${field}" must be a valid email` }
+    )
   }
 
-  public static async BodyBooleanValidation (
-    agent: SuperAgentTest,
-    url: string,
-    method: HttpMethod,
-    field: string,
-    body: Object
-  ): Promise<void> {
+  public static async BodyUuidValidation ({
+    agent,
+    url,
+    method,
+    field,
+    body,
+    cryptography,
+    tokenField,
+    publicKey
+  }: CommonRouteHelperDTO): Promise<void> {
+    body[field] = datatype.number().toString()
+    const response: HttpResponse = await RouteHelpers.GetHttpResponse(agent, url, method, RouteHelpers.GetBody(body, cryptography, tokenField, publicKey))
+    expect(response.statusCode).toEqual(HttpStatusCode.unprocessableEntity)
+    const validations = response.body.error as RequestValidatorModel[]
+    expect(validations).toContainEqual(
+      { path: field, message: `"${field}" must be a valid GUID` }
+    )
+  }
+
+  public static async BodyBooleanValidation ({
+    agent,
+    url,
+    method,
+    field,
+    body,
+    cryptography,
+    tokenField,
+    publicKey
+  }: CommonRouteHelperDTO): Promise<void> {
     body[field] = datatype.uuid()
-    const response: HttpResponse = await RouteHelpers.GetHttpResponse(agent, url, method, body)
+    const response: HttpResponse = await RouteHelpers.GetHttpResponse(agent, url, method, RouteHelpers.GetBody(body, cryptography, tokenField, publicKey))
     expect(response.statusCode).toEqual(HttpStatusCode.unprocessableEntity)
-    expect(response.body).toEqual({
-      error: [
-        { path: field, message: `"${field}" must be a boolean` }
-      ]
-    })
+    const validations = response.body.error as RequestValidatorModel[]
+    expect(validations).toContainEqual(
+      { path: field, message: `"${field}" must be a boolean` }
+    )
   }
 
-  public static async BodyArrayValidation (
-    agent: SuperAgentTest,
-    url: string,
-    method: HttpMethod,
-    field: string,
-    body: Object
-  ): Promise<void> {
+  public static async BodyPasswordConfirmationValidation ({
+    agent,
+    url,
+    method,
+    field,
+    sameTo,
+    body,
+    cryptography,
+    tokenField,
+    publicKey
+  }: PasswordConfirmationValidationRouteHelperDTO): Promise<void> {
+    body[field] = internet.password()
+    body[sameTo] = internet.password()
+    const response: HttpResponse = await RouteHelpers.GetHttpResponse(agent, url, method, RouteHelpers.GetBody(body, cryptography, tokenField, publicKey))
+    expect(response.statusCode).toEqual(HttpStatusCode.unprocessableEntity)
+    const validations = response.body.error as RequestValidatorModel[]
+    expect(validations).toContainEqual(
+      { path: field, message: `"${field}" must be [ref:${sameTo}]` }
+    )
+  }
+
+  public static async BodyArrayValidation ({
+    agent,
+    url,
+    method,
+    field,
+    body,
+    cryptography,
+    tokenField,
+    publicKey
+  }: CommonRouteHelperDTO): Promise<void> {
     body[field] = datatype.uuid()
-    const response: HttpResponse = await RouteHelpers.GetHttpResponse(agent, url, method, body)
+    const response: HttpResponse = await RouteHelpers.GetHttpResponse(agent, url, method, RouteHelpers.GetBody(body, cryptography, tokenField, publicKey))
     expect(response.statusCode).toEqual(HttpStatusCode.unprocessableEntity)
-    expect(response.body).toEqual({
-      error: [
-        { path: field, message: `"${field}" must be an array` }
-      ]
-    })
+    const validations = response.body.error as RequestValidatorModel[]
+    expect(validations).toContainEqual(
+      { path: field, message: `"${field}" must be an array` }
+    )
   }
 
-  public static async BodyArrayRequiredValidation (
-    agent: SuperAgentTest,
-    url: string,
-    method: HttpMethod,
-    field: string,
-    body: Object
-  ): Promise<void> {
+  public static async BodyArrayRequiredValidation ({
+    agent,
+    url,
+    method,
+    field,
+    body,
+    cryptography,
+    tokenField,
+    publicKey
+  }: CommonRouteHelperDTO): Promise<void> {
     body[field] = []
-    const response: HttpResponse = await RouteHelpers.GetHttpResponse(agent, url, method, body)
+    const response: HttpResponse = await RouteHelpers.GetHttpResponse(agent, url, method, RouteHelpers.GetBody(body, cryptography, tokenField, publicKey))
     expect(response.statusCode).toEqual(HttpStatusCode.unprocessableEntity)
-    expect(response.body).toEqual({
-      error: [
-        { path: field, message: `"${field}" does not contain 1 required value(s)` }
-      ]
-    })
+    const validations = response.body.error as RequestValidatorModel[]
+    expect(validations).toContainEqual(
+      { path: field, message: `"${field}" does not contain 1 required value(s)` }
+    )
   }
 
-  public static async BodyArrayUuidValidation (
-    agent: SuperAgentTest,
-    url: string,
-    method: HttpMethod,
-    field: string,
-    body: Object
-  ): Promise<void> {
+  public static async BodyArrayUuidValidation ({
+    agent,
+    url,
+    method,
+    field,
+    body,
+    cryptography,
+    tokenField,
+    publicKey
+  }: CommonRouteHelperDTO): Promise<void> {
     body[field] = [
       datatype.number().toString(),
       datatype.number().toString(),
@@ -170,7 +248,7 @@ export class RouteHelpers {
       datatype.number().toString(),
       datatype.number().toString()
     ]
-    const response: HttpResponse = await RouteHelpers.GetHttpResponse(agent, url, method, body)
+    const response: HttpResponse = await RouteHelpers.GetHttpResponse(agent, url, method, RouteHelpers.GetBody(body, cryptography, tokenField, publicKey))
     expect(response.statusCode).toEqual(HttpStatusCode.unprocessableEntity)
     const validations = response.body.error as RequestValidatorModel[]
     validations.forEach((error, index) => {

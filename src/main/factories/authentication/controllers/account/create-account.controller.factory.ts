@@ -1,5 +1,5 @@
 import { AccountModel, CreateAccountDTO } from '@/domain/authentication'
-import { CreateEntityController } from '@/presentation/common/controllers'
+import { CreateEntityController } from '@/presentation/common'
 import { CreateAccountUseCaseProps, makeCreateAccountUseCase } from '@/main/factories/authentication/use-cases'
 
 export type CreateAccountControllerProps = CreateAccountUseCaseProps
