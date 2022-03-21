@@ -148,7 +148,6 @@ UpdateEntityRepository<EntityType> {
   }
 
   throwCorrectError (error: RepositoryError): void {
-    console.log(error)
     switch (error.code) {
       case RepositoryErrorType.NotNull:
         throw new MissingParamError(error.column)

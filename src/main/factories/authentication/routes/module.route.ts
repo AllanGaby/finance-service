@@ -6,21 +6,21 @@ import {
   ModuleEntity,
   ModuleRepositorySettings
 } from '@/infrastructure/authentication'
-import { CRUDEntityRouteProps, makeCrudEntityRoute } from '@/main/factories/common/routes'
+import { DefaultCRUDEntityRoutesProps, makeDefaultCRUDEntityRoutes } from '@/main/factories/common/routes'
 
-export type ModuleRouteProps = CRUDEntityRouteProps
+export type ModuleRouteProps = DefaultCRUDEntityRoutesProps
 
 export const makeModuleRoute = (props: ModuleRouteProps): Router =>
   Router()
     .use('/module',
-      makeCrudEntityRoute<ModuleModel>({
+      makeDefaultCRUDEntityRoutes<ModuleModel>({
         ...props,
         validRepositoryColumns: Object.values(RepositoryModuleFilter),
         validRequestColumns: Object.values(RequestModuleFilter),
         repositorySettings: ModuleRepositorySettings
       }, {
         entityClass: ModuleEntity,
-        paramId: 'module_id',
+        paramIdName: 'module_id',
         entityName: 'Module'
       })
     )

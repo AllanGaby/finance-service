@@ -6,19 +6,19 @@ import {
   ModuleAccessRuleEntity,
   ModuleAccessRuleRepositorySettings
 } from '@/infrastructure/authentication'
-import { CRUDEntityRouteProps, makeCrudEntityRoute } from '@/main/factories/common/routes'
+import { DefaultCRUDEntityRoutesProps, makeDefaultCRUDEntityRoutes } from '@/main/factories/common/routes'
 
-export type ModuleAccessRuleRouteProps = CRUDEntityRouteProps
+export type ModuleAccessRuleRouteProps = DefaultCRUDEntityRoutesProps
 
 export const makeModuleAccessRuleRoute = (props: ModuleAccessRuleRouteProps): Router =>
   Router()
     .use('/module-access-rule',
-      makeCrudEntityRoute<ModuleAccessRuleModel>({
+      makeDefaultCRUDEntityRoutes<ModuleAccessRuleModel>({
         ...props,
         repositorySettings: ModuleAccessRuleRepositorySettings
       }, {
         entityClass: ModuleAccessRuleEntity,
-        paramId: 'module_access_rule_id',
+        paramIdName: 'module_access_rule_id',
         entityName: 'ModuleAccessRule'
       })
     )

@@ -4,12 +4,8 @@ import {
 } from '@/domain/authentication'
 import { CreateAccountRouteProps, makeCreateAccountRoute } from './create-account.route'
 import {
-  DeleteEntityByIdRouteProps,
-  GetEntityByIdRouteProps,
-  ListEntitiesRouteProps,
-  makeDeleteEntityByIdRoute,
-  makeGetEntityByIdRoute,
-  makeListEntitiesRoute
+  DefaultDeleteGetListEntityRoutesProps,
+  makeDefaultDeleteGetListEntityRoutes
 } from '@/main/factories/common/routes'
 import {
   makeCreateAccountFieldsValidations
@@ -19,9 +15,7 @@ import { Router } from 'express'
 
 export type AccountRouteProps =
 CreateAccountRouteProps &
-DeleteEntityByIdRouteProps &
-GetEntityByIdRouteProps &
-ListEntitiesRouteProps
+DefaultDeleteGetListEntityRoutesProps
 
 export const makeAccountRoute = (
   props: AccountRouteProps
@@ -31,7 +25,9 @@ export const makeAccountRoute = (
   props.repositorySettings = AccountRepositorySettings
   return Router()
     .use('/', makeCreateAccountRoute(props, makeCreateAccountFieldsValidations()))
-    .use('/', makeDeleteEntityByIdRoute(props, AccountEntity, 'account_id'))
-    .use('/', makeGetEntityByIdRoute(props, AccountEntity, 'account_id', 'Account'))
-    .use('/', makeListEntitiesRoute(props, AccountEntity))
+    .use(makeDefaultDeleteGetListEntityRoutes(props, {
+      entityClass: AccountEntity,
+      entityName: 'Account',
+      paramIdName: 'account_id'
+    }))
 }

@@ -6,19 +6,19 @@ import { Router } from 'express'
 import { EntityTarget } from 'typeorm'
 
 export type GetEntityByIdRouteProps =
-Omit<Omit<GetEntityByIdControllerProps, 'paramName'>, 'entityName'>
+Omit<Omit<GetEntityByIdControllerProps, 'paramIdName'>, 'entityName'>
 
 export const makeGetEntityByIdRoute = <EntityType extends EntityModel>(
   props: GetEntityByIdRouteProps,
   entityClass: EntityTarget<EntityType>,
-  paramName: string,
+  paramIdName: string,
   entityName: string
 ): Router =>
     Router()
-      .get(`/:${paramName}`,
-        ExpressMiddlewareAdapter(makeCommonIdFieldValidationMiddleware(paramName)),
+      .get(`/:${paramIdName}`,
+        ExpressMiddlewareAdapter(makeCommonIdFieldValidationMiddleware(paramIdName)),
         ExpressControllerAdapter(makeGetEntityByIdController<EntityType>({
           ...props,
-          paramName,
+          paramIdName,
           entityName
         }, entityClass)))

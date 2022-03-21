@@ -4,7 +4,7 @@ import { GetEntityByIdUseCaseProps, makeGetEntityByIdUseCase } from '@/main/fact
 import { EntityTarget } from 'typeorm'
 
 export type GetEntityByIdControllerProps = GetEntityByIdUseCaseProps & {
-  paramName: string
+  paramIdName: string
 }
 
 export const makeGetEntityByIdController = <EntityType extends EntityModel>(
@@ -13,5 +13,5 @@ export const makeGetEntityByIdController = <EntityType extends EntityModel>(
 ): GetEntityByIdController<EntityType> =>
     new GetEntityByIdController(
       makeGetEntityByIdUseCase<EntityType>(props, entityClass),
-      props.paramName
+      props.paramIdName
     )

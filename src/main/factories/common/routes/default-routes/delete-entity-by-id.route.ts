@@ -6,17 +6,17 @@ import { Router } from 'express'
 import { EntityTarget } from 'typeorm'
 
 export type DeleteEntityByIdRouteProps =
-Omit<DeleteEntityByIdControllerProps, 'paramName'>
+Omit<DeleteEntityByIdControllerProps, 'paramIdName'>
 
 export const makeDeleteEntityByIdRoute = <EntityType extends EntityModel>(
   props: DeleteEntityByIdRouteProps,
   entityClass: EntityTarget<EntityType>,
-  paramName: string
+  paramIdName: string
 ): Router =>
     Router()
-      .delete(`/:${paramName}`,
-        ExpressMiddlewareAdapter(makeCommonIdFieldValidationMiddleware(paramName)),
+      .delete(`/:${paramIdName}`,
+        ExpressMiddlewareAdapter(makeCommonIdFieldValidationMiddleware(paramIdName)),
         ExpressControllerAdapter(makeDeleteEntityByIdController<EntityType>({
           ...props,
-          paramName
+          paramIdName
         }, entityClass)))
