@@ -4,6 +4,7 @@ import { CreatePublicEncryptedToken } from '@/protocols/rsa'
 import {
   BiggerValidationRouteHelperDTO,
   CommonRouteHelperDTO,
+  InvalidTypeValidationRouteHelperDTO,
   PasswordConfirmationValidationRouteHelperDTO,
   SmallerValidationRouteHelperDTO
 } from '@/main/factories/common/helpers'
@@ -119,80 +120,57 @@ export class RouteHelpers {
     )
   }
 
-  public static async BodyEmailValidation ({
+  public static async BodyInvalidTypeValidation ({
     agent,
     url,
     method,
     field,
     body,
+    invalidValue,
+    type,
     cryptography,
     tokenField,
     publicKey
-  }: CommonRouteHelperDTO): Promise<void> {
-    body[field] = datatype.number().toString()
+  }: InvalidTypeValidationRouteHelperDTO): Promise<void> {
+    body[field] = invalidValue
     const response: HttpResponse = await RouteHelpers.GetHttpResponse(agent, url, method, RouteHelpers.GetBody(body, cryptography, tokenField, publicKey))
     expect(response.statusCode).toEqual(HttpStatusCode.unprocessableEntity)
     const validations = response.body.error as RequestValidatorModel[]
     expect(validations).toContainEqual(
-      { path: field, message: `"${field}" must be a valid email` }
+      { path: field, message: `"${field}" must be a ${type}` }
     )
   }
 
-  public static async BodyUuidValidation ({
-    agent,
-    url,
-    method,
-    field,
-    body,
-    cryptography,
-    tokenField,
-    publicKey
-  }: CommonRouteHelperDTO): Promise<void> {
-    body[field] = datatype.number().toString()
-    const response: HttpResponse = await RouteHelpers.GetHttpResponse(agent, url, method, RouteHelpers.GetBody(body, cryptography, tokenField, publicKey))
-    expect(response.statusCode).toEqual(HttpStatusCode.unprocessableEntity)
-    const validations = response.body.error as RequestValidatorModel[]
-    expect(validations).toContainEqual(
-      { path: field, message: `"${field}" must be a valid GUID` }
-    )
+  public static async BodyEmailValidation (props: CommonRouteHelperDTO): Promise<void> {
+    await RouteHelpers.BodyInvalidTypeValidation({
+      ...props,
+      invalidValue: datatype.number().toString(),
+      type: 'valid email'
+    })
   }
 
-  public static async BodyBooleanValidation ({
-    agent,
-    url,
-    method,
-    field,
-    body,
-    cryptography,
-    tokenField,
-    publicKey
-  }: CommonRouteHelperDTO): Promise<void> {
-    body[field] = datatype.uuid()
-    const response: HttpResponse = await RouteHelpers.GetHttpResponse(agent, url, method, RouteHelpers.GetBody(body, cryptography, tokenField, publicKey))
-    expect(response.statusCode).toEqual(HttpStatusCode.unprocessableEntity)
-    const validations = response.body.error as RequestValidatorModel[]
-    expect(validations).toContainEqual(
-      { path: field, message: `"${field}" must be a boolean` }
-    )
+  public static async BodyUuidValidation (props: CommonRouteHelperDTO): Promise<void> {
+    await RouteHelpers.BodyInvalidTypeValidation({
+      ...props,
+      invalidValue: datatype.number().toString(),
+      type: 'valid GUID'
+    })
   }
 
-  public static async BodyStringValidation ({
-    agent,
-    url,
-    method,
-    field,
-    body,
-    cryptography,
-    tokenField,
-    publicKey
-  }: CommonRouteHelperDTO): Promise<void> {
-    body[field] = datatype.number()
-    const response: HttpResponse = await RouteHelpers.GetHttpResponse(agent, url, method, RouteHelpers.GetBody(body, cryptography, tokenField, publicKey))
-    expect(response.statusCode).toEqual(HttpStatusCode.unprocessableEntity)
-    const validations = response.body.error as RequestValidatorModel[]
-    expect(validations).toContainEqual(
-      { path: field, message: `"${field}" must be a string` }
-    )
+  public static async BodyBooleanValidation (props: CommonRouteHelperDTO): Promise<void> {
+    await RouteHelpers.BodyInvalidTypeValidation({
+      ...props,
+      invalidValue: datatype.number().toString(),
+      type: 'boolean'
+    })
+  }
+
+  public static async BodyStringValidation (props: CommonRouteHelperDTO): Promise<void> {
+    await RouteHelpers.BodyInvalidTypeValidation({
+      ...props,
+      invalidValue: datatype.number(),
+      type: 'string'
+    })
   }
 
   public static async BodyPasswordConfirmationValidation ({

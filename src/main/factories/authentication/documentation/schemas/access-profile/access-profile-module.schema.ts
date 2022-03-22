@@ -1,26 +1,27 @@
 import { DocumentationSchemaModel, DocumentationDataType, DocumentationStringFormat } from '@/protocols/documentation'
 
-export const ModuleAccessRuleSchema: DocumentationSchemaModel = {
+export const AccessProfileSchema: DocumentationSchemaModel = {
   type: DocumentationDataType.Object,
-  description: 'Regra de acesso',
+  description: 'Perfil de acesso',
   properties: {
     id: {
       type: DocumentationDataType.String,
       format: DocumentationStringFormat.Uuid,
-      description: 'Identificador único da regra de acesso(Gerado automaticamente)'
+      description: 'Identificador único do perfil de acesso(Gerado automaticamente)'
     },
-    title: {
+    name: {
       type: DocumentationDataType.String,
-      description: 'Título amigável da regra de acesso',
+      description: 'Nome do perfil de acesso',
       required: true
     },
-    description: {
-      type: DocumentationDataType.String,
-      description: 'Descrição detalhada da regra de acesso'
+    enabled: {
+      type: DocumentationDataType.Boolean,
+      description: 'Flag identificando se o módulo esta habilitado ou não',
+      required: true
     },
-    rule_key: {
+    access_profile_key: {
       type: DocumentationDataType.String,
-      description: 'Identificador único da regra de acesso(Controlado pelo usuário)',
+      description: 'Identificador único do perfil de acesso(Controlado pelo usuário)',
       required: true
     },
     module_id: {
@@ -32,15 +33,21 @@ export const ModuleAccessRuleSchema: DocumentationSchemaModel = {
     module: {
       $ref: '#/schemas/authentication/module'
     },
+    module_access_rules: {
+      type: DocumentationDataType.Array,
+      items: {
+        $ref: '#/schemas/authentication/moduleAccessRule'
+      }
+    },
     created_at: {
       type: DocumentationDataType.String,
       format: DocumentationStringFormat.DateTime,
-      description: 'Data de cadastro da regra de acesso'
+      description: 'Data de cadastro do perfil de acesso'
     },
     updated_at: {
       type: DocumentationDataType.String,
       format: DocumentationStringFormat.DateTime,
-      description: 'Data de última atualização da regra de acesso'
+      description: 'Data de última atualização do perfil de acesso'
     }
   }
 }

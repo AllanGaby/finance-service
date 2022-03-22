@@ -1,4 +1,4 @@
-import { DocumentationPathModel, DocumentationHttpStatusCode, DocumentationContentType, DocumentationParamType, DocumentationDataType } from '@/protocols/documentation'
+import { DocumentationPathModel, DocumentationHttpStatusCode, DocumentationContentType, DocumentationParamType, DocumentationDataType, DocumentationStringFormat } from '@/protocols/documentation'
 
 export const DeleteOrGetOrUpdateModuleAccessRulePath: DocumentationPathModel = {
   put: {
@@ -8,7 +8,8 @@ export const DeleteOrGetOrUpdateModuleAccessRulePath: DocumentationPathModel = {
       in: DocumentationParamType.Path,
       name: 'module_access_rule_id',
       required: true,
-      type: DocumentationDataType.String
+      type: DocumentationDataType.String,
+      format: DocumentationStringFormat.Uuid
     }],
     requestBody: {
       description: 'Dados da regra de acesso',
@@ -49,7 +50,8 @@ export const DeleteOrGetOrUpdateModuleAccessRulePath: DocumentationPathModel = {
       in: DocumentationParamType.Path,
       name: 'module_access_rule_id',
       required: true,
-      type: DocumentationDataType.String
+      type: DocumentationDataType.String,
+      format: DocumentationStringFormat.Uuid
     }],
     responses: {
       [DocumentationHttpStatusCode.NoContent]: {
@@ -73,7 +75,8 @@ export const DeleteOrGetOrUpdateModuleAccessRulePath: DocumentationPathModel = {
       in: DocumentationParamType.Path,
       name: 'module_access_rule_id',
       required: true,
-      type: DocumentationDataType.String
+      type: DocumentationDataType.String,
+      format: DocumentationStringFormat.Uuid
     }],
     responses: {
       [DocumentationHttpStatusCode.Ok]: {

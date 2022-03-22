@@ -1,33 +1,33 @@
 import { DocumentationPathModel, DocumentationHttpStatusCode, DocumentationContentType, DocumentationParamType, DocumentationDataType, DocumentationStringFormat } from '@/protocols/documentation'
 
-export const DeleteOrGetOrUpdateModulePath: DocumentationPathModel = {
+export const DeleteOrGetOrUpdateAccessProfilePath: DocumentationPathModel = {
   put: {
-    tags: ['Módulo/Aplicação'],
-    summary: 'Atualiza o cadastro de um módulo/aplicação pelo identificador único',
+    tags: ['Perfil de acesso'],
+    summary: 'Atualiza o cadastro de um perfil de acesso pelo identificador único',
     parameters: [{
       in: DocumentationParamType.Path,
-      name: 'module_id',
+      name: 'access_profile_id',
       required: true,
       type: DocumentationDataType.String,
       format: DocumentationStringFormat.Uuid
     }],
     requestBody: {
-      description: 'Dados do módulo/aplicação',
+      description: 'Dados do perfil de acesso',
       content: {
         [DocumentationContentType.Json]: {
           schema: {
-            $ref: '#/schemas/authentication/createOrUpdateModule'
+            $ref: '#/schemas/authentication/createOrUpdateAccessProfile'
           }
         }
       }
     },
     responses: {
       [DocumentationHttpStatusCode.Ok]: {
-        description: 'Dados do módulo/aplicação',
+        description: 'Dados do perfil de acesso',
         content: {
           [DocumentationContentType.Json]: {
             schema: {
-              $ref: '#/schemas/authentication/module'
+              $ref: '#/schemas/authentication/accessProfile'
             }
           }
         }
@@ -44,11 +44,11 @@ export const DeleteOrGetOrUpdateModulePath: DocumentationPathModel = {
     }
   },
   delete: {
-    tags: ['Módulo/Aplicação'],
-    summary: 'Exclui o cadastro de um módulo/aplicação pelo identificador único',
+    tags: ['Perfil de acesso'],
+    summary: 'Exclui o cadastro de um perfil de acesso pelo identificador único',
     parameters: [{
       in: DocumentationParamType.Path,
-      name: 'module_id',
+      name: 'access_profile_id',
       required: true,
       type: DocumentationDataType.String,
       format: DocumentationStringFormat.Uuid
@@ -69,22 +69,22 @@ export const DeleteOrGetOrUpdateModulePath: DocumentationPathModel = {
     }
   },
   get: {
-    tags: ['Módulo/Aplicação'],
-    summary: 'Busca um módulo/aplicação pelo identificador único',
+    tags: ['Perfil de acesso'],
+    summary: 'Busca um perfil de acesso pelo identificador único',
     parameters: [{
       in: DocumentationParamType.Path,
-      name: 'module_id',
+      name: 'access_profile_id',
       required: true,
       type: DocumentationDataType.String,
       format: DocumentationStringFormat.Uuid
     }],
     responses: {
       [DocumentationHttpStatusCode.Ok]: {
-        description: 'Dados do módulo/aplicação',
+        description: 'Dados do perfil de acesso',
         content: {
           [DocumentationContentType.Json]: {
             schema: {
-              $ref: '#/schemas/authentication/module'
+              $ref: '#/schemas/authentication/accessProfile'
             }
           }
         }

@@ -6,6 +6,7 @@ export const ModuleSchema: DocumentationSchemaModel = {
   properties: {
     id: {
       type: DocumentationDataType.String,
+      format: DocumentationStringFormat.Uuid,
       description: 'Identificador único do módulo(Gerado automaticamente)'
     },
     name: {
@@ -19,6 +20,10 @@ export const ModuleSchema: DocumentationSchemaModel = {
     module_key: {
       type: DocumentationDataType.String,
       description: 'Identificador único do módulo(Controlado pelo usuário)'
+    },
+    enabled: {
+      type: DocumentationDataType.Boolean,
+      description: 'Flag identificando se o módulo esta habilitado ou não'
     },
     access_rules: {
       type: DocumentationDataType.Array,
