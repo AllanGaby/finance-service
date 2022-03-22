@@ -2,7 +2,7 @@ import { DocumentationSchemaModel, DocumentationDataType } from '@/protocols/doc
 
 export const CreateOrUpdateModuleSchema: DocumentationSchemaModel = {
   type: DocumentationDataType.Object,
-  description: 'Dados para o cadastro de um Módulo/Aplicação',
+  description: 'Dados para o cadastro/alteração de um Módulo/Aplicação',
   properties: {
     name: {
       type: DocumentationDataType.String,

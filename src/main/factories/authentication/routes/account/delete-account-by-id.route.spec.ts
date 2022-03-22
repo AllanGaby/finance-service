@@ -3,8 +3,6 @@ import {
   AccountModel,
   mockAccountModel
 } from '@/domain/authentication'
-import { InvalidForeignKeyError, ViolateUniqueKeyError } from '@/data/common/errors'
-import { CommonMemoryRepository } from '@/infrastructure/repositories'
 import { HttpStatusCode } from '@/protocols/http'
 import { datatype } from 'faker'
 import http from 'http'
@@ -44,22 +42,6 @@ describe('DELETE /authentication/account/:account_id - Delete a Account By Id', 
       await agent
         .delete(url)
         .expect(HttpStatusCode.notFound)
-    })
-  })
-
-  describe('Conflict status code(409)', () => {
-    test('Should return Conflict status code(409) if AccountRepository return ViolateUniqueKeyError', async () => {
-      jest.spyOn(CommonMemoryRepository.getRepository(), 'deleteById').mockRejectedValueOnce(new ViolateUniqueKeyError(datatype.uuid()))
-      await agent
-        .delete(`${url}/${currentAccount.id}`)
-        .expect(HttpStatusCode.conflict)
-    })
-
-    test('Should return Conflict status code(409) if AccountRepository return InvalidForeignKeyError', async () => {
-      jest.spyOn(CommonMemoryRepository.getRepository(), 'deleteById').mockRejectedValueOnce(new InvalidForeignKeyError(datatype.uuid()))
-      await agent
-        .delete(`${url}/${currentAccount.id}`)
-        .expect(HttpStatusCode.conflict)
     })
   })
 

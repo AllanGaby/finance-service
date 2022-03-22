@@ -7,6 +7,7 @@ import {
   ModuleRepositorySettings
 } from '@/infrastructure/authentication'
 import { DefaultCRUDEntityRoutesProps, makeDefaultCRUDEntityRoutes } from '@/main/factories/common/routes'
+import { makeCreateModuleFieldsValidations, makeUpdateModuleFieldsValidations } from '@/main/factories/authentication/fields-validations'
 
 export type ModuleRouteProps = DefaultCRUDEntityRoutesProps
 
@@ -21,6 +22,8 @@ export const makeModuleRoute = (props: ModuleRouteProps): Router =>
       }, {
         entityClass: ModuleEntity,
         paramIdName: 'module_id',
-        entityName: 'Module'
+        entityName: 'Module',
+        createFieldsValidation: makeCreateModuleFieldsValidations(),
+        updateFieldsValidation: makeUpdateModuleFieldsValidations()
       })
     )

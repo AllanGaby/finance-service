@@ -36,30 +36,25 @@ export const ExpressControllerAdapter = <RequestBody = any, ResponseBody = any>(
         .json(httpResponse.body)
       return response
     } catch (error) {
-      if (error instanceof CorruptedAccountError) {
-        return SetErrorResponse(HttpStatusCode.forbidden, error)
+      switch (error.constructor) {
+        case CorruptedAccountError:
+          return SetErrorResponse(HttpStatusCode.forbidden, error)
+        case InvalidCredentialsError:
+          return SetErrorResponse(HttpStatusCode.forbidden, error)
+        case EntityIsNotFoundError:
+          return SetErrorResponse(HttpStatusCode.notFound, error)
+        case MissingParamError:
+          return SetErrorResponse(HttpStatusCode.unprocessableEntity, error)
+        case ConditionalMissingParamError:
+          return SetErrorResponse(HttpStatusCode.unprocessableEntity, error)
+        case EntityAlreadyExistsError:
+          return SetErrorResponse(HttpStatusCode.conflict, error)
+        case InvalidForeignKeyError:
+          return SetErrorResponse(HttpStatusCode.conflict, error)
+        case ViolateUniqueKeyError:
+          return SetErrorResponse(HttpStatusCode.conflict, error)
+        default:
+          return SetErrorResponse(HttpStatusCode.serverError, error)
       }
-      if (error instanceof InvalidCredentialsError) {
-        return SetErrorResponse(HttpStatusCode.forbidden, error)
-      }
-      if (error instanceof EntityIsNotFoundError) {
-        return SetErrorResponse(HttpStatusCode.notFound, error)
-      }
-      if (error instanceof MissingParamError) {
-        return SetErrorResponse(HttpStatusCode.unprocessableEntity, error)
-      }
-      if (error instanceof ConditionalMissingParamError) {
-        return SetErrorResponse(HttpStatusCode.unprocessableEntity, error)
-      }
-      if (error instanceof EntityAlreadyExistsError) {
-        return SetErrorResponse(HttpStatusCode.conflict, error)
-      }
-      if (error instanceof InvalidForeignKeyError) {
-        return SetErrorResponse(HttpStatusCode.conflict, error)
-      }
-      if (error instanceof ViolateUniqueKeyError) {
-        return SetErrorResponse(HttpStatusCode.conflict, error)
-      }
-      return SetErrorResponse(HttpStatusCode.serverError, error)
     }
   }

@@ -8,7 +8,6 @@ import {
 import { HttpMethod, HttpStatusCode } from '@/protocols/http'
 import { CommonMemoryRepository } from '@/infrastructure/repositories'
 import { RouteHelpers } from '@/main/factories/common/helpers'
-import { datatype } from 'faker'
 import http from 'http'
 import supertest, { SuperAgentTest } from 'supertest'
 
@@ -60,15 +59,7 @@ describe('PUT /authentication/access-profile/:access-profile_id - Update a Acces
   describe('Unprocessable entity status code (422)', () => {
     describe('AccessProfileId validations', () => {
       test('Should return Unprocessable entity status code (422) if access_profile_id is not a uuid', async () => {
-        const response = await agent
-          .put(`${url}/${datatype.number()}`)
-          .send(updateAccessProfileDTO)
-          .expect(HttpStatusCode.unprocessableEntity)
-        expect(response.body).toEqual({
-          error: [
-            { path: 'access_profile_id', message: '"access_profile_id" must be a valid GUID' }
-          ]
-        })
+        await RouteHelpers.URLParamUuidValidation({ agent, url, method: HttpMethod.put, field: 'access_profile_id' })
       })
     })
 

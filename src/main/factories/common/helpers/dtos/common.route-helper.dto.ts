@@ -6,7 +6,7 @@ export type CommonRouteHelperDTO = {
   url: string
   method: HttpMethod
   field: string
-  body: Object
+  body?: Object
   cryptography?: boolean
   tokenField?: string
   publicKey?: string

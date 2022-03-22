@@ -29,9 +29,14 @@ export class RouteHelpers {
     agent: SuperAgentTest,
     url: string,
     method: HttpMethod,
-    body: Object
+    body?: Object
   ): Promise<HttpResponse> {
     switch (method) {
+      case HttpMethod.delete: {
+        return agent
+          .delete(url)
+          .send(body)
+      }
       case HttpMethod.patch: {
         return agent
           .patch(url)
@@ -171,6 +176,25 @@ export class RouteHelpers {
     )
   }
 
+  public static async BodyStringValidation ({
+    agent,
+    url,
+    method,
+    field,
+    body,
+    cryptography,
+    tokenField,
+    publicKey
+  }: CommonRouteHelperDTO): Promise<void> {
+    body[field] = datatype.number()
+    const response: HttpResponse = await RouteHelpers.GetHttpResponse(agent, url, method, RouteHelpers.GetBody(body, cryptography, tokenField, publicKey))
+    expect(response.statusCode).toEqual(HttpStatusCode.unprocessableEntity)
+    const validations = response.body.error as RequestValidatorModel[]
+    expect(validations).toContainEqual(
+      { path: field, message: `"${field}" must be a string` }
+    )
+  }
+
   public static async BodyPasswordConfirmationValidation ({
     agent,
     url,
@@ -264,5 +288,23 @@ export class RouteHelpers {
         })
       }
     })
+  }
+
+  public static async URLParamUuidValidation ({
+    agent,
+    url,
+    method,
+    field,
+    cryptography,
+    tokenField,
+    publicKey
+  }: CommonRouteHelperDTO): Promise<void> {
+    url = `${url}/${datatype.number()}`
+    const response: HttpResponse = await RouteHelpers.GetHttpResponse(agent, url, method)
+    expect(response.statusCode).toEqual(HttpStatusCode.unprocessableEntity)
+    const validations = response.body.error as RequestValidatorModel[]
+    expect(validations).toContainEqual(
+      { path: field, message: `"${field}" must be a valid GUID` }
+    )
   }
 }

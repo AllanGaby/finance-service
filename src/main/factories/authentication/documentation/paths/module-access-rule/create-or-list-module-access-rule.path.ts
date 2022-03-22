@@ -1,26 +1,26 @@
 import { DocumentationPathModel, DocumentationHttpStatusCode, DocumentationContentType, DocumentationDataType } from '@/protocols/documentation'
 
-export const CreateOrListModulePath: DocumentationPathModel = {
+export const CreateOrListModuleAccessRulePath: DocumentationPathModel = {
   post: {
-    tags: ['Módulo/Aplicação'],
-    summary: 'Cria um módulo/aplicação que fará o controle de acesso pelo serviço de autenticação',
+    tags: ['Regra de acesso'],
+    summary: 'Cria uma regra de acesso',
     requestBody: {
-      description: 'Dados do módulo/aplicação',
+      description: 'Dados da regra de acessp',
       content: {
         [DocumentationContentType.Json]: {
           schema: {
-            $ref: '#/schemas/authentication/createOrUpdateModule'
+            $ref: '#/schemas/authentication/createOrUpdateModuleAccessRule'
           }
         }
       }
     },
     responses: {
       [DocumentationHttpStatusCode.Created]: {
-        description: 'Dados do módulo/aplicação',
+        description: 'Dados da regra de acesso',
         content: {
           [DocumentationContentType.Json]: {
             schema: {
-              $ref: '#/schemas/authentication/module'
+              $ref: '#/schemas/authentication/moduleAccessRule'
             }
           }
         }
@@ -37,17 +37,17 @@ export const CreateOrListModulePath: DocumentationPathModel = {
     }
   },
   get: {
-    tags: ['Módulo/Aplicação'],
-    summary: 'Lista módulos/aplicações',
+    tags: ['Regra de acesso'],
+    summary: 'Lista regras de acesso',
     responses: {
       [DocumentationHttpStatusCode.Ok]: {
-        description: 'Dados do módulo/aplicação',
+        description: 'Dados das regras de acesso',
         content: {
           [DocumentationContentType.Json]: {
             schema: {
               type: DocumentationDataType.Array,
               items: {
-                $ref: '#/schemas/authentication/module'
+                $ref: '#/schemas/authentication/moduleAccessRule'
               }
             }
           }

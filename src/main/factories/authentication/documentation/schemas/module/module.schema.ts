@@ -23,7 +23,7 @@ export const ModuleSchema: DocumentationSchemaModel = {
     access_rules: {
       type: DocumentationDataType.Array,
       items: {
-        $ref: '#/schemas/authentication/accessRule'
+        $ref: '#/schemas/authentication/moduleAccessRule'
       }
     },
     created_at: {

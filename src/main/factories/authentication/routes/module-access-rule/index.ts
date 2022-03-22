@@ -7,6 +7,7 @@ import {
   ModuleAccessRuleRepositorySettings
 } from '@/infrastructure/authentication'
 import { DefaultCRUDEntityRoutesProps, makeDefaultCRUDEntityRoutes } from '@/main/factories/common/routes'
+import { makeCreateModuleAccessRuleFieldsValidations, makeUpdateModuleAccessRuleFieldsValidations } from '@/main/factories/authentication/fields-validations'
 
 export type ModuleAccessRuleRouteProps = DefaultCRUDEntityRoutesProps
 
@@ -19,6 +20,8 @@ export const makeModuleAccessRuleRoute = (props: ModuleAccessRuleRouteProps): Ro
       }, {
         entityClass: ModuleAccessRuleEntity,
         paramIdName: 'module_access_rule_id',
-        entityName: 'ModuleAccessRule'
+        entityName: 'ModuleAccessRule',
+        createFieldsValidation: makeCreateModuleAccessRuleFieldsValidations(),
+        updateFieldsValidation: makeUpdateModuleAccessRuleFieldsValidations()
       })
     )
