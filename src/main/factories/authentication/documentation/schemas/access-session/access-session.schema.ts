@@ -14,6 +14,12 @@ export const AccessSessionSchema: DocumentationSchemaModel = {
       format: DocumentationStringFormat.Uuid,
       description: 'Identificador único da conta de acesso'
     },
+    modules: {
+      type: DocumentationDataType.Object,
+      additionalProperties: {
+        $ref: '#/schemas/authentication/accessSessionModule'
+      }
+    },
     account_name: {
       type: DocumentationDataType.String,
       description: 'Nome da conta de acesso'

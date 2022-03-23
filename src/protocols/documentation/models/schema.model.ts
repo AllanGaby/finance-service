@@ -18,4 +18,5 @@ export type DocumentationSchemaModel = {
   properties?: {
     [name: string]: DocumentationSchemaModel
   }
+  additionalProperties?: DocumentationSchemaModel
 }

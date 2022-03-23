@@ -2,6 +2,7 @@ import { DocumentationSetupModel } from '@/protocols/documentation'
 import {
   AccessProfileSchema,
   AccessSessionSchema,
+  AccessSessionModuleSchema,
   AccountAccessModuleSchema,
   AccountSchema,
   CreateAccessSessionSchema,
@@ -35,6 +36,7 @@ export const AuthenticationDocumentationSetup: DocumentationSetupModel = {
     createOrUpdateModuleAccessRule: CreateOrUpdateModuleAccessRuleSchema,
     accessProfile: AccessProfileSchema,
     accessSession: AccessSessionSchema,
+    accessSessionModule: AccessSessionModuleSchema,
     accountAccessModule: AccountAccessModuleSchema,
     account: AccountSchema,
     module: ModuleSchema,
