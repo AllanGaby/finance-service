@@ -21,6 +21,10 @@ export class createAccessSessionsMigration1647777436477 implements MigrationInte
           type: 'varchar'
         },
         {
+          name: 'ip',
+          type: 'varchar'
+        },
+        {
           name: 'deleted_at',
           type: 'timestamp with time zone',
           isNullable: true

@@ -1,13 +1,14 @@
 import {
   RequestAccessProfileFilter,
-  RepositoryAccessProfileFilter
+  RepositoryAccessProfileFilter,
+  AuthenticationAccessRules
 } from '@/domain/authentication'
 import { CreateAccessProfileRouteProps, makeCreateAccessProfileRoute } from './create-access-profile.route'
 import { UpdateAccessProfileByIdRouteProps, makeUpdateAccessProfileByIdRoute } from './update-access-profile-by-id.route'
 import {
-  DefaultDeleteGetListEntityRoutesProps,
-  makeDefaultDeleteGetListEntityRoutes
-} from '@/main/factories/common/routes'
+  DefaultDeleteGetListEntityWithAuthenticationRoutesProps,
+  makeDefaultDeleteGetListEntityWithAuthenticationRoutes
+} from '@/main/factories/authentication/routes'
 import {
   makeCreateAccessProfileFieldsValidations,
   makeUpdateAccessProfileFieldsValidations
@@ -17,7 +18,7 @@ import { Router } from 'express'
 
 export type AccessProfileRouteProps =
 CreateAccessProfileRouteProps &
-DefaultDeleteGetListEntityRoutesProps &
+DefaultDeleteGetListEntityWithAuthenticationRoutesProps &
 UpdateAccessProfileByIdRouteProps
 
 export const makeAccessProfileRoute = (
@@ -27,11 +28,14 @@ export const makeAccessProfileRoute = (
   props.validRepositoryColumns = Object.values(RepositoryAccessProfileFilter)
   props.validRequestColumns = Object.values(RequestAccessProfileFilter)
   return Router()
-    .use('/', makeCreateAccessProfileRoute(props, makeCreateAccessProfileFieldsValidations()))
-    .use(makeDefaultDeleteGetListEntityRoutes(props, {
+    .use('/', makeCreateAccessProfileRoute(props, makeCreateAccessProfileFieldsValidations(), [AuthenticationAccessRules.CreateAccessProfiles]))
+    .use(makeDefaultDeleteGetListEntityWithAuthenticationRoutes(props, {
       entityClass: AccessProfileEntity,
       paramIdName: 'access_profile_id',
-      entityName: 'AccessProfile'
+      entityName: 'AccessProfile',
+      deleteAccessRules: [AuthenticationAccessRules.DeleteAccessProfiles],
+      getByIdAccessRules: [AuthenticationAccessRules.ShowAccessProfiles],
+      listAccessRules: [AuthenticationAccessRules.ListAccessProfiles]
     }))
-    .use('/', makeUpdateAccessProfileByIdRoute(props, 'access_profile_id', 'AccessProfile', makeUpdateAccessProfileFieldsValidations()))
+    .use('/', makeUpdateAccessProfileByIdRoute(props, 'access_profile_id', makeUpdateAccessProfileFieldsValidations(), [AuthenticationAccessRules.UpdateAccessProfiles]))
 }

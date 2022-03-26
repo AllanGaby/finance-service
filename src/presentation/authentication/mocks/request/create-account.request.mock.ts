@@ -1,5 +1,5 @@
 import { mockCreateAccountDTO } from '@/domain/authentication'
-import { CreateAccountRequest } from '@/presentation/authentication/request'
+import { CreateAccountRequest } from '@/presentation/authentication'
 
 export const mockCreateAccountRequest = (): CreateAccountRequest => {
   const createAccountDTO = mockCreateAccountDTO()

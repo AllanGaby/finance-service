@@ -4,6 +4,9 @@ export const CreateOrListModulePath: DocumentationPathModel = {
   post: {
     tags: ['Módulo/Aplicação'],
     summary: 'Cria um módulo/aplicação que fará o controle de acesso pelo serviço de autenticação',
+    security: [{
+      bearerAuth: []
+    }],
     requestBody: {
       description: 'Dados do módulo/aplicação',
       content: {
@@ -31,6 +34,9 @@ export const CreateOrListModulePath: DocumentationPathModel = {
       [DocumentationHttpStatusCode.Unauthorized]: {
         $ref: '#/components/common/unauthorized'
       },
+      [DocumentationHttpStatusCode.Forbidden]: {
+        $ref: '#/components/common/forbidden'
+      },
       [DocumentationHttpStatusCode.UnprocessableEntity]: {
         $ref: '#/components/common/unprocessableEntity'
       }
@@ -39,6 +45,9 @@ export const CreateOrListModulePath: DocumentationPathModel = {
   get: {
     tags: ['Módulo/Aplicação'],
     summary: 'Lista módulos/aplicações',
+    security: [{
+      bearerAuth: []
+    }],
     responses: {
       [DocumentationHttpStatusCode.Ok]: {
         description: 'Dados do módulo/aplicação',
@@ -55,6 +64,9 @@ export const CreateOrListModulePath: DocumentationPathModel = {
       },
       [DocumentationHttpStatusCode.Unauthorized]: {
         $ref: '#/components/common/unauthorized'
+      },
+      [DocumentationHttpStatusCode.Forbidden]: {
+        $ref: '#/components/common/forbidden'
       },
       [DocumentationHttpStatusCode.UnprocessableEntity]: {
         $ref: '#/components/common/unprocessableEntity'

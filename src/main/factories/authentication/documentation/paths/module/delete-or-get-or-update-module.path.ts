@@ -4,6 +4,9 @@ export const DeleteOrGetOrUpdateModulePath: DocumentationPathModel = {
   put: {
     tags: ['Módulo/Aplicação'],
     summary: 'Atualiza o cadastro de um módulo/aplicação pelo identificador único',
+    security: [{
+      bearerAuth: []
+    }],
     parameters: [{
       in: DocumentationParamType.Path,
       name: 'module_id',
@@ -32,11 +35,14 @@ export const DeleteOrGetOrUpdateModulePath: DocumentationPathModel = {
           }
         }
       },
-      [DocumentationHttpStatusCode.Conflict]: {
-        $ref: '#/components/common/conflict'
-      },
       [DocumentationHttpStatusCode.Unauthorized]: {
         $ref: '#/components/common/unauthorized'
+      },
+      [DocumentationHttpStatusCode.Forbidden]: {
+        $ref: '#/components/common/forbidden'
+      },
+      [DocumentationHttpStatusCode.Conflict]: {
+        $ref: '#/components/common/conflict'
       },
       [DocumentationHttpStatusCode.UnprocessableEntity]: {
         $ref: '#/components/common/unprocessableEntity'
@@ -46,6 +52,9 @@ export const DeleteOrGetOrUpdateModulePath: DocumentationPathModel = {
   delete: {
     tags: ['Módulo/Aplicação'],
     summary: 'Exclui o cadastro de um módulo/aplicação pelo identificador único',
+    security: [{
+      bearerAuth: []
+    }],
     parameters: [{
       in: DocumentationParamType.Path,
       name: 'module_id',
@@ -57,11 +66,14 @@ export const DeleteOrGetOrUpdateModulePath: DocumentationPathModel = {
       [DocumentationHttpStatusCode.NoContent]: {
         $ref: '#/components/common/noContent'
       },
-      [DocumentationHttpStatusCode.Conflict]: {
-        $ref: '#/components/common/conflict'
-      },
       [DocumentationHttpStatusCode.Unauthorized]: {
         $ref: '#/components/common/unauthorized'
+      },
+      [DocumentationHttpStatusCode.Forbidden]: {
+        $ref: '#/components/common/forbidden'
+      },
+      [DocumentationHttpStatusCode.Conflict]: {
+        $ref: '#/components/common/conflict'
       },
       [DocumentationHttpStatusCode.UnprocessableEntity]: {
         $ref: '#/components/common/unprocessableEntity'
@@ -71,6 +83,9 @@ export const DeleteOrGetOrUpdateModulePath: DocumentationPathModel = {
   get: {
     tags: ['Módulo/Aplicação'],
     summary: 'Busca um módulo/aplicação pelo identificador único',
+    security: [{
+      bearerAuth: []
+    }],
     parameters: [{
       in: DocumentationParamType.Path,
       name: 'module_id',
@@ -91,6 +106,9 @@ export const DeleteOrGetOrUpdateModulePath: DocumentationPathModel = {
       },
       [DocumentationHttpStatusCode.Unauthorized]: {
         $ref: '#/components/common/unauthorized'
+      },
+      [DocumentationHttpStatusCode.Forbidden]: {
+        $ref: '#/components/common/forbidden'
       },
       [DocumentationHttpStatusCode.UnprocessableEntity]: {
         $ref: '#/components/common/unprocessableEntity'

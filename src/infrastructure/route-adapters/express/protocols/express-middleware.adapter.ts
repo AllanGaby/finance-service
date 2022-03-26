@@ -13,6 +13,8 @@ export const ExpressMiddlewareAdapter = (middleware: MiddlewareProtocol<any, any
     const httpResponse = await middleware.handle(httpRequest)
     if (httpResponse.statusCode === HttpStatusCode.ok) {
       request.body = httpResponse.body
+      request.headers = httpResponse.headers
+      request.params = httpResponse.params
       next()
     } else {
       response.status(httpResponse.statusCode).json({

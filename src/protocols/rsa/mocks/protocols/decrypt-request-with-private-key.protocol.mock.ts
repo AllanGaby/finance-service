@@ -1,7 +1,7 @@
 import { DecryptRequestWithPrivateKeyProtocol } from '@/protocols/rsa'
 import { datatype } from 'faker'
 
-export class DecryptRequestWithPrivateKeySpy implements DecryptRequestWithPrivateKeyProtocol {
+export class DecryptRequestWithPrivateKeyProtocolSpy implements DecryptRequestWithPrivateKeyProtocol {
   token: string
   result: string = datatype.uuid()
 

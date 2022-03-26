@@ -11,7 +11,7 @@ jest.mock('express', () => ({
 }))
 
 type sutTypes = {
-  paramName: string
+  paramIdName: string
 }
 
 const makeSut = (putMethod?: boolean): sutTypes => {
@@ -21,12 +21,12 @@ const makeSut = (putMethod?: boolean): sutTypes => {
     mockFieldValidationModel(),
     mockFieldValidationModel()
   ]
-  const paramName = database.column()
+  const paramIdName = database.column()
   makeUpdateEntityByIdRoute({
     repositoryType: RepositoryType.Memory
-  }, DefaultEntity, paramName, database.column(), fieldsValidation, putMethod)
+  }, DefaultEntity, paramIdName, database.column(), fieldsValidation, putMethod)
   return {
-    paramName
+    paramIdName
   }
 }
 
@@ -44,9 +44,9 @@ describe('makeUpdateEntityByIdRoute', () => {
 
     test('Should call router with correct url', () => {
       const putSpy = jest.spyOn(RouterSpy, 'put')
-      const { paramName } = makeSut()
+      const { paramIdName } = makeSut()
       expect(putSpy).toHaveBeenCalledWith(
-        `/:${paramName}`,
+        `/:${paramIdName}`,
         expect.any(Function),
         expect.any(Function),
         expect.any(Function)
@@ -63,9 +63,9 @@ describe('makeUpdateEntityByIdRoute', () => {
 
     test('Should call router with correct url', () => {
       const putSpy = jest.spyOn(RouterSpy, 'put')
-      const { paramName } = makeSut(true)
+      const { paramIdName } = makeSut(true)
       expect(putSpy).toHaveBeenCalledWith(
-        `/:${paramName}`,
+        `/:${paramIdName}`,
         expect.any(Function),
         expect.any(Function),
         expect.any(Function)
@@ -82,9 +82,9 @@ describe('makeUpdateEntityByIdRoute', () => {
 
     test('Should call router with correct url', () => {
       const patchSpy = jest.spyOn(RouterSpy, 'patch')
-      const { paramName } = makeSut(false)
+      const { paramIdName } = makeSut(false)
       expect(patchSpy).toHaveBeenCalledWith(
-        `/:${paramName}`,
+        `/:${paramIdName}`,
         expect.any(Function),
         expect.any(Function),
         expect.any(Function)

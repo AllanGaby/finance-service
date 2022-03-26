@@ -1,6 +1,6 @@
 import { ExpressControllerAdapter } from './express-controller.adapter'
 import { ConditionalMissingParamError, EntityAlreadyExistsError, EntityIsNotFoundError, InvalidForeignKeyError, MissingParamError, ViolateUniqueKeyError } from '@/data/common/errors'
-import { CorruptedAccountError, InvalidCredentialsError } from '@/data/authentication/errors'
+import { CorruptedAccountError, InvalidCredentialsError, UnauthorizedError } from '@/data/authentication/errors'
 import { mockPartialExpressRequest, mockPartialExpressResponse } from '@/infrastructure/route-adapters/express/mocks'
 import { HttpStatusCode, ControllerSpy, mockHttpFailStatusCode, mockHttpSuccessStatusCode } from '@/protocols/http'
 import { Request, Response } from 'express'
@@ -91,6 +91,15 @@ describe('ExpressControllerAdapter', () => {
   })
 
   describe('Controller Throws', () => {
+    test('Should return Unauthorized Status Code (401) if controller return UnauthorizedError', async () => {
+      const { sut, controller, request, response } = makeSut()
+      const error = new UnauthorizedError()
+      const statusSpy = jest.spyOn(response, 'status')
+      jest.spyOn(controller, 'handle').mockRejectedValue(error)
+      await sut(request, response)
+      expect(statusSpy).toHaveBeenCalledWith(HttpStatusCode.unauthorized)
+    })
+
     test('Should return Forbidden Status Code (403) if controller return CorruptedAccountError', async () => {
       const { sut, controller, request, response } = makeSut()
       const error = new CorruptedAccountError()

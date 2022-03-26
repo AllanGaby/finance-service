@@ -7,12 +7,13 @@ import {
   ViolateUniqueKeyError
 } from '@/data/common/errors'
 import { HttpStatusCode, ControllerProtocol, HttpRequest } from '@/protocols/http'
-import { CorruptedAccountError, InvalidCredentialsError } from '@/data/authentication/errors'
+import { UnauthorizedError, CorruptedAccountError, InvalidCredentialsError } from '@/data/authentication/errors'
 import { Request, Response } from 'express'
 
 export const ExpressControllerAdapter = <RequestBody = any, ResponseBody = any>(controller: ControllerProtocol<RequestBody, ResponseBody | Error>) =>
   async (request: Partial<Request>, response: Partial<Response>) => {
     const httpRequest: HttpRequest<RequestBody> = {
+      ip: request.ip,
       body: request.body,
       params: request.params,
       headers: request.headers,
@@ -37,6 +38,8 @@ export const ExpressControllerAdapter = <RequestBody = any, ResponseBody = any>(
       return response
     } catch (error) {
       switch (error.constructor) {
+        case UnauthorizedError:
+          return SetErrorResponse(HttpStatusCode.unauthorized, error)
         case CorruptedAccountError:
           return SetErrorResponse(HttpStatusCode.forbidden, error)
         case InvalidCredentialsError:

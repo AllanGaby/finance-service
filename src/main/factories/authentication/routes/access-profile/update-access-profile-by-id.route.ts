@@ -1,22 +1,25 @@
 import { ExpressControllerAdapter, ExpressMiddlewareAdapter } from '@/infrastructure/route-adapters'
 import { UpdateAccessProfileByIdControllerProps, makeUpdateAccessProfileByIdController } from '@/main/factories/authentication/controllers'
+import { RecoverAccessSessionMiddlewareProps, makeRecoverAccessSessionMiddleware } from '@/main/factories/authentication/middlewares'
 import { makeCommonIdFieldValidationMiddleware, makeCommonFieldValidationMiddleware } from '@/main/factories/common/middlewares'
 import { FieldValidationModel } from '@/protocols/request-validator'
 import { Router } from 'express'
 
 export type UpdateAccessProfileByIdRouteProps =
-Omit<UpdateAccessProfileByIdControllerProps, 'paramName'>
+RecoverAccessSessionMiddlewareProps &
+Omit<UpdateAccessProfileByIdControllerProps, 'paramIdName'>
 
 export const makeUpdateAccessProfileByIdRoute = (
   props: UpdateAccessProfileByIdRouteProps,
-  paramName: string,
-  entityName: string,
-  fieldsValidation: FieldValidationModel[]
+  paramIdName: string,
+  fieldsValidation: FieldValidationModel[],
+  updateAccessRules: string[]
 ): Router => Router()
-  .put(`/:${paramName}`,
-    ExpressMiddlewareAdapter(makeCommonIdFieldValidationMiddleware(paramName)),
+  .put(`/:${paramIdName}`,
+    ExpressMiddlewareAdapter(makeRecoverAccessSessionMiddleware(props, updateAccessRules)),
+    ExpressMiddlewareAdapter(makeCommonIdFieldValidationMiddleware(paramIdName)),
     ExpressMiddlewareAdapter(makeCommonFieldValidationMiddleware(fieldsValidation)),
     ExpressControllerAdapter(makeUpdateAccessProfileByIdController({
       ...props,
-      paramName
+      paramIdName
     })))

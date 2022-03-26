@@ -4,6 +4,9 @@ export const DeleteOrGetAccountPath: DocumentationPathModel = {
   delete: {
     tags: ['Conta de acesso'],
     summary: 'Exclui o cadastro de uma conta de acesso pelo identificador único',
+    security: [{
+      bearerAuth: []
+    }],
     parameters: [{
       in: DocumentationParamType.Path,
       name: 'account_id',
@@ -15,11 +18,14 @@ export const DeleteOrGetAccountPath: DocumentationPathModel = {
       [DocumentationHttpStatusCode.NoContent]: {
         $ref: '#/components/common/noContent'
       },
-      [DocumentationHttpStatusCode.Conflict]: {
-        $ref: '#/components/common/conflict'
-      },
       [DocumentationHttpStatusCode.Unauthorized]: {
         $ref: '#/components/common/unauthorized'
+      },
+      [DocumentationHttpStatusCode.Forbidden]: {
+        $ref: '#/components/common/forbidden'
+      },
+      [DocumentationHttpStatusCode.Conflict]: {
+        $ref: '#/components/common/conflict'
       },
       [DocumentationHttpStatusCode.UnprocessableEntity]: {
         $ref: '#/components/common/unprocessableEntity'
@@ -29,6 +35,9 @@ export const DeleteOrGetAccountPath: DocumentationPathModel = {
   get: {
     tags: ['Conta de acesso'],
     summary: 'Busca uma conta de acesso pelo identificador único',
+    security: [{
+      bearerAuth: []
+    }],
     parameters: [{
       in: DocumentationParamType.Path,
       name: 'account_id',

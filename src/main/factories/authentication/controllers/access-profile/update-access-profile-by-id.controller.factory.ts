@@ -3,7 +3,7 @@ import { UpdateEntityByIdController } from '@/presentation/common'
 import { UpdateAccessProfileByIdUseCaseProps, makeUpdateAccessProfileByIdUseCase } from '@/main/factories/authentication/use-cases'
 
 export type UpdateAccessProfileByIdControllerProps = UpdateAccessProfileByIdUseCaseProps & {
-  paramName: string
+  paramIdName: string
 }
 
 export const makeUpdateAccessProfileByIdController = (
@@ -11,5 +11,5 @@ export const makeUpdateAccessProfileByIdController = (
 ): UpdateEntityByIdController<AccessProfileModel> =>
   new UpdateEntityByIdController(
     makeUpdateAccessProfileByIdUseCase(props),
-    props.paramName
+    props.paramIdName
   )

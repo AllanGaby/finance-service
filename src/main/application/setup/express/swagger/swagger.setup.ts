@@ -21,7 +21,10 @@ export const SwaggerSetup = (app: Express): void => {
       description: 'Authentication Service'
     }],
     components: {
-      common: CommonDocumentationSetup.components
+      common: CommonDocumentationSetup.components,
+      securitySchemes: {
+        bearerAuth: AuthenticationDocumentationSetup.components.authentication
+      }
     },
     schemas: {
       authentication: AuthenticationDocumentationSetup.schemas

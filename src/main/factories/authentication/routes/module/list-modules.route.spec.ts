@@ -1,9 +1,14 @@
-import { application } from '@/main/application/setup/application'
+import { AuthenticationAccessRules } from '@/domain/authentication'
 import { HttpStatusCode } from '@/protocols/http'
+import { application } from '@/main/application/setup/application'
+import { ConfigSetup } from '@/main/application/config'
+import { RouteHelpers } from '@/main/factories/common/helpers'
 import http from 'http'
 import supertest, { SuperAgentTest } from 'supertest'
 
 const url = '/authentication/module'
+const accessRule = AuthenticationAccessRules.ListModules
+const accessTokenName = ConfigSetup().authentication.accessTokenName
 let server: http.Server
 let agent: SuperAgentTest
 
@@ -23,7 +28,17 @@ describe('GET /authentication/module - List Modules', () => {
     test('Should return Ok status code(200) if succeeds', async () => {
       await agent
         .get(url)
+        .set(accessTokenName, await RouteHelpers.GetAccessToken([accessRule]))
         .expect(HttpStatusCode.ok)
+    })
+  })
+
+  describe('Forbidden Status Code(403)', () => {
+    test('Should return Forbidden Status Code(403) if access token hasnt access rule', async () => {
+      await agent
+        .get(url)
+        .set(accessTokenName, await RouteHelpers.GetAccessToken([]))
+        .expect(HttpStatusCode.forbidden)
     })
   })
 })

@@ -4,7 +4,7 @@ import { CommonRepositorySettingsModel } from '@/infrastructure/repositories'
 export const AccountAccessModuleRepositorySettings: CommonRepositorySettingsModel = {
   join: {
     alias: 'account_access_module',
-    innerJoinAndSelect: {
+    leftJoinAndSelect: {
       account: 'account_access_module.account',
       module: 'account_access_module.module',
       access_profile: 'account_access_module.access_profile'

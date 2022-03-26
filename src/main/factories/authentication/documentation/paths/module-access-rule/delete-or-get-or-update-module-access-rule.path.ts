@@ -4,6 +4,9 @@ export const DeleteOrGetOrUpdateModuleAccessRulePath: DocumentationPathModel = {
   put: {
     tags: ['Regra de acesso'],
     summary: 'Atualiza o cadastro de uma regra de acesso pelo identificador único',
+    security: [{
+      bearerAuth: []
+    }],
     parameters: [{
       in: DocumentationParamType.Path,
       name: 'module_access_rule_id',
@@ -32,11 +35,14 @@ export const DeleteOrGetOrUpdateModuleAccessRulePath: DocumentationPathModel = {
           }
         }
       },
-      [DocumentationHttpStatusCode.Conflict]: {
-        $ref: '#/components/common/conflict'
-      },
       [DocumentationHttpStatusCode.Unauthorized]: {
         $ref: '#/components/common/unauthorized'
+      },
+      [DocumentationHttpStatusCode.Forbidden]: {
+        $ref: '#/components/common/forbidden'
+      },
+      [DocumentationHttpStatusCode.Conflict]: {
+        $ref: '#/components/common/conflict'
       },
       [DocumentationHttpStatusCode.UnprocessableEntity]: {
         $ref: '#/components/common/unprocessableEntity'
@@ -46,6 +52,9 @@ export const DeleteOrGetOrUpdateModuleAccessRulePath: DocumentationPathModel = {
   delete: {
     tags: ['Regra de acesso'],
     summary: 'Exclui o cadastro de uma regra de acesso',
+    security: [{
+      bearerAuth: []
+    }],
     parameters: [{
       in: DocumentationParamType.Path,
       name: 'module_access_rule_id',
@@ -57,11 +66,14 @@ export const DeleteOrGetOrUpdateModuleAccessRulePath: DocumentationPathModel = {
       [DocumentationHttpStatusCode.NoContent]: {
         $ref: '#/components/common/noContent'
       },
-      [DocumentationHttpStatusCode.Conflict]: {
-        $ref: '#/components/common/conflict'
-      },
       [DocumentationHttpStatusCode.Unauthorized]: {
         $ref: '#/components/common/unauthorized'
+      },
+      [DocumentationHttpStatusCode.Forbidden]: {
+        $ref: '#/components/common/forbidden'
+      },
+      [DocumentationHttpStatusCode.Conflict]: {
+        $ref: '#/components/common/conflict'
       },
       [DocumentationHttpStatusCode.UnprocessableEntity]: {
         $ref: '#/components/common/unprocessableEntity'
@@ -70,7 +82,10 @@ export const DeleteOrGetOrUpdateModuleAccessRulePath: DocumentationPathModel = {
   },
   get: {
     tags: ['Regra de acesso'],
-    summary: 'Busca uma regra de acessp pelo identificador único',
+    summary: 'Busca uma regra de acesso pelo identificador único',
+    security: [{
+      bearerAuth: []
+    }],
     parameters: [{
       in: DocumentationParamType.Path,
       name: 'module_access_rule_id',
@@ -91,6 +106,9 @@ export const DeleteOrGetOrUpdateModuleAccessRulePath: DocumentationPathModel = {
       },
       [DocumentationHttpStatusCode.Unauthorized]: {
         $ref: '#/components/common/unauthorized'
+      },
+      [DocumentationHttpStatusCode.Forbidden]: {
+        $ref: '#/components/common/forbidden'
       },
       [DocumentationHttpStatusCode.UnprocessableEntity]: {
         $ref: '#/components/common/unprocessableEntity'

@@ -15,6 +15,7 @@ module.exports = {
     '!**/**.dto.ts',
     '!**/**.entity.ts',
     '!**/**.error.ts',
+    '!**/**.filter.ts',
     '!**/**.factory.ts',
     '!**/**.mock.ts',
     '!**/**.schema.ts',

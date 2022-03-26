@@ -4,6 +4,9 @@ export const DeleteOrGetOrUpdateAccountAccessModulePath: DocumentationPathModel 
   put: {
     tags: ['Perfil de acesso do usuário para um módulo/aplicação'],
     summary: 'Atualiza o perfil de acesso de um usuário para um módulo/aplicação pelo identificador único',
+    security: [{
+      bearerAuth: []
+    }],
     parameters: [{
       in: DocumentationParamType.Path,
       name: 'account_access_module_id',
@@ -32,11 +35,14 @@ export const DeleteOrGetOrUpdateAccountAccessModulePath: DocumentationPathModel 
           }
         }
       },
-      [DocumentationHttpStatusCode.Conflict]: {
-        $ref: '#/components/common/conflict'
-      },
       [DocumentationHttpStatusCode.Unauthorized]: {
         $ref: '#/components/common/unauthorized'
+      },
+      [DocumentationHttpStatusCode.Forbidden]: {
+        $ref: '#/components/common/forbidden'
+      },
+      [DocumentationHttpStatusCode.Conflict]: {
+        $ref: '#/components/common/conflict'
       },
       [DocumentationHttpStatusCode.UnprocessableEntity]: {
         $ref: '#/components/common/unprocessableEntity'
@@ -46,6 +52,9 @@ export const DeleteOrGetOrUpdateAccountAccessModulePath: DocumentationPathModel 
   delete: {
     tags: ['Perfil de acesso do usuário para um módulo/aplicação'],
     summary: 'Remove o perfil de acesso de um usuário para um módulo/aplicação pelo identificador único',
+    security: [{
+      bearerAuth: []
+    }],
     parameters: [{
       in: DocumentationParamType.Path,
       name: 'account_access_module_id',
@@ -57,11 +66,14 @@ export const DeleteOrGetOrUpdateAccountAccessModulePath: DocumentationPathModel 
       [DocumentationHttpStatusCode.NoContent]: {
         $ref: '#/components/common/noContent'
       },
-      [DocumentationHttpStatusCode.Conflict]: {
-        $ref: '#/components/common/conflict'
-      },
       [DocumentationHttpStatusCode.Unauthorized]: {
         $ref: '#/components/common/unauthorized'
+      },
+      [DocumentationHttpStatusCode.Forbidden]: {
+        $ref: '#/components/common/forbidden'
+      },
+      [DocumentationHttpStatusCode.Conflict]: {
+        $ref: '#/components/common/conflict'
       },
       [DocumentationHttpStatusCode.UnprocessableEntity]: {
         $ref: '#/components/common/unprocessableEntity'
@@ -71,6 +83,9 @@ export const DeleteOrGetOrUpdateAccountAccessModulePath: DocumentationPathModel 
   get: {
     tags: ['Perfil de acesso do usuário para um módulo/aplicação'],
     summary: 'Busca o perfil de acesso do usuário para um módulo/aplicação pelo identificador único',
+    security: [{
+      bearerAuth: []
+    }],
     parameters: [{
       in: DocumentationParamType.Path,
       name: 'account_access_module_id',

@@ -1,20 +1,26 @@
 import { Router } from 'express'
 import {
-  AccountAccessModuleModel, RepositoryAccountAccessModuleFilter, RequestAccountAccessModuleFilter
+  AccountAccessModuleModel,
+  RepositoryAccountAccessModuleFilter,
+  RequestAccountAccessModuleFilter,
+  AuthenticationAccessRules
 } from '@/domain/authentication'
 import {
   AccountAccessModuleEntity,
   AccountAccessModuleRepositorySettings
 } from '@/infrastructure/authentication'
-import { DefaultCRUDEntityRoutesProps, makeDefaultCRUDEntityRoutes } from '@/main/factories/common/routes'
+import {
+  DefaultCRUDEntityWithAuthenticationRoutesProps,
+  makeDefaultCRUDEntityWithAuthenticationRoutes
+} from '@/main/factories/authentication/routes'
 import { makeCreateAccountAccessModuleFieldsValidations, makeUpdateAccountAccessModuleFieldsValidations } from '@/main/factories/authentication/fields-validations'
 
-export type AccountAccessModuleRouteProps = DefaultCRUDEntityRoutesProps
+export type AccountAccessModuleRouteProps = DefaultCRUDEntityWithAuthenticationRoutesProps
 
 export const makeAccountAccessModuleRoute = (props: AccountAccessModuleRouteProps): Router =>
   Router()
     .use('/account-access-module',
-      makeDefaultCRUDEntityRoutes<AccountAccessModuleModel>({
+      makeDefaultCRUDEntityWithAuthenticationRoutes<AccountAccessModuleModel>({
         ...props,
         validRepositoryColumns: Object.values(RepositoryAccountAccessModuleFilter),
         validRequestColumns: Object.values(RequestAccountAccessModuleFilter),
@@ -24,6 +30,11 @@ export const makeAccountAccessModuleRoute = (props: AccountAccessModuleRouteProp
         paramIdName: 'account_access_module_id',
         entityName: 'AccountAccessModule',
         createFieldsValidation: makeCreateAccountAccessModuleFieldsValidations(),
-        updateFieldsValidation: makeUpdateAccountAccessModuleFieldsValidations()
+        updateFieldsValidation: makeUpdateAccountAccessModuleFieldsValidations(),
+        createAccessRules: [AuthenticationAccessRules.CreateAccountAccessModule],
+        deleteAccessRules: [AuthenticationAccessRules.DeleteAccountAccessModule],
+        getByIdAccessRules: [AuthenticationAccessRules.ShowAccountAccessModule],
+        listAccessRules: [AuthenticationAccessRules.ListAccountAccessModule],
+        updateAccessRules: [AuthenticationAccessRules.UpdateAccountAccessModule]
       })
     )

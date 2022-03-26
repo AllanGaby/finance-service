@@ -10,16 +10,16 @@ jest.mock('express', () => ({
 }))
 
 type sutTypes = {
-  paramName: string
+  paramIdName: string
 }
 
 const makeSut = (): sutTypes => {
-  const paramName = database.column()
+  const paramIdName = database.column()
   makeGetEntityByIdRoute({
     repositoryType: RepositoryType.Memory
-  }, DefaultEntity, paramName, database.column())
+  }, DefaultEntity, paramIdName, database.column())
   return {
-    paramName
+    paramIdName
   }
 }
 
@@ -36,9 +36,9 @@ describe('makeGetEntityByIdRoute', () => {
 
   test('Should call router with correct url', () => {
     const getSpy = jest.spyOn(RouterSpy, 'get')
-    const { paramName } = makeSut()
+    const { paramIdName } = makeSut()
     expect(getSpy).toHaveBeenCalledWith(
-      `/:${paramName}`,
+      `/:${paramIdName}`,
       expect.any(Function),
       expect.any(Function)
     )

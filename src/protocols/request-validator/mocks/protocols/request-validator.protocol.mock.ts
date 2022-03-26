@@ -1,6 +1,6 @@
 import { RequestValidatorProtocol, FieldValidationModel, RequestValidatorModel } from '@/protocols/request-validator'
 
-export class RequestValidatorSpy implements RequestValidatorProtocol {
+export class RequestValidatorProtocolSpy implements RequestValidatorProtocol {
   data: any
   fieldsToValidate: FieldValidationModel[]
   validation: RequestValidatorModel[] = undefined

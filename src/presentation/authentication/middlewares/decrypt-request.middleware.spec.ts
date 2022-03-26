@@ -1,7 +1,7 @@
 import { DecryptRequestMiddleware } from './decrypt-request.middleware'
 import { CreateEntityDTO, EntityModel, mockEntityModel } from '@/domain/common'
 import { InvalidCredentialsError } from '@/data/authentication/errors'
-import { DecryptRequestWithPrivateKeySpy } from '@/protocols/rsa'
+import { DecryptRequestWithPrivateKeyProtocolSpy } from '@/protocols/rsa'
 import { mockRequest } from '@/presentation/common'
 import { HttpHelper, HttpRequest } from '@/protocols/http'
 import { database, datatype } from 'faker'
@@ -9,13 +9,13 @@ import { database, datatype } from 'faker'
 type sutTypes = {
   sut: DecryptRequestMiddleware
   request: HttpRequest<CreateEntityDTO<EntityModel>>
-  decryptRequestWithPrivateKey: DecryptRequestWithPrivateKeySpy
+  decryptRequestWithPrivateKey: DecryptRequestWithPrivateKeyProtocolSpy
   fieldName: string
   token: string
 }
 
 const makeSut = (): sutTypes => {
-  const decryptRequestWithPrivateKey = new DecryptRequestWithPrivateKeySpy()
+  const decryptRequestWithPrivateKey = new DecryptRequestWithPrivateKeyProtocolSpy()
   const fieldName = database.column()
   const token = datatype.uuid()
   const request = mockRequest<EntityModel>(mockEntityModel())

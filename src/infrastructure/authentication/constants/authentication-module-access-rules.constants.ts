@@ -69,5 +69,45 @@ export const AuthenticationModuleAccessRules: Array<CreateEntityDTO<Omit<ModuleA
   {
     rule_key: AuthenticationAccessRules.ShowAuthenticationSettings,
     title: 'Visualizar dados detalhados de configurações do módulo de autenticação'
+  },
+  {
+    rule_key: AuthenticationAccessRules.CreateAccount,
+    title: 'Criar novas conta de acesso'
+  },
+  {
+    rule_key: AuthenticationAccessRules.UpdateAccount,
+    title: 'Atualizar dados de conta de acesso'
+  },
+  {
+    rule_key: AuthenticationAccessRules.ListAccount,
+    title: 'Listar contas de acesso'
+  },
+  {
+    rule_key: AuthenticationAccessRules.ShowAccount,
+    title: 'Visualizar dados detalhados de conta de acesso'
+  },
+  {
+    rule_key: AuthenticationAccessRules.DeleteAccount,
+    title: 'Excluir conta de acesso'
+  },
+  {
+    rule_key: AuthenticationAccessRules.CreateAccountAccessModule,
+    title: 'Adiciona novos módulos/aplicações aos acessos de conta de acesso'
+  },
+  {
+    rule_key: AuthenticationAccessRules.UpdateAccountAccessModule,
+    title: 'Atualizar dados de módulos/aplicações que a conta de acesso tem acesso'
+  },
+  {
+    rule_key: AuthenticationAccessRules.ListAccountAccessModule,
+    title: 'Listar os módulos/aplicações que contas possuem acesso'
+  },
+  {
+    rule_key: AuthenticationAccessRules.ShowAccountAccessModule,
+    title: 'Visualizar dados detalhados de módulos/aplicações que conta de acesso possui acesso'
+  },
+  {
+    rule_key: AuthenticationAccessRules.DeleteAccountAccessModule,
+    title: 'Excluir módulos/aplicações dos acessos da conta de acesso'
   }
 ]

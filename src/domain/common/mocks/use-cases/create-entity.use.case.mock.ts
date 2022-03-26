@@ -1,6 +1,6 @@
-import { CreateEntityUseCase, CreateEntityDTO, EntityModel } from '@/domain/common'
+import { CreateEntityUseCase, CreateEntityDTO } from '@/domain/common'
 
-export class CreateEntityUseCaseSpy<EntityType extends EntityModel, CreateEntityDTOType = CreateEntityDTO<EntityType>>
+export class CreateEntityUseCaseSpy<EntityType, CreateEntityDTOType = CreateEntityDTO<EntityType>>
 implements CreateEntityUseCase<EntityType, CreateEntityDTOType> {
   params: CreateEntityDTOType
   entity: EntityType

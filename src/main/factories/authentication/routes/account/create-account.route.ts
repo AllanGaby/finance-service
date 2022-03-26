@@ -1,7 +1,10 @@
 import { ExpressControllerAdapter, ExpressMiddlewareAdapter } from '@/infrastructure/route-adapters'
 import { CreateAccountControllerProps, makeCreateAccountController } from '@/main/factories/authentication/controllers'
 import { makeCommonFieldValidationMiddleware } from '@/main/factories/common/middlewares'
-import { DecryptRequestMiddlewareProps, makeDecryptRequestMiddleware } from '@/main/factories/authentication/middlewares'
+import {
+  DecryptRequestMiddlewareProps,
+  makeDecryptRequestMiddleware
+} from '@/main/factories/authentication/middlewares'
 import { FieldValidationModel } from '@/protocols/request-validator'
 import { Router } from 'express'
 

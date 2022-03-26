@@ -3,5 +3,6 @@ import { internet } from 'faker'
 
 export const mockCreateAccessSessionDTO = (): CreateAccessSessionDTO => ({
   login: internet.email(),
-  password: internet.password()
+  password: internet.password(),
+  ip: internet.ip()
 })

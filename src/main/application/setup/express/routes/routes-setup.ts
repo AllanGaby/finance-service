@@ -14,6 +14,7 @@ export const RoutesSetup = async (app: Express): Promise<void> => {
     privateKey: await config.security.getPrivateKey(),
     publicKey: await config.security.getPublicKey(),
     ...config.cache,
-    secret: config.security.jwtSecret
+    secret: config.security.jwtSecret,
+    accessTokenName: config.authentication.accessTokenName
   }))
 }

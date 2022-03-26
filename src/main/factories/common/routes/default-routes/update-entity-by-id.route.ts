@@ -7,34 +7,34 @@ import { Router } from 'express'
 import { EntityTarget } from 'typeorm'
 
 export type UpdateEntityByIdRouteProps =
-Omit<Omit<UpdateEntityByIdControllerProps, 'paramName'>, 'entityName'>
+Omit<Omit<UpdateEntityByIdControllerProps, 'paramIdName'>, 'entityName'>
 
 export const makeUpdateEntityByIdRoute = <EntityType extends EntityModel>(
   props: UpdateEntityByIdRouteProps,
   entityClass: EntityTarget<EntityType>,
-  paramName: string,
+  paramIdName: string,
   entityName: string,
   fieldsValidation: FieldValidationModel[],
   putMethod: boolean = true
 ): Router => {
   if (putMethod) {
     return Router()
-      .put(`/:${paramName}`,
-        ExpressMiddlewareAdapter(makeCommonIdFieldValidationMiddleware(paramName)),
+      .put(`/:${paramIdName}`,
+        ExpressMiddlewareAdapter(makeCommonIdFieldValidationMiddleware(paramIdName)),
         ExpressMiddlewareAdapter(makeCommonFieldValidationMiddleware(fieldsValidation)),
         ExpressControllerAdapter(makeUpdateEntityByIdController<EntityType>({
           ...props,
-          paramName,
+          paramIdName,
           entityName
         }, entityClass)))
   }
   return Router()
-    .patch(`/:${paramName}`,
-      ExpressMiddlewareAdapter(makeCommonIdFieldValidationMiddleware(paramName)),
+    .patch(`/:${paramIdName}`,
+      ExpressMiddlewareAdapter(makeCommonIdFieldValidationMiddleware(paramIdName)),
       ExpressMiddlewareAdapter(makeCommonFieldValidationMiddleware(fieldsValidation)),
       ExpressControllerAdapter(makeUpdateEntityByIdController<EntityType>({
         ...props,
-        paramName,
+        paramIdName,
         entityName
       }, entityClass)))
 }

@@ -18,6 +18,9 @@ export class AccessSessionEntity extends DefaultEntity implements AccessSessionM
   @Column()
   access_session_modules: string
 
+  @Column()
+  ip: string
+
   modules: AccessSessionModuleModel
 
   @AfterLoad()

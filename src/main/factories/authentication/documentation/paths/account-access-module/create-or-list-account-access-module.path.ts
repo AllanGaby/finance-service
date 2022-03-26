@@ -4,6 +4,9 @@ export const CreateOrListAccountAccessModulePath: DocumentationPathModel = {
   post: {
     tags: ['Perfil de acesso do usuário para um módulo/aplicação'],
     summary: 'Define o perfil de acesso de um usuário para um módulo/aplicação',
+    security: [{
+      bearerAuth: []
+    }],
     requestBody: {
       description: 'Dados para definir o perfil de acesso do usuário para um módulo/aplicação',
       content: {
@@ -25,11 +28,14 @@ export const CreateOrListAccountAccessModulePath: DocumentationPathModel = {
           }
         }
       },
-      [DocumentationHttpStatusCode.Conflict]: {
-        $ref: '#/components/common/conflict'
-      },
       [DocumentationHttpStatusCode.Unauthorized]: {
         $ref: '#/components/common/unauthorized'
+      },
+      [DocumentationHttpStatusCode.Forbidden]: {
+        $ref: '#/components/common/forbidden'
+      },
+      [DocumentationHttpStatusCode.Conflict]: {
+        $ref: '#/components/common/conflict'
       },
       [DocumentationHttpStatusCode.UnprocessableEntity]: {
         $ref: '#/components/common/unprocessableEntity'
@@ -39,6 +45,9 @@ export const CreateOrListAccountAccessModulePath: DocumentationPathModel = {
   get: {
     tags: ['Perfil de acesso do usuário para um módulo/aplicação'],
     summary: 'Lista perfil de acesso de usuários para os módulos/aplicações',
+    security: [{
+      bearerAuth: []
+    }],
     responses: {
       [DocumentationHttpStatusCode.Ok]: {
         description: 'Dados para definir o perfil de acesso do usuário para um módulo/aplicação',
@@ -55,6 +64,9 @@ export const CreateOrListAccountAccessModulePath: DocumentationPathModel = {
       },
       [DocumentationHttpStatusCode.Unauthorized]: {
         $ref: '#/components/common/unauthorized'
+      },
+      [DocumentationHttpStatusCode.Forbidden]: {
+        $ref: '#/components/common/forbidden'
       },
       [DocumentationHttpStatusCode.UnprocessableEntity]: {
         $ref: '#/components/common/unprocessableEntity'

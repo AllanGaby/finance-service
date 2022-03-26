@@ -24,7 +24,7 @@ export class DbCreateAccessSessionUseCase implements CreateEntityUseCase<AccessS
     private readonly createJWTAdapter: CreateJsonWebTokenProtocol
   ) {}
 
-  async create ({ login, password }: CreateAccessSessionDTO): Promise<AccessSessionPayloadModel> {
+  async create ({ login, password, ip }: CreateAccessSessionDTO): Promise<AccessSessionPayloadModel> {
     const accountByLogin = await this.getAccountRepository.getOne([{
       field: RepositoryAccountFilter.Email,
       conditional: CustomFilterConditional.equal,
@@ -63,7 +63,8 @@ export class DbCreateAccessSessionUseCase implements CreateEntityUseCase<AccessS
     })
     const accessSession = await this.createAccessSessionRepository.create({
       account_id: accountByLogin.id,
-      access_session_modules: JSON.stringify(modules)
+      access_session_modules: JSON.stringify(modules),
+      ip
     })
     await this.createCacheAdapter.create<Partial<AccessSessionPayloadModel>>({
       key: `session:${accountByLogin.id}:${accessSession.id}`,
@@ -76,7 +77,8 @@ export class DbCreateAccessSessionUseCase implements CreateEntityUseCase<AccessS
     })
     const accessSessionToken = this.encryptWithPublicKeyAdapter.createToken(JSON.stringify({
       session_id: accessSession.id,
-      account_id: accountByLogin.id
+      account_id: accountByLogin.id,
+      ip
     }))
     const accessToken = await this.createJWTAdapter.createJWT({
       payload: {

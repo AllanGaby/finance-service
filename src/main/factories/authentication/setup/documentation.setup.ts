@@ -5,6 +5,7 @@ import {
   AccessSessionModuleSchema,
   AccountAccessModuleSchema,
   AccountSchema,
+  AuthenticationSchema,
   CreateAccessSessionSchema,
   CreateAccountSchema,
   CreateAccessSessionPath,
@@ -27,6 +28,9 @@ import {
 } from '@/main/factories/authentication/documentation'
 
 export const AuthenticationDocumentationSetup: DocumentationSetupModel = {
+  components: {
+    authentication: AuthenticationSchema
+  },
   schemas: {
     createOrUpdateAccessProfile: CreateOrUpdateAccessProfileSchema,
     createAccessSession: CreateAccessSessionSchema,

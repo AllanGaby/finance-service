@@ -1,13 +1,13 @@
 import { CreateBatchEntityController } from './create-batch-entity.controller'
 import { CreateEntityUseCaseSpy, EntityModel, mockEntityModel } from '@/domain/common'
 import { mockCreateBatchEntityRequest } from '@/presentation/common'
-import { RequestValidatorSpy, mockRequestValidatorModel, mockFieldValidationModel, FieldValidationModel } from '@/protocols/request-validator'
+import { RequestValidatorProtocolSpy, mockRequestValidatorModel, mockFieldValidationModel, FieldValidationModel } from '@/protocols/request-validator'
 import { HttpHelper } from '@/protocols/http'
 
 type sutTypes = {
   sut: CreateBatchEntityController<EntityModel>
   fieldsToValidate: FieldValidationModel[]
-  validator: RequestValidatorSpy
+  validator: RequestValidatorProtocolSpy
   createEntityUseCase: CreateEntityUseCaseSpy<EntityModel>
 }
 
@@ -17,7 +17,7 @@ const makeSut = (): sutTypes => {
     mockFieldValidationModel(),
     mockFieldValidationModel()
   ]
-  const validator = new RequestValidatorSpy()
+  const validator = new RequestValidatorProtocolSpy()
   const createEntityUseCase = new CreateEntityUseCaseSpy<EntityModel>()
   const sut = new CreateBatchEntityController<EntityModel>(fieldsToValidate, validator, createEntityUseCase)
   return {

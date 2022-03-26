@@ -4,6 +4,9 @@ export const DeleteOrGetOrUpdateAccessProfilePath: DocumentationPathModel = {
   put: {
     tags: ['Perfil de acesso'],
     summary: 'Atualiza o cadastro de um perfil de acesso pelo identificador único',
+    security: [{
+      bearerAuth: []
+    }],
     parameters: [{
       in: DocumentationParamType.Path,
       name: 'access_profile_id',
@@ -32,11 +35,14 @@ export const DeleteOrGetOrUpdateAccessProfilePath: DocumentationPathModel = {
           }
         }
       },
-      [DocumentationHttpStatusCode.Conflict]: {
-        $ref: '#/components/common/conflict'
-      },
       [DocumentationHttpStatusCode.Unauthorized]: {
         $ref: '#/components/common/unauthorized'
+      },
+      [DocumentationHttpStatusCode.Forbidden]: {
+        $ref: '#/components/common/forbidden'
+      },
+      [DocumentationHttpStatusCode.Conflict]: {
+        $ref: '#/components/common/conflict'
       },
       [DocumentationHttpStatusCode.UnprocessableEntity]: {
         $ref: '#/components/common/unprocessableEntity'
@@ -46,6 +52,9 @@ export const DeleteOrGetOrUpdateAccessProfilePath: DocumentationPathModel = {
   delete: {
     tags: ['Perfil de acesso'],
     summary: 'Exclui o cadastro de um perfil de acesso pelo identificador único',
+    security: [{
+      bearerAuth: []
+    }],
     parameters: [{
       in: DocumentationParamType.Path,
       name: 'access_profile_id',
@@ -57,11 +66,14 @@ export const DeleteOrGetOrUpdateAccessProfilePath: DocumentationPathModel = {
       [DocumentationHttpStatusCode.NoContent]: {
         $ref: '#/components/common/noContent'
       },
-      [DocumentationHttpStatusCode.Conflict]: {
-        $ref: '#/components/common/conflict'
-      },
       [DocumentationHttpStatusCode.Unauthorized]: {
         $ref: '#/components/common/unauthorized'
+      },
+      [DocumentationHttpStatusCode.Forbidden]: {
+        $ref: '#/components/common/forbidden'
+      },
+      [DocumentationHttpStatusCode.Conflict]: {
+        $ref: '#/components/common/conflict'
       },
       [DocumentationHttpStatusCode.UnprocessableEntity]: {
         $ref: '#/components/common/unprocessableEntity'
@@ -71,6 +83,9 @@ export const DeleteOrGetOrUpdateAccessProfilePath: DocumentationPathModel = {
   get: {
     tags: ['Perfil de acesso'],
     summary: 'Busca um perfil de acesso pelo identificador único',
+    security: [{
+      bearerAuth: []
+    }],
     parameters: [{
       in: DocumentationParamType.Path,
       name: 'access_profile_id',

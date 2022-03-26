@@ -187,9 +187,9 @@ describe('CommonTypeORMRepository', () => {
 
     test('Should throws a MissingParamError if MissingParamError throws on create method', async () => {
       const { sut } = makeSut()
-      const missingParamName = database.column()
+      const missingparamIdName = database.column()
       jest.spyOn(sut.repositoryTypeORM, 'create').mockImplementationOnce(() => {
-        throw new RepositoryError(RepositoryErrorType.NotNull, undefined, missingParamName)
+        throw new RepositoryError(RepositoryErrorType.NotNull, undefined, missingparamIdName)
       })
       const promise = sut.create(mockEntityModel())
       await expect(promise).rejects.toThrowError(MissingParamError)
@@ -324,7 +324,7 @@ describe('CommonTypeORMRepository', () => {
           await sut.getOne([mockCustomFilterModel()], options)
           expect(findOneSpy).toHaveBeenCalledWith({
             join: undefined,
-            withDeleted: defaultRepositoryOptionsModel.returnDeletedEntities,
+            withDeleted: options.returnDeletedEntities,
             where
           })
         })

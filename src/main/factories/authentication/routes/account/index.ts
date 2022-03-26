@@ -1,12 +1,13 @@
 import {
   RequestAccountFilter,
-  RepositoryAccountFilter
+  RepositoryAccountFilter,
+  AuthenticationAccessRules
 } from '@/domain/authentication'
 import { CreateAccountRouteProps, makeCreateAccountRoute } from './create-account.route'
 import {
-  DefaultDeleteGetListEntityRoutesProps,
-  makeDefaultDeleteGetListEntityRoutes
-} from '@/main/factories/common/routes'
+  DefaultDeleteGetListEntityWithAuthenticationRoutesProps,
+  makeDefaultDeleteGetListEntityWithAuthenticationRoutes
+} from '@/main/factories/authentication/routes'
 import {
   makeCreateAccountFieldsValidations
 } from '@/main/factories/authentication/fields-validations'
@@ -15,7 +16,7 @@ import { Router } from 'express'
 
 export type AccountRouteProps =
 CreateAccountRouteProps &
-DefaultDeleteGetListEntityRoutesProps
+DefaultDeleteGetListEntityWithAuthenticationRoutesProps
 
 export const makeAccountRoute = (
   props: AccountRouteProps
@@ -25,9 +26,12 @@ export const makeAccountRoute = (
   props.repositorySettings = AccountRepositorySettings
   return Router()
     .use('/', makeCreateAccountRoute(props, makeCreateAccountFieldsValidations()))
-    .use(makeDefaultDeleteGetListEntityRoutes(props, {
+    .use(makeDefaultDeleteGetListEntityWithAuthenticationRoutes(props, {
       entityClass: AccountEntity,
       entityName: 'Account',
-      paramIdName: 'account_id'
+      paramIdName: 'account_id',
+      deleteAccessRules: [AuthenticationAccessRules.DeleteAccount],
+      getByIdAccessRules: [AuthenticationAccessRules.ShowAccount],
+      listAccessRules: [AuthenticationAccessRules.ListAccount]
     }))
 }

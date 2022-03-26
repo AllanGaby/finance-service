@@ -1,11 +1,11 @@
 import { FieldValidationMiddleware } from './field-validation.middleware'
-import { RequestValidatorSpy, mockRequestValidatorModel, mockFieldValidationModel, FieldValidationModel } from '@/protocols/request-validator'
 import { mockEntityModel } from '@/domain/common'
+import { RequestValidatorProtocolSpy, mockRequestValidatorModel, mockFieldValidationModel, FieldValidationModel } from '@/protocols/request-validator'
 import { HttpHelper, FieldValidationType, mockFieldValidationType } from '@/protocols/http'
 
 type sutTypes = {
   sut: FieldValidationMiddleware
-  validator: RequestValidatorSpy
+  validator: RequestValidatorProtocolSpy
   fieldToValidation: FieldValidationModel[]
   fieldValidationType: FieldValidationType
 }
@@ -21,7 +21,7 @@ const makeSut = (
   fieldToValidation: FieldValidationModel[],
   defineFieldValidationType: boolean = true
 ): sutTypes => {
-  const validator = new RequestValidatorSpy()
+  const validator = new RequestValidatorProtocolSpy()
   const fieldValidationType = defineFieldValidationType ? mockFieldValidationType() : undefined
   const sut = new FieldValidationMiddleware(validator, fieldToValidation, fieldValidationType)
   return {
@@ -91,11 +91,15 @@ describe('FieldValidationMiddleware', () => {
     const { sut, validator } = makeSut(mockFieldsToValidation())
     const body = mockEntityModel()
     const headers = mockEntityModel()
+    const queryParams = mockEntityModel()
+    const params = mockEntityModel()
     jest.spyOn(validator, 'validate').mockReturnValue(undefined)
     const response = await sut.handle({
       body,
-      headers
+      headers,
+      queryParams,
+      params
     })
-    expect(response).toEqual(HttpHelper.ok(body, headers))
+    expect(response).toEqual(HttpHelper.ok(body, headers, queryParams, params))
   })
 })

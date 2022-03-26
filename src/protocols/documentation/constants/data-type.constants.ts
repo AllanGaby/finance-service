@@ -1,8 +1,9 @@
 export enum DocumentationDataType {
-  String = 'string',
-  Number = 'number',
-  Integer = 'integer',
-  Boolean = 'boolean',
   Array = 'array',
-  Object = 'object'
+  Boolean = 'boolean',
+  Integer = 'integer',
+  Http = 'http',
+  Number = 'number',
+  Object = 'object',
+  String = 'string'
 }

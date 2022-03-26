@@ -1,6 +1,6 @@
 export class ConditionalMissingParamError extends Error {
-  constructor (paramName: string, conditionalMessage: string) {
-    super(`Column '${paramName}' is required when ${conditionalMessage}`)
+  constructor (paramIdName: string, conditionalMessage: string) {
+    super(`Column '${paramIdName}' is required when ${conditionalMessage}`)
     this.name = 'ConditionalMissingParamError'
   }
 }

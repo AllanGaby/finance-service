@@ -10,16 +10,16 @@ jest.mock('express', () => ({
 }))
 
 type sutTypes = {
-  paramName: string
+  paramIdName: string
 }
 
 const makeSut = (): sutTypes => {
-  const paramName = database.column()
+  const paramIdName = database.column()
   makeDeleteEntityByIdRoute({
     repositoryType: RepositoryType.Memory
-  }, DefaultEntity, paramName)
+  }, DefaultEntity, paramIdName)
   return {
-    paramName
+    paramIdName
   }
 }
 
@@ -36,9 +36,9 @@ describe('makeDeleteEntityByIdRoute', () => {
 
   test('Should call router with correct url', () => {
     const deleteSpy = jest.spyOn(RouterSpy, 'delete')
-    const { paramName } = makeSut()
+    const { paramIdName } = makeSut()
     expect(deleteSpy).toHaveBeenCalledWith(
-      `/:${paramName}`,
+      `/:${paramIdName}`,
       expect.any(Function),
       expect.any(Function)
     )

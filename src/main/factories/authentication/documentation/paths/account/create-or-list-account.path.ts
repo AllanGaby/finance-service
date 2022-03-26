@@ -25,11 +25,14 @@ export const CreateOrListAccountPath: DocumentationPathModel = {
           }
         }
       },
-      [DocumentationHttpStatusCode.Conflict]: {
-        $ref: '#/components/common/conflict'
-      },
       [DocumentationHttpStatusCode.Unauthorized]: {
         $ref: '#/components/common/unauthorized'
+      },
+      [DocumentationHttpStatusCode.Forbidden]: {
+        $ref: '#/components/common/forbidden'
+      },
+      [DocumentationHttpStatusCode.Conflict]: {
+        $ref: '#/components/common/conflict'
       },
       [DocumentationHttpStatusCode.UnprocessableEntity]: {
         $ref: '#/components/common/unprocessableEntity'
@@ -39,6 +42,9 @@ export const CreateOrListAccountPath: DocumentationPathModel = {
   get: {
     tags: ['Conta de acesso'],
     summary: 'Lista contas de acesso',
+    security: [{
+      bearerAuth: []
+    }],
     responses: {
       [DocumentationHttpStatusCode.Ok]: {
         description: 'Dados da conta de acesso',
@@ -55,6 +61,9 @@ export const CreateOrListAccountPath: DocumentationPathModel = {
       },
       [DocumentationHttpStatusCode.Unauthorized]: {
         $ref: '#/components/common/unauthorized'
+      },
+      [DocumentationHttpStatusCode.Forbidden]: {
+        $ref: '#/components/common/forbidden'
       },
       [DocumentationHttpStatusCode.UnprocessableEntity]: {
         $ref: '#/components/common/unprocessableEntity'

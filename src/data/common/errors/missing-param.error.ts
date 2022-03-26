@@ -1,6 +1,6 @@
 export class MissingParamError extends Error {
-  constructor (paramName: string) {
-    super(`Column '${paramName}' is required`)
+  constructor (paramIdName: string) {
+    super(`Column '${paramIdName}' is required`)
     this.name = 'MissingParamError'
   }
 }

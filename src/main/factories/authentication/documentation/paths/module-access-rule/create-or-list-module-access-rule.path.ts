@@ -4,6 +4,9 @@ export const CreateOrListModuleAccessRulePath: DocumentationPathModel = {
   post: {
     tags: ['Regra de acesso'],
     summary: 'Cria uma regra de acesso',
+    security: [{
+      bearerAuth: []
+    }],
     requestBody: {
       description: 'Dados da regra de acessp',
       content: {
@@ -25,11 +28,14 @@ export const CreateOrListModuleAccessRulePath: DocumentationPathModel = {
           }
         }
       },
-      [DocumentationHttpStatusCode.Conflict]: {
-        $ref: '#/components/common/conflict'
-      },
       [DocumentationHttpStatusCode.Unauthorized]: {
         $ref: '#/components/common/unauthorized'
+      },
+      [DocumentationHttpStatusCode.Forbidden]: {
+        $ref: '#/components/common/forbidden'
+      },
+      [DocumentationHttpStatusCode.Conflict]: {
+        $ref: '#/components/common/conflict'
       },
       [DocumentationHttpStatusCode.UnprocessableEntity]: {
         $ref: '#/components/common/unprocessableEntity'
@@ -39,6 +45,9 @@ export const CreateOrListModuleAccessRulePath: DocumentationPathModel = {
   get: {
     tags: ['Regra de acesso'],
     summary: 'Lista regras de acesso',
+    security: [{
+      bearerAuth: []
+    }],
     responses: {
       [DocumentationHttpStatusCode.Ok]: {
         description: 'Dados das regras de acesso',
@@ -55,6 +64,9 @@ export const CreateOrListModuleAccessRulePath: DocumentationPathModel = {
       },
       [DocumentationHttpStatusCode.Unauthorized]: {
         $ref: '#/components/common/unauthorized'
+      },
+      [DocumentationHttpStatusCode.Forbidden]: {
+        $ref: '#/components/common/forbidden'
       },
       [DocumentationHttpStatusCode.UnprocessableEntity]: {
         $ref: '#/components/common/unprocessableEntity'

@@ -154,7 +154,8 @@ describe('DbCreateAccessSessionUseCase', () => {
       await sut.create(createAccessSessionDTO)
       expect(createSpy).toHaveBeenCalledWith({
         account_id: authenticationAccount.id,
-        access_session_modules: JSON.stringify(modules)
+        access_session_modules: JSON.stringify(modules),
+        ip: createAccessSessionDTO.ip
       })
     })
 
@@ -190,7 +191,8 @@ describe('DbCreateAccessSessionUseCase', () => {
       await sut.create(createAccessSessionDTO)
       expect(createTokenSpy).toHaveBeenCalledWith(JSON.stringify({
         session_id: accessSession.id,
-        account_id: authenticationAccount.id
+        account_id: authenticationAccount.id,
+        ip: createAccessSessionDTO.ip
       }))
     })
 

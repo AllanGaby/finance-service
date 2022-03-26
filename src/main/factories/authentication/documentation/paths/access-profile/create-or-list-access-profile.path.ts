@@ -4,6 +4,9 @@ export const CreateOrListAccessProfilePath: DocumentationPathModel = {
   post: {
     tags: ['Perfil de acesso'],
     summary: 'Cria um perfil de acesso com as regras de acessos',
+    security: [{
+      bearerAuth: []
+    }],
     requestBody: {
       description: 'Dados do perfil de acesso',
       content: {
@@ -25,11 +28,14 @@ export const CreateOrListAccessProfilePath: DocumentationPathModel = {
           }
         }
       },
-      [DocumentationHttpStatusCode.Conflict]: {
-        $ref: '#/components/common/conflict'
-      },
       [DocumentationHttpStatusCode.Unauthorized]: {
         $ref: '#/components/common/unauthorized'
+      },
+      [DocumentationHttpStatusCode.Forbidden]: {
+        $ref: '#/components/common/forbidden'
+      },
+      [DocumentationHttpStatusCode.Conflict]: {
+        $ref: '#/components/common/conflict'
       },
       [DocumentationHttpStatusCode.UnprocessableEntity]: {
         $ref: '#/components/common/unprocessableEntity'
@@ -39,6 +45,9 @@ export const CreateOrListAccessProfilePath: DocumentationPathModel = {
   get: {
     tags: ['Perfil de acesso'],
     summary: 'Lista perfils de acesso',
+    security: [{
+      bearerAuth: []
+    }],
     responses: {
       [DocumentationHttpStatusCode.Ok]: {
         description: 'Dados do perfil de acesso',
@@ -55,6 +64,9 @@ export const CreateOrListAccessProfilePath: DocumentationPathModel = {
       },
       [DocumentationHttpStatusCode.Unauthorized]: {
         $ref: '#/components/common/unauthorized'
+      },
+      [DocumentationHttpStatusCode.Forbidden]: {
+        $ref: '#/components/common/forbidden'
       },
       [DocumentationHttpStatusCode.UnprocessableEntity]: {
         $ref: '#/components/common/unprocessableEntity'
