@@ -1,6 +1,6 @@
 import { SendMailProtocol, SendMailDTO, SMTPConfig } from '@/protocols/mail'
 
-export class SendMailSpy implements SendMailProtocol {
+export class SendMailProtocolSpy implements SendMailProtocol {
   params: SendMailDTO
   config: SMTPConfig
 

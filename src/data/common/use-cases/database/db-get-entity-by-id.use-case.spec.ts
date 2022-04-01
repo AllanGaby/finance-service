@@ -1,8 +1,7 @@
 import { DbGetEntityByIdUseCase } from './db-get-entity-by-id.use-case'
 import { mockEntityModel, EntityModel } from '@/domain/common'
-import { GetEntityByIdRepositorySpy, mockRepositoryOptionsModel } from '@/protocols/repositories'
+import { GetEntityByIdRepositorySpy, mockRepositoryOptionsModel, RepositoryOptionsModel } from '@/protocols/repositories'
 import { EntityIsNotFoundError } from '@/data/common/errors'
-import { RepositoryOptionsModel } from '@/protocols/repositories'
 import { database, datatype } from 'faker'
 
 type sutTypes = {

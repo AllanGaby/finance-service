@@ -1,17 +1,19 @@
 import {
+  RepositoryOptionsModel,
   CountEntitiesRepository,
   CreateEntityInBulkRepository,
   CreateEntityRepository,
   DeleteEntitiesByListIdRepository,
   DeleteEntityByIdRepository,
+  DeleteEntityRepository,
   GetEntityByIdRepository,
   GetOneEntityRepository,
   ListEntitiesRepository,
-  ListEntitiesRepositoryDTO,
-  RepositoryOptionsModel,
   SoftDeleteEntitiesByListIdRepository,
   SoftDeleteEntityByIdRepository,
-  UpdateEntityRepository
+  SoftDeleteEntityRepository,
+  UpdateEntityRepository,
+  ListEntitiesRepositoryDTO
 } from '@/protocols/repositories'
 import { CreateEntityDTO, CustomFilterConditional, CustomFilterModel, OrderDirection } from '@/domain/common'
 import { InvalidForeignKeyError, MissingParamError, RepositoryError, RepositoryErrorType, ViolateUniqueKeyError } from '@/data/common/errors'
@@ -27,16 +29,18 @@ export const defaultRepositoryOptionsModel: RepositoryOptionsModel = {
 
 export class CommonTypeORMRepository<EntityType extends DefaultEntity>
 implements CountEntitiesRepository<EntityType>,
-CreateEntityInBulkRepository<EntityType>,
-CreateEntityRepository<EntityType>,
-DeleteEntitiesByListIdRepository<EntityType>,
-DeleteEntityByIdRepository<EntityType>,
-GetEntityByIdRepository<EntityType>,
-GetOneEntityRepository<EntityType>,
-ListEntitiesRepository<EntityType>,
-SoftDeleteEntitiesByListIdRepository<EntityType>,
-SoftDeleteEntityByIdRepository<EntityType>,
-UpdateEntityRepository<EntityType> {
+ CreateEntityInBulkRepository<EntityType>,
+ CreateEntityRepository<EntityType>,
+ DeleteEntitiesByListIdRepository<EntityType>,
+ DeleteEntityByIdRepository<EntityType>,
+ DeleteEntityRepository<EntityType>,
+ GetEntityByIdRepository<EntityType>,
+ GetOneEntityRepository<EntityType>,
+ ListEntitiesRepository<EntityType>,
+ SoftDeleteEntitiesByListIdRepository<EntityType>,
+ SoftDeleteEntityByIdRepository<EntityType>,
+ SoftDeleteEntityRepository<EntityType>,
+ UpdateEntityRepository<EntityType> {
   public repositoryTypeORM: Repository<EntityType>
   public columnsToFilter: string[] = []
   public join?: JoinOptions
@@ -198,6 +202,26 @@ UpdateEntityRepository<EntityType> {
   async softDeleteById (entityId: string): Promise<EntityType | undefined> {
     const repository = await this.getRepositoryTypeORM()
     await repository.softDelete(entityId)
+    return undefined
+  }
+
+  async delete (filter: Partial<EntityType>): Promise<EntityType | undefined> {
+    const repository = await this.getRepositoryTypeORM()
+    const mappedFilters = {}
+    Object.keys(filter).forEach(key => {
+      mappedFilters[key] = filter[key]
+    })
+    await repository.delete(mappedFilters)
+    return undefined
+  }
+
+  async softDelete (filter: Partial<EntityType>): Promise<EntityType | undefined> {
+    const repository = await this.getRepositoryTypeORM()
+    const mappedFilters = {}
+    Object.keys(filter).forEach(key => {
+      mappedFilters[key] = filter[key]
+    })
+    await repository.softDelete(mappedFilters)
     return undefined
   }
 

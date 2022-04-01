@@ -4,12 +4,14 @@ import {
   CreateEntityRepository,
   DeleteEntitiesByListIdRepository,
   DeleteEntityByIdRepository,
+  DeleteEntityRepository,
   GetEntityByIdRepository,
   GetOneEntityRepository,
   ListEntitiesRepository,
   ListEntitiesRepositoryDTO,
   SoftDeleteEntitiesByListIdRepository,
   SoftDeleteEntityByIdRepository,
+  SoftDeleteEntityRepository,
   UpdateEntityRepository
 } from '@/protocols/repositories'
 import { EntityModel, CreateEntityDTO, UpdateEntityDTO, CustomFilterModel } from '@/domain/common'
@@ -21,11 +23,13 @@ CreateEntityInBulkRepository<EntityType>,
 CreateEntityRepository<EntityType>,
 DeleteEntitiesByListIdRepository<EntityType>,
 DeleteEntityByIdRepository<EntityType>,
+DeleteEntityRepository<EntityType>,
 GetEntityByIdRepository<EntityType>,
 GetOneEntityRepository<EntityType>,
 ListEntitiesRepository<EntityType>,
 SoftDeleteEntitiesByListIdRepository<EntityType>,
 SoftDeleteEntityByIdRepository<EntityType>,
+SoftDeleteEntityRepository<EntityType>,
 UpdateEntityRepository<EntityType> {
   entities: EntityType[]
 
@@ -123,8 +127,16 @@ UpdateEntityRepository<EntityType> {
     return undefined
   }
 
+  async delete (filter: Partial<EntityType>): Promise<EntityType> {
+    return undefined
+  }
+
   async softDeleteByListId (listIds: string[]): Promise<EntityType | undefined> {
     return this.deleteByListId(listIds)
+  }
+
+  async softDelete (filter: Partial<EntityType>): Promise<EntityType> {
+    return undefined
   }
 
   async listByListFieldValue (listValues: string[], field: string): Promise<EntityType[]> {

@@ -1,6 +1,6 @@
 import { ControllerProtocol, HttpRequest, HttpResponse, HttpHelper } from '@/protocols/http'
 import { CreateEntityUseCase, CreateEntityDTO } from '@/domain/common'
-import { CreateEntityRequest } from '@/presentation/common'
+import { CreateEntityRequest, SettingsHeaderRequest } from '@/presentation/common'
 
 type CreateEntityResponse<EntityType> = EntityType | EntityType[] | Error | object
 
@@ -10,8 +10,8 @@ implements ControllerProtocol<CreateEntityRequest<CreateEntityDTOType>, CreateEn
     private readonly createEntityUseCase: CreateEntityUseCase<EntityType, CreateEntityDTOType>
   ) {}
 
-  async handle (request: HttpRequest<CreateEntityRequest<CreateEntityDTOType>>): Promise<HttpResponse<CreateEntityResponse<EntityType>>> {
-    const entity = await this.createEntityUseCase.create(request.body)
+  async handle (request: HttpRequest<CreateEntityRequest<CreateEntityDTOType>, SettingsHeaderRequest>): Promise<HttpResponse<CreateEntityResponse<EntityType>>> {
+    const entity = await this.createEntityUseCase.create(request.body, request.headers.settings)
     if (entity) {
       return HttpHelper.created(entity)
     }

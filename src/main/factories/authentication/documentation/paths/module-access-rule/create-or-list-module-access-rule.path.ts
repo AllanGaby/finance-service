@@ -8,7 +8,7 @@ export const CreateOrListModuleAccessRulePath: DocumentationPathModel = {
       bearerAuth: []
     }],
     requestBody: {
-      description: 'Dados da regra de acessp',
+      description: 'Dados da regra de acesso',
       content: {
         [DocumentationContentType.Json]: {
           schema: {

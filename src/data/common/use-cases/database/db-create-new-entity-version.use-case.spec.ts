@@ -1,10 +1,10 @@
 import { DbCreateNewEntityVersionUseCase } from './db-create-new-entity-version.use-case'
 import {
   CreateEntityRepositorySpy,
-  GetEntityByIdRepositorySpy,
-  SoftDeleteEntityByIdRepositorySpy
+  GetOneEntityRepositorySpy,
+  SoftDeleteEntityRepositorySpy
 } from '@/protocols/repositories'
-import { mockVersionedEntityModel, UpdateEntityDTO, VersionedEntityModel } from '@/domain/common'
+import { CustomFilterConditional, CustomFilterOperator, mockVersionedEntityModel, UpdateEntityDTO, VersionedEntityModel } from '@/domain/common'
 import { EntityIsNotFoundError } from '@/data/common/errors'
 import { datatype } from 'faker'
 
@@ -12,21 +12,21 @@ type sutTypes = {
   sut: DbCreateNewEntityVersionUseCase<VersionedEntityModel>
   entityId: string
   createNewEntityVersionDTO: UpdateEntityDTO<VersionedEntityModel>
-  getEntityByIdRepository: GetEntityByIdRepositorySpy<VersionedEntityModel>
+  getEntityOneRepository: GetOneEntityRepositorySpy<VersionedEntityModel>
   entityName: string
-  softDeleteEntityRepository: SoftDeleteEntityByIdRepositorySpy<VersionedEntityModel>
+  softDeleteEntityRepository: SoftDeleteEntityRepositorySpy<VersionedEntityModel>
   createNewEntityEntityRepository: CreateEntityRepositorySpy<VersionedEntityModel>
 }
 
 const makeSut = (): sutTypes => {
-  const getEntityByIdRepository = new GetEntityByIdRepositorySpy<VersionedEntityModel>()
-  getEntityByIdRepository.entity = mockVersionedEntityModel()
+  const getEntityOneRepository = new GetOneEntityRepositorySpy<VersionedEntityModel>()
+  getEntityOneRepository.entity = mockVersionedEntityModel()
   const entityName = datatype.uuid()
-  const softDeleteEntityRepository = new SoftDeleteEntityByIdRepositorySpy<VersionedEntityModel>()
+  const softDeleteEntityRepository = new SoftDeleteEntityRepositorySpy<VersionedEntityModel>()
   const createNewEntityEntityRepository = new CreateEntityRepositorySpy<VersionedEntityModel>()
   createNewEntityEntityRepository.entity = mockVersionedEntityModel()
   const sut = new DbCreateNewEntityVersionUseCase<VersionedEntityModel>(
-    getEntityByIdRepository,
+    getEntityOneRepository,
     entityName,
     softDeleteEntityRepository,
     createNewEntityEntityRepository
@@ -35,7 +35,7 @@ const makeSut = (): sutTypes => {
     sut,
     entityId: datatype.uuid(),
     createNewEntityVersionDTO: mockVersionedEntityModel(),
-    getEntityByIdRepository,
+    getEntityOneRepository,
     entityName,
     softDeleteEntityRepository,
     createNewEntityEntityRepository
@@ -43,64 +43,74 @@ const makeSut = (): sutTypes => {
 }
 
 describe('DbCreateNewEntityVersionUseCase', () => {
-  describe('Find Entity By Id', () => {
-    test('Should call GetEntityByIdRepository with correct value', async () => {
-      const { sut, entityId, createNewEntityVersionDTO, getEntityByIdRepository } = makeSut()
-      const getByIdSpy = jest.spyOn(getEntityByIdRepository, 'getById')
+  describe('Find Current version', () => {
+    test('Should call getEntityOneRepository with correct value', async () => {
+      const { sut, entityId, createNewEntityVersionDTO, getEntityOneRepository } = makeSut()
+      const getByIdSpy = jest.spyOn(getEntityOneRepository, 'getOne')
       await sut.createVersion(entityId, createNewEntityVersionDTO)
-      expect(getByIdSpy).toHaveBeenCalledWith(entityId, {
+      expect(getByIdSpy).toHaveBeenCalledWith([{
+        field: 'id',
+        conditional: CustomFilterConditional.equal,
+        operator: CustomFilterOperator.and,
+        value: entityId
+      }, {
+        field: 'deleted_at',
+        conditional: CustomFilterConditional.isEmpty,
+        operator: CustomFilterOperator.and,
+        value: undefined
+      }], {
         useJoin: false
       })
     })
 
-    test('Should fails if GetEntityByIdRepository fails', async () => {
-      const { sut, entityId, createNewEntityVersionDTO, getEntityByIdRepository } = makeSut()
-      jest.spyOn(getEntityByIdRepository, 'getById').mockRejectedValue(new Error())
+    test('Should fails if getEntityOneRepository fails', async () => {
+      const { sut, entityId, createNewEntityVersionDTO, getEntityOneRepository } = makeSut()
+      jest.spyOn(getEntityOneRepository, 'getOne').mockRejectedValue(new Error())
       const promise = sut.createVersion(entityId, createNewEntityVersionDTO)
       await expect(promise).rejects.toThrow()
     })
 
-    test('Should return EntityIsNotFoundError if GetEntityByIdRepository return undefined', async () => {
-      const { sut, entityId, createNewEntityVersionDTO, getEntityByIdRepository } = makeSut()
-      jest.spyOn(getEntityByIdRepository, 'getById').mockResolvedValue(undefined)
+    test('Should return EntityIsNotFoundError if getEntityOneRepository return undefined', async () => {
+      const { sut, entityId, createNewEntityVersionDTO, getEntityOneRepository } = makeSut()
+      jest.spyOn(getEntityOneRepository, 'getOne').mockResolvedValue(undefined)
       const promise = sut.createVersion(entityId, createNewEntityVersionDTO)
       await expect(promise).rejects.toThrowError(EntityIsNotFoundError)
     })
 
-    describe('If GetEntityByIdRepository fails', () => {
+    describe('If getEntityOneRepository fails', () => {
       test('Should not call SoftDeleteEntityRepository', async () => {
-        const { sut, entityId, createNewEntityVersionDTO, getEntityByIdRepository, softDeleteEntityRepository } = makeSut()
-        const softDeleteByIdSpy = jest.spyOn(softDeleteEntityRepository, 'softDeleteById')
-        jest.spyOn(getEntityByIdRepository, 'getById').mockRejectedValue(new Error())
+        const { sut, entityId, createNewEntityVersionDTO, getEntityOneRepository, softDeleteEntityRepository } = makeSut()
+        const softDeleteByIdSpy = jest.spyOn(softDeleteEntityRepository, 'softDelete')
+        jest.spyOn(getEntityOneRepository, 'getOne').mockRejectedValue(new Error())
         const promise = sut.createVersion(entityId, createNewEntityVersionDTO)
         await expect(promise).rejects.toThrow()
         expect(softDeleteByIdSpy).not.toHaveBeenCalled()
       })
 
       test('Should not call CreateNewEntityEntityRepository', async () => {
-        const { sut, entityId, createNewEntityVersionDTO, getEntityByIdRepository, createNewEntityEntityRepository } = makeSut()
+        const { sut, entityId, createNewEntityVersionDTO, getEntityOneRepository, createNewEntityEntityRepository } = makeSut()
         const createSpy = jest.spyOn(createNewEntityEntityRepository, 'create')
-        jest.spyOn(getEntityByIdRepository, 'getById').mockRejectedValue(new Error())
+        jest.spyOn(getEntityOneRepository, 'getOne').mockRejectedValue(new Error())
         const promise = sut.createVersion(entityId, createNewEntityVersionDTO)
         await expect(promise).rejects.toThrow()
         expect(createSpy).not.toHaveBeenCalled()
       })
     })
 
-    describe('If GetEntityByIdRepository return undefined', () => {
+    describe('If getEntityOneRepository return undefined', () => {
       test('Should not call SoftDeleteEntityRepository', async () => {
-        const { sut, entityId, createNewEntityVersionDTO, getEntityByIdRepository, softDeleteEntityRepository } = makeSut()
-        const softDeleteByIdSpy = jest.spyOn(softDeleteEntityRepository, 'softDeleteById')
-        jest.spyOn(getEntityByIdRepository, 'getById').mockResolvedValue(undefined)
+        const { sut, entityId, createNewEntityVersionDTO, getEntityOneRepository, softDeleteEntityRepository } = makeSut()
+        const softDeleteByIdSpy = jest.spyOn(softDeleteEntityRepository, 'softDelete')
+        jest.spyOn(getEntityOneRepository, 'getOne').mockResolvedValue(undefined)
         const promise = sut.createVersion(entityId, createNewEntityVersionDTO)
         await expect(promise).rejects.toThrowError(EntityIsNotFoundError)
         expect(softDeleteByIdSpy).not.toHaveBeenCalled()
       })
 
       test('Should not call CreateNewEntityEntityRepository', async () => {
-        const { sut, entityId, createNewEntityVersionDTO, getEntityByIdRepository, createNewEntityEntityRepository } = makeSut()
+        const { sut, entityId, createNewEntityVersionDTO, getEntityOneRepository, createNewEntityEntityRepository } = makeSut()
         const createSpy = jest.spyOn(createNewEntityEntityRepository, 'create')
-        jest.spyOn(getEntityByIdRepository, 'getById').mockResolvedValue(undefined)
+        jest.spyOn(getEntityOneRepository, 'getOne').mockResolvedValue(undefined)
         const promise = sut.createVersion(entityId, createNewEntityVersionDTO)
         await expect(promise).rejects.toThrowError(EntityIsNotFoundError)
         expect(createSpy).not.toHaveBeenCalled()
@@ -110,15 +120,18 @@ describe('DbCreateNewEntityVersionUseCase', () => {
 
   describe('Delete Old Entity Version', () => {
     test('Should call SoftDeleteEntityRepository with correct value', async () => {
-      const { sut, entityId, createNewEntityVersionDTO, getEntityByIdRepository, softDeleteEntityRepository } = makeSut()
-      const softDeleteByIdSpy = jest.spyOn(softDeleteEntityRepository, 'softDeleteById')
+      const { sut, entityId, createNewEntityVersionDTO, getEntityOneRepository, softDeleteEntityRepository } = makeSut()
+      const softDeleteByIdSpy = jest.spyOn(softDeleteEntityRepository, 'softDelete')
       await sut.createVersion(entityId, createNewEntityVersionDTO)
-      expect(softDeleteByIdSpy).toHaveBeenCalledWith(getEntityByIdRepository.entity.id)
+      expect(softDeleteByIdSpy).toHaveBeenCalledWith({
+        id: getEntityOneRepository.entity.id,
+        version: getEntityOneRepository.entity.version
+      })
     })
 
     test('Should fails if SoftDeleteEntityRepository fails', async () => {
       const { sut, entityId, createNewEntityVersionDTO, softDeleteEntityRepository } = makeSut()
-      jest.spyOn(softDeleteEntityRepository, 'softDeleteById').mockRejectedValue(new Error())
+      jest.spyOn(softDeleteEntityRepository, 'softDelete').mockRejectedValue(new Error())
       const promise = sut.createVersion(entityId, createNewEntityVersionDTO)
       await expect(promise).rejects.toThrow()
     })
@@ -127,7 +140,7 @@ describe('DbCreateNewEntityVersionUseCase', () => {
       test('Should not call CreateNewEntityEntityRepository', async () => {
         const { sut, entityId, createNewEntityVersionDTO, softDeleteEntityRepository, createNewEntityEntityRepository } = makeSut()
         const createSpy = jest.spyOn(createNewEntityEntityRepository, 'create')
-        jest.spyOn(softDeleteEntityRepository, 'softDeleteById').mockRejectedValue(new Error())
+        jest.spyOn(softDeleteEntityRepository, 'softDelete').mockRejectedValue(new Error())
         const promise = sut.createVersion(entityId, createNewEntityVersionDTO)
         await expect(promise).rejects.toThrow()
         expect(createSpy).not.toHaveBeenCalled()
@@ -137,16 +150,15 @@ describe('DbCreateNewEntityVersionUseCase', () => {
 
   describe('Create New Entity Version', () => {
     test('Should call CreateNewEntityEntityRepository with correct value', async () => {
-      const { sut, entityId, createNewEntityVersionDTO, getEntityByIdRepository, createNewEntityEntityRepository } = makeSut()
+      const { sut, entityId, createNewEntityVersionDTO, getEntityOneRepository, createNewEntityEntityRepository } = makeSut()
       const createSpy = jest.spyOn(createNewEntityEntityRepository, 'create')
       await sut.createVersion(entityId, createNewEntityVersionDTO)
       expect(createSpy).toHaveBeenCalledWith({
-        ...getEntityByIdRepository.entity,
+        ...getEntityOneRepository.entity,
         ...createNewEntityVersionDTO,
         deleted_at: null,
-        current_version_id: null,
-        version: getEntityByIdRepository.entity.version + 1,
-        last_version_id: getEntityByIdRepository.entity.id
+        version: getEntityOneRepository.entity.version + 1,
+        id: getEntityOneRepository.entity.id
       })
     })
 

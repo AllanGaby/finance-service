@@ -16,6 +16,10 @@ implements ControllerProtocol<UpdateEntityRequest<UpdateEntityDTOType>, UpdateEn
   ) {}
 
   async handle (request: HttpRequest<UpdateEntityRequest<UpdateEntityDTOType>, any, any, UpdateEntityByIdRequestDefault>): Promise<HttpResponse<UpdateEntityByIdResponse<EntityType>>> {
-    return HttpHelper.ok(await this.updateEntityUseCase.updateById(request.params[this.paramIdName], request.body))
+    const entity = await this.updateEntityUseCase.updateById(request.params[this.paramIdName], request.body)
+    if (entity) {
+      return HttpHelper.ok(entity)
+    }
+    return HttpHelper.noContent()
   }
 }

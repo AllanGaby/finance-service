@@ -6,12 +6,14 @@ import {
   AccountAccessModuleRouteProps,
   ModuleAccessRuleRouteProps,
   ModuleRouteProps,
+  RequestRecoverPasswordRouteProps,
   makeAccessProfileRoute,
   makeAccessSessionRoute,
   makeAccountRoute,
   makeAccountAccessModuleRoute,
   makeModuleAccessRuleRoute,
-  makeModuleRoute
+  makeModuleRoute,
+  makeRequestRecoverPasswordRoute
 } from '@/main/factories/authentication/routes'
 
 export type AuthenticationRouteProps =
@@ -20,7 +22,8 @@ AccessSessionRouteProps &
 AccountRouteProps &
 AccountAccessModuleRouteProps &
 ModuleAccessRuleRouteProps &
-ModuleRouteProps
+ModuleRouteProps &
+RequestRecoverPasswordRouteProps
 
 export const AuthenticationModuleRoute = (props: AuthenticationRouteProps): Router =>
   Router()
@@ -30,3 +33,4 @@ export const AuthenticationModuleRoute = (props: AuthenticationRouteProps): Rout
     .use(makeAccountAccessModuleRoute(props))
     .use(makeModuleAccessRuleRoute(props))
     .use(makeModuleRoute(props))
+    .use('/request-recover-password', makeRequestRecoverPasswordRoute(props))

@@ -12,12 +12,12 @@ import {
   CustomFilterConditional,
   CustomFilterOperator
 } from '@/domain/common'
-import { ListEntitiesRepository } from '@/protocols/repositories'
+import { ListEntitiesRepository, GetOneEntityRepository } from '@/protocols/repositories'
 
 export class DbCreateOrUpdateManagerAccessProfilesUseCase implements CreateOrUpdateManagerAccessProfilesUseCase {
   constructor (
     private readonly listModulesRepository: ListEntitiesRepository<ModuleModel>,
-    private readonly listAccessProfileRepository: ListEntitiesRepository<AccessProfileModel>,
+    private readonly getAccessProfileRepository: GetOneEntityRepository<AccessProfileModel>,
     private readonly createAccessProfileUseCase: CreateEntityUseCase<AccessProfileModel, CreateAccessProfileDTO>,
     private readonly updateAccessProfileUseCase: UpdateEntityByIdUseCase<AccessProfileModel, UpdateAccessProfileDTO>
   ) { }
@@ -31,19 +31,17 @@ export class DbCreateOrUpdateManagerAccessProfilesUseCase implements CreateOrUpd
       const accessProfileKey = `${module.module_key}_manager`
       const accessProfileName = `${module.name}(Administrador)`
 
-      const moduleAccessProfileList = await this.listAccessProfileRepository.list({
-        filters: [{
-          field: RepositoryAccessProfileFilter.ModuleId,
-          conditional: CustomFilterConditional.equal,
-          operator: CustomFilterOperator.and,
-          value: module.id
-        }, {
-          field: RepositoryAccessProfileFilter.Key,
-          conditional: CustomFilterConditional.equal,
-          operator: CustomFilterOperator.and,
-          value: accessProfileKey
-        }]
-      })
+      const currentManagerAccessProfile = await this.getAccessProfileRepository.getOne([{
+        field: RepositoryAccessProfileFilter.ModuleId,
+        conditional: CustomFilterConditional.equal,
+        operator: CustomFilterOperator.and,
+        value: module.id
+      }, {
+        field: RepositoryAccessProfileFilter.Key,
+        conditional: CustomFilterConditional.equal,
+        operator: CustomFilterOperator.and,
+        value: accessProfileKey
+      }])
       const accessProfileDTO: CreateAccessProfileDTO = {
         access_profile_key: accessProfileKey,
         enabled: true,
@@ -52,8 +50,7 @@ export class DbCreateOrUpdateManagerAccessProfilesUseCase implements CreateOrUpd
         rules_id: moduleAccessRuleList
       }
       let managerAccessProfile: AccessProfileModel
-      if (moduleAccessProfileList.length > 0) {
-        const currentManagerAccessProfile = moduleAccessProfileList[0]
+      if (currentManagerAccessProfile) {
         managerAccessProfile = await this.updateAccessProfileUseCase.updateById(currentManagerAccessProfile.id, accessProfileDTO)
       } else {
         managerAccessProfile = await this.createAccessProfileUseCase.create(accessProfileDTO) as AccessProfileModel

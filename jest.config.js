@@ -17,6 +17,7 @@ module.exports = {
     '!**/**.error.ts',
     '!**/**.filter.ts',
     '!**/**.factory.ts',
+    '!**/**.helper.ts',
     '!**/**.mock.ts',
     '!**/**.schema.ts',
     '!**/**.path.ts',

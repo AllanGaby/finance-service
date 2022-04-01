@@ -1,6 +1,7 @@
 export * from './db-create-entity.use-case'
 export * from './db-create-new-entity-version.use-case'
 export * from './db-delete-entity-by-id.use-case'
+export * from './db-get-current-settings.use-case'
 export * from './db-get-entity-by-id.use-case'
 export * from './db-get-file-by-entity-id.use-case'
 export * from './db-list-entities-and-export-to-file.use-case'

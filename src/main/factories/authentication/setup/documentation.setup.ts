@@ -18,13 +18,16 @@ import {
   CreateOrUpdateAccountAccessModuleSchema,
   CreateOrUpdateModuleAccessRuleSchema,
   CreateOrUpdateModuleSchema,
+  CreateRequestAndRecoverPasswordPath,
+  CreateRequestRecoverPasswordSchema,
   DeleteOrGetAccountPath,
   DeleteOrGetOrUpdateAccessProfilePath,
   DeleteOrGetOrUpdateModuleAccessRulePath,
   DeleteOrGetOrUpdateAccountAccessModulePath,
   DeleteOrGetOrUpdateModulePath,
   ModuleAccessRuleSchema,
-  ModuleSchema
+  ModuleSchema,
+  RecoverPasswordSchema
 } from '@/main/factories/authentication/documentation'
 
 export const AuthenticationDocumentationSetup: DocumentationSetupModel = {
@@ -32,19 +35,21 @@ export const AuthenticationDocumentationSetup: DocumentationSetupModel = {
     authentication: AuthenticationSchema
   },
   schemas: {
-    createOrUpdateAccessProfile: CreateOrUpdateAccessProfileSchema,
-    createAccessSession: CreateAccessSessionSchema,
-    createOrUpdateAccountAccessModule: CreateOrUpdateAccountAccessModuleSchema,
-    createAccount: CreateAccountSchema,
-    createOrUpdateModule: CreateOrUpdateModuleSchema,
-    createOrUpdateModuleAccessRule: CreateOrUpdateModuleAccessRuleSchema,
     accessProfile: AccessProfileSchema,
     accessSession: AccessSessionSchema,
     accessSessionModule: AccessSessionModuleSchema,
     accountAccessModule: AccountAccessModuleSchema,
     account: AccountSchema,
+    createAccessSession: CreateAccessSessionSchema,
+    createAccount: CreateAccountSchema,
+    createOrUpdateAccessProfile: CreateOrUpdateAccessProfileSchema,
+    createOrUpdateAccountAccessModule: CreateOrUpdateAccountAccessModuleSchema,
+    createOrUpdateModule: CreateOrUpdateModuleSchema,
+    createRequestRecoverPassword: CreateRequestRecoverPasswordSchema,
+    createOrUpdateModuleAccessRule: CreateOrUpdateModuleAccessRuleSchema,
     module: ModuleSchema,
-    moduleAccessRule: ModuleAccessRuleSchema
+    moduleAccessRule: ModuleAccessRuleSchema,
+    recoverPassword: RecoverPasswordSchema
   },
   paths: {
     '/authentication/access-profile/{access_profile_id}': DeleteOrGetOrUpdateAccessProfilePath,
@@ -57,6 +62,7 @@ export const AuthenticationDocumentationSetup: DocumentationSetupModel = {
     '/authentication/module/{module_id}': DeleteOrGetOrUpdateModulePath,
     '/authentication/module': CreateOrListModulePath,
     '/authentication/module-access-rule/{module_access_rule_id}': DeleteOrGetOrUpdateModuleAccessRulePath,
-    '/authentication/module-access-rule': CreateOrListModuleAccessRulePath
+    '/authentication/module-access-rule': CreateOrListModuleAccessRulePath,
+    '/authentication/request-recover-password': CreateRequestAndRecoverPasswordPath
   }
 }

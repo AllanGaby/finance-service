@@ -11,6 +11,7 @@ import { database, datatype, random } from 'faker'
 jest.mock('typeorm', () => ({
   Entity: () => {},
   PrimaryGeneratedColumn: () => {},
+  PrimaryColumn: () => {},
   ManyToMany: () => {},
   JoinTable: () => {},
   OneToMany: () => {},
@@ -409,6 +410,23 @@ describe('CommonTypeORMRepository', () => {
     })
   })
 
+  describe('Delete Method', () => {
+    test('Should call GetRepositoryTypeORM method', async () => {
+      const { sut } = makeSut()
+      const getRepositoryTypeORMSpy = jest.spyOn(sut, 'getRepositoryTypeORM')
+      await sut.delete(mockEntityModel())
+      expect(getRepositoryTypeORMSpy).toHaveBeenCalledTimes(1)
+    })
+
+    test('Should call delete with correct value', async () => {
+      const { sut } = makeSut()
+      const deleteSpy = jest.spyOn(sut.repositoryTypeORM, 'delete')
+      const filter = mockEntityModel()
+      await sut.delete(filter)
+      expect(deleteSpy).toHaveBeenCalledWith(filter)
+    })
+  })
+
   describe('DeleteById Method', () => {
     test('Should call GetRepositoryTypeORM method', async () => {
       const { sut } = makeSut()
@@ -423,6 +441,23 @@ describe('CommonTypeORMRepository', () => {
       const entityId = datatype.uuid()
       await sut.deleteById(entityId)
       expect(deleteSpy).toHaveBeenCalledWith(entityId)
+    })
+  })
+
+  describe('SoftDelete Method', () => {
+    test('Should call GetRepositoryTypeORM method', async () => {
+      const { sut } = makeSut()
+      const getRepositoryTypeORMSpy = jest.spyOn(sut, 'getRepositoryTypeORM')
+      await sut.softDelete(mockEntityModel())
+      expect(getRepositoryTypeORMSpy).toHaveBeenCalledTimes(1)
+    })
+
+    test('Should call softDelete with correct value', async () => {
+      const { sut } = makeSut()
+      const softDeleteSpy = jest.spyOn(sut.repositoryTypeORM, 'softDelete')
+      const filter = mockEntityModel()
+      await sut.softDelete(filter)
+      expect(softDeleteSpy).toHaveBeenCalledWith(filter)
     })
   })
 

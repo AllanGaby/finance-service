@@ -1,8 +1,7 @@
 import { UpdateEntityByIdController, UpdateEntityByIdRequestDefault } from './update-entity-by-id.controller'
-import { EntityModel, UpdateEntityDTO, UpdateEntityByIdUseCaseSpy } from '@/domain/common'
-import { mockUpdateEntityRequest } from '@/presentation/common'
+import { EntityModel, UpdateEntityDTO, UpdateEntityByIdUseCaseSpy, mockEntityModel } from '@/domain/common'
+import { mockUpdateEntityRequest, UpdateEntityRequest } from '@/presentation/common'
 import { HttpRequest, HttpHelper } from '@/protocols/http'
-import { UpdateEntityRequest } from '@/presentation/common'
 
 type sutTypes = {
   sut: UpdateEntityByIdController<EntityModel>
@@ -36,9 +35,18 @@ describe('UpdateEntityByIdController', () => {
     await expect(promise).rejects.toThrow()
   })
 
-  test('Should return Updated if UpdateEntityByIdUseCase is succeeds', async () => {
+  test('Should return ok if UpdateEntityByIdUseCase is succeeds and UpdateEntityByIdUseCase returns a entity', async () => {
     const { sut, updateEntityByIdUseCase, request } = makeSut()
+    const updatedEntity = mockEntityModel()
+    jest.spyOn(updateEntityByIdUseCase, 'updateById').mockResolvedValue(updatedEntity)
     const result = await sut.handle(request)
-    expect(result).toEqual(HttpHelper.ok(updateEntityByIdUseCase.updatedEntity))
+    expect(result).toEqual(HttpHelper.ok(updatedEntity))
+  })
+
+  test('Should return noContent if updateEntityByIdUseCase is succeeds and updateEntityByIdUseCase returns undefined', async () => {
+    const { sut, updateEntityByIdUseCase, request } = makeSut()
+    jest.spyOn(updateEntityByIdUseCase, 'updateById').mockResolvedValue(undefined)
+    const result = await sut.handle(request)
+    expect(result).toEqual(HttpHelper.noContent())
   })
 })

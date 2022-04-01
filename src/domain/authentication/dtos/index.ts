@@ -1,5 +1,7 @@
 export * from './create-access-profile.dto'
 export * from './create-access-session.dto'
 export * from './create-account.dto'
+export * from './create-request-recover-password.dto'
+export * from './recover-password.dto'
 export * from './refresh-access-profile-rules.dto'
 export * from './update-access-profile.dto'

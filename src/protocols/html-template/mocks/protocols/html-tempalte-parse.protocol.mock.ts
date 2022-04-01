@@ -1,7 +1,7 @@
 import { HtmlTemplateParseProtocol, HtmlTemplateDTO } from '@/protocols/html-template'
 import { datatype } from 'faker'
 
-export class HtmlTemplateParseSpy implements HtmlTemplateParseProtocol {
+export class HtmlTemplateParseProtocolSpy implements HtmlTemplateParseProtocol {
   params: HtmlTemplateDTO
   html: string = datatype.uuid()
 

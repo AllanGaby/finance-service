@@ -1,7 +1,7 @@
 import { CreateTwoFactorAuthenticationTokenProtocol } from '@/protocols/two-factor-authentication'
 import { datatype } from 'faker'
 
-export class CreateTwoFactorAuthenticationTokenSpy implements CreateTwoFactorAuthenticationTokenProtocol {
+export class CreateTwoFactorAuthenticationTokenProtocolSpy implements CreateTwoFactorAuthenticationTokenProtocol {
   secret: string
   token: string = datatype.uuid()
 

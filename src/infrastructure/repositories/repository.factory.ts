@@ -1,5 +1,6 @@
 import { EntityModel } from '@/domain/common'
-import { RepositoryType, CommonRepositoryType, TypeOrmRepositorySettingsModel } from '@/infrastructure/repositories'
+import { RepositoryType, TypeOrmRepositorySettingsModel } from '@/infrastructure/repositories'
+import { CommonRepositoryType } from '@/protocols/repositories'
 import { CommonTypeORMRepository } from './typeorm'
 import { CommonMemoryRepository } from './memory'
 import { EntityTarget } from 'typeorm'
