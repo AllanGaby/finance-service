@@ -177,6 +177,14 @@ export class RouteHelpers {
     )
   }
 
+  public static async BodyNumberValidation (props: CommonRouteHelperDTO): Promise<void> {
+    await RouteHelpers.BodyInvalidTypeValidation({
+      ...props,
+      invalidValue: datatype.string(),
+      type: 'number'
+    })
+  }
+
   public static async BodyEmailValidation (props: CommonRouteHelperDTO): Promise<void> {
     await RouteHelpers.BodyInvalidTypeValidation({
       ...props,

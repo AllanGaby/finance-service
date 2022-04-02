@@ -4,8 +4,8 @@ export const makeRecoverPasswordFieldsValidations = (): FieldValidationModel[] =
   {
     name: 'verification_code',
     type: TypeFieldValidation.String,
-    min: 3,
-    max: 100,
+    min: 6,
+    max: 6,
     required: true
   },
   {

@@ -1,6 +1,47 @@
 import { DocumentationPathModel, DocumentationHttpStatusCode, DocumentationContentType, DocumentationParamType, DocumentationDataType, DocumentationStringFormat } from '@/protocols/documentation'
 
-export const DeleteOrGetAccountPath: DocumentationPathModel = {
+export const DeleteOrGetOrUpdateAccountPath: DocumentationPathModel = {
+  patch: {
+    tags: ['Conta de acesso'],
+    summary: 'Atualiza o cadastro de uma conta de acesso pelo identificador único',
+    security: [{
+      bearerAuth: []
+    }],
+    parameters: [{
+      in: DocumentationParamType.Path,
+      name: 'account_id',
+      required: true,
+      type: DocumentationDataType.String,
+      format: DocumentationStringFormat.Uuid
+    }],
+    requestBody: {
+      description: 'Dados da para atualizar a conta de acesso',
+      content: {
+        [DocumentationContentType.Json]: {
+          schema: {
+            $ref: '#/schemas/authentication/updateAccount'
+          }
+        }
+      }
+    },
+    responses: {
+      [DocumentationHttpStatusCode.NoContent]: {
+        $ref: '#/components/common/noContent'
+      },
+      [DocumentationHttpStatusCode.Unauthorized]: {
+        $ref: '#/components/common/unauthorized'
+      },
+      [DocumentationHttpStatusCode.Forbidden]: {
+        $ref: '#/components/common/forbidden'
+      },
+      [DocumentationHttpStatusCode.Conflict]: {
+        $ref: '#/components/common/conflict'
+      },
+      [DocumentationHttpStatusCode.UnprocessableEntity]: {
+        $ref: '#/components/common/unprocessableEntity'
+      }
+    }
+  },
   delete: {
     tags: ['Conta de acesso'],
     summary: 'Exclui o cadastro de uma conta de acesso pelo identificador único',

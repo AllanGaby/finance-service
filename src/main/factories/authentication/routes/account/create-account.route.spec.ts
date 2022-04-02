@@ -5,7 +5,7 @@ import {
 } from '@/domain/authentication'
 import { CommonMemoryRepository } from '@/infrastructure/repositories'
 import { HttpMethod, HttpStatusCode } from '@/protocols/http'
-import { RouteHelpers } from '@/main/factories/common/helpers'
+import { CommonRouteHelperDTO, RouteHelpers } from '@/main/factories/common/helpers'
 import { CreateAccountRequest, mockCreateAccountRequest } from '@/presentation/authentication'
 import { ConfigurationModel, ConfigSetup } from '@/main/application/config'
 import http from 'http'
@@ -18,6 +18,17 @@ let createdAccount: AccountModel
 let server: http.Server
 let agent: SuperAgentTest
 let publicKey: string
+
+const getDefaultRouteHelperDTO = (field: string): CommonRouteHelperDTO => ({
+  agent,
+  url,
+  field,
+  method: HttpMethod.post,
+  body: createAccountRequest,
+  cryptography: true,
+  tokenField: 'token',
+  publicKey
+})
 
 describe('POST /authentication/account/ - Create a new Account', () => {
   beforeAll((done) => {
@@ -53,55 +64,55 @@ describe('POST /authentication/account/ - Create a new Account', () => {
   describe('Unprocessable entity status code (422)', () => {
     describe('Name validations', () => {
       test('Should return Unprocessable entity status code (422) if name is not provided', async () => {
-        await RouteHelpers.BodyRequiredValueValidation({ agent, url, method: HttpMethod.post, field: 'name', body: createAccountRequest, cryptography: true, tokenField: 'token', publicKey })
+        await RouteHelpers.BodyRequiredValueValidation(getDefaultRouteHelperDTO('name'))
       })
 
       test('Should return Unprocessable entity status code (422) if name length is smaller than', async () => {
-        await RouteHelpers.BodySmallerStringValidation({ agent, url, method: HttpMethod.post, field: 'name', minLength: 3, body: createAccountRequest, cryptography: true, tokenField: 'token', publicKey })
+        await RouteHelpers.BodySmallerStringValidation({ ...getDefaultRouteHelperDTO('name'), minLength: 3 })
       })
 
       test('Should return Unprocessable entity status code (422) if name length is bigger than', async () => {
-        await RouteHelpers.BodyBiggerStringValidation({ agent, url, method: HttpMethod.post, field: 'name', maxLength: 100, body: createAccountRequest, cryptography: true, tokenField: 'token', publicKey })
+        await RouteHelpers.BodyBiggerStringValidation({ ...getDefaultRouteHelperDTO('name'), maxLength: 100 })
       })
     })
 
     describe('Email validations', () => {
       test('Should return Unprocessable entity status code (422) if email is not provided', async () => {
-        await RouteHelpers.BodyRequiredValueValidation({ agent, url, method: HttpMethod.post, field: 'email', body: createAccountRequest, cryptography: true, tokenField: 'token', publicKey })
+        await RouteHelpers.BodyRequiredValueValidation(getDefaultRouteHelperDTO('email'))
       })
 
       test('Should return Unprocessable entity status code (422) if email is not valid e-mail', async () => {
-        await RouteHelpers.BodyEmailValidation({ agent, url, method: HttpMethod.post, field: 'email', body: createAccountRequest, cryptography: true, tokenField: 'token', publicKey })
+        await RouteHelpers.BodyEmailValidation(getDefaultRouteHelperDTO('email'))
       })
     })
 
     describe('Identification validations', () => {
       test('Should return Unprocessable entity status code (422) if identification length is smaller than', async () => {
-        await RouteHelpers.BodySmallerStringValidation({ agent, url, method: HttpMethod.post, field: 'identification', minLength: 3, body: createAccountRequest, cryptography: true, tokenField: 'token', publicKey })
+        await RouteHelpers.BodySmallerStringValidation({ ...getDefaultRouteHelperDTO('identification'), minLength: 3 })
       })
 
       test('Should return Unprocessable entity status code (422) if identification length is bigger than', async () => {
-        await RouteHelpers.BodyBiggerStringValidation({ agent, url, method: HttpMethod.post, field: 'identification', maxLength: 100, body: createAccountRequest, cryptography: true, tokenField: 'token', publicKey })
+        await RouteHelpers.BodyBiggerStringValidation({ ...getDefaultRouteHelperDTO('identification'), maxLength: 100 })
       })
     })
 
     describe('Password validations', () => {
       test('Should return Unprocessable entity status code (422) if password is not provided', async () => {
-        await RouteHelpers.BodyRequiredValueValidation({ agent, url, method: HttpMethod.post, field: 'password', body: createAccountRequest, cryptography: true, tokenField: 'token', publicKey })
+        await RouteHelpers.BodyRequiredValueValidation(getDefaultRouteHelperDTO('password'))
       })
 
       test('Should return Unprocessable entity status code (422) if password length is smaller than', async () => {
-        await RouteHelpers.BodySmallerStringValidation({ agent, url, method: HttpMethod.post, field: 'password', minLength: 6, body: createAccountRequest, cryptography: true, tokenField: 'token', publicKey })
+        await RouteHelpers.BodySmallerStringValidation({ ...getDefaultRouteHelperDTO('password'), minLength: 6 })
       })
 
       test('Should return Unprocessable entity status code (422) if password length is bigger than', async () => {
-        await RouteHelpers.BodyBiggerStringValidation({ agent, url, method: HttpMethod.post, field: 'password', maxLength: 20, body: createAccountRequest, cryptography: true, tokenField: 'token', publicKey })
+        await RouteHelpers.BodyBiggerStringValidation({ ...getDefaultRouteHelperDTO('password'), maxLength: 20 })
       })
     })
 
     describe('PasswordConfirmation validations', () => {
       test('Should return Unprocessable entity status code (422) if password_confirmation is different than password', async () => {
-        await RouteHelpers.BodyPasswordConfirmationValidation({ agent, url, method: HttpMethod.post, field: 'password_confirmation', sameTo: 'password', body: createAccountRequest, cryptography: true, tokenField: 'token', publicKey })
+        await RouteHelpers.BodyPasswordConfirmationValidation({ ...getDefaultRouteHelperDTO('password_confirmation'), sameTo: 'password' })
       })
     })
   })

@@ -1,6 +1,7 @@
 import { EnvironmentType } from '@/main/application/config'
 import { RepositoryType } from '@/infrastructure/repositories'
 import { CacheConfigurationModel } from '@/infrastructure/cache'
+import { MailConfigModel } from '@/infrastructure/mail'
 
 export type ConfigurationModel = {
   environment: EnvironmentType
@@ -25,4 +26,5 @@ export type ConfigurationModel = {
     jwtSecret: string
   }
   cache: CacheConfigurationModel
+  mail: MailConfigModel
 }

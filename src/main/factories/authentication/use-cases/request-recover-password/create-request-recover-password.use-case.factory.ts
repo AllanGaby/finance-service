@@ -6,9 +6,10 @@ import { CommonUseCaseProps } from '@/infrastructure/common'
 import { CommonRepositoryFactory } from '@/infrastructure/repositories'
 import { AccountRepositorySettings, AccountEntity, RequestRecoverPasswordEntity } from '@/infrastructure/authentication'
 import { TwoFactorAuthenticationFactory } from '@/infrastructure/two-factor-authentication'
-import { makeSendMailUseCase } from '@/main/factories/comunication/use-cases'
+import { SendMailUseCaseProps, makeSendMailUseCase } from '@/main/factories/comunication/use-cases'
 
 export type CreateRequestRecoverPasswordUseCaseProps =
+SendMailUseCaseProps &
 CommonUseCaseProps & {
   recoverPasswordEmailFilePath: string
 }
@@ -20,6 +21,6 @@ export const makeCreateRequestRecoverPasswordUseCase = (props: CreateRequestReco
     TwoFactorAuthenticationFactory.GetTwoFactorAuthenticationAdapter(),
     CommonRepositoryFactory.getRepository<RequestRecoverPasswordEntity, SoftDeleteEntityRepository<RequestRecoverPasswordEntity>>(props.repositoryType, RequestRecoverPasswordEntity),
     CommonRepositoryFactory.getRepository<RequestRecoverPasswordEntity, CreateEntityRepository<RequestRecoverPasswordEntity>>(props.repositoryType, RequestRecoverPasswordEntity),
-    makeSendMailUseCase(),
+    makeSendMailUseCase(props),
     props.recoverPasswordEmailFilePath
   )

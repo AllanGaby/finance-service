@@ -10,6 +10,6 @@ CreateHashProtocol
 
 export class CryptographyFactory {
   public static GetCryptographyAdapter<AdapterType extends CryptographyProtocols>(salt: number): AdapterType {
-    return new BCryptAdapter(salt) as unknown as AdapterType
+    return BCryptAdapter.getInstance(salt) as unknown as AdapterType
   }
 }

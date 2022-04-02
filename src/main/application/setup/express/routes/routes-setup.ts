@@ -17,7 +17,8 @@ export const RoutesSetup = async (app: Express): Promise<void> => {
 
   app.use('/authentication', AuthenticationModuleRoute({
     ...commonConfig,
-    recoverPasswordEmailFilePath: 'public/views/ejs/request-recover-password-mail.ejs'
+    recoverPasswordEmailFilePath: 'public/views/ejs/request-recover-password-mail.ejs',
+    mail: config.mail
   }))
 
   app.use('/authentication', CommonModuleRoute(commonConfig))

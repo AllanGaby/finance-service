@@ -2,6 +2,15 @@ import { CreateHashProtocol, CompareHashProtocol } from '@/protocols/cryptograph
 import bcrypt from 'bcrypt'
 
 export class BCryptAdapter implements CreateHashProtocol, CompareHashProtocol {
+  public static instance: BCryptAdapter
+
+  public static getInstance (salt: number): BCryptAdapter {
+    if (!BCryptAdapter.instance) {
+      BCryptAdapter.instance = new BCryptAdapter(salt)
+    }
+    return BCryptAdapter.instance
+  }
+
   constructor (
     private readonly salt: number
   ) {}

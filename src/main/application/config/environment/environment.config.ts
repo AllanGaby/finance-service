@@ -3,6 +3,7 @@ import dotenv from 'dotenv'
 import { ConfigurationModel, EnvironmentType } from '@/main/application/config'
 import { RepositoryType } from '@/infrastructure/repositories'
 import { CacheType } from '@/infrastructure/cache'
+import { MailType } from '@/infrastructure/mail'
 import fs from 'fs'
 
 dotenv.config({
@@ -77,6 +78,9 @@ export const ConfigSetup = (): ConfigurationModel => {
       host: process.env.CACHE_HOST,
       port: Number(process.env.CACHE_PORT),
       password: process.env.CACHE_PASSWORD
+    },
+    mail: {
+      type: environment === EnvironmentType.test ? MailType.Memory : process.env.MAIL_TYPE as MailType
     }
   }
 }
