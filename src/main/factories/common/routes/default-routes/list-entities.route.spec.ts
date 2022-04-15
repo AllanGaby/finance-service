@@ -10,7 +10,9 @@ jest.mock('express', () => ({
 
 const makeSut = (): void => {
   makeListEntitiesRoute({
-    repositoryType: RepositoryType.Memory
+    repositoryType: RepositoryType.Memory,
+    validRepositoryColumns: [],
+    validRequestColumns: []
   }, DefaultEntity)
 }
 
@@ -30,6 +32,7 @@ describe('makeListEntitiesRoute', () => {
     makeSut()
     expect(getSpy).toHaveBeenCalledWith(
       '/',
+      expect.any(Function),
       expect.any(Function)
     )
   })

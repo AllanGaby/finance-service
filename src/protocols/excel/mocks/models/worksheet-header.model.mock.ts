@@ -8,11 +8,5 @@ export const mockWorksheetHeaderModel = (): WorksheetHeaderModel => ({
     database.column(),
     database.column(),
     database.column()
-  ],
-  subHeaders: [
-    database.column(),
-    database.column(),
-    database.column(),
-    database.column()
   ]
 })

@@ -1,5 +1,5 @@
 import { HttpHelper } from './http.helper'
-import { HttpStatusCode, HttpResponse } from '@/protocols/http'
+import { HttpStatusCode, HttpResponse, HttpFileResponse, mockHttpFileResponse } from '@/protocols/http'
 import { random } from 'faker'
 
 describe('HttpHelper', () => {
@@ -11,6 +11,19 @@ describe('HttpHelper', () => {
         body
       }
       const response = HttpHelper.ok<object>(body)
+      expect(expectedValue).toEqual(response)
+    })
+  })
+
+  describe('ExportFile Method', () => {
+    test('Should return ok status code (200) and correct body', () => {
+      const file: HttpFileResponse = mockHttpFileResponse()
+      const expectedValue: HttpResponse<undefined> = {
+        statusCode: HttpStatusCode.ok,
+        body: undefined,
+        file
+      }
+      const response = HttpHelper.exportFile(file)
       expect(expectedValue).toEqual(response)
     })
   })

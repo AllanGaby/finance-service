@@ -1,10 +1,12 @@
 import {
   RequestAccessProfileFilter,
   RepositoryAccessProfileFilter,
-  AuthenticationAccessRules
+  AuthenticationAccessRules,
+  AccessProfileColumnsToExportXLSX
 } from '@/domain/authentication'
 import { CreateAccessProfileRouteProps, makeCreateAccessProfileRoute } from './create-access-profile.route'
 import { UpdateAccessProfileByIdRouteProps, makeUpdateAccessProfileByIdRoute } from './update-access-profile-by-id.route'
+import { makeListAccessProfilesAndExportToXLSXFileRoute } from './list-access-profiles-and-export-to-xlsx-file.route'
 import {
   DefaultDeleteGetListEntityWithAuthenticationRoutesProps,
   makeDefaultDeleteGetListEntityWithAuthenticationRoutes
@@ -19,17 +21,25 @@ import { Router } from 'express'
 export type AccessProfileRouteProps =
 CreateAccessProfileRouteProps &
 DefaultDeleteGetListEntityWithAuthenticationRoutesProps &
-UpdateAccessProfileByIdRouteProps
+UpdateAccessProfileByIdRouteProps & {
+  logoFilePath: string
+}
 
 export const makeAccessProfileRoute = (
   props: AccessProfileRouteProps
 ): Router => {
   props.repositorySettings = AccessProfileRepositorySettings
-  props.validRepositoryColumns = Object.values(RepositoryAccessProfileFilter)
-  props.validRequestColumns = Object.values(RequestAccessProfileFilter)
   return Router()
     .use('/', makeCreateAccessProfileRoute(props, makeCreateAccessProfileFieldsValidations(), [AuthenticationAccessRules.CreateAccessProfiles]))
+    .use('/', makeListAccessProfilesAndExportToXLSXFileRoute({
+      ...props,
+      entityName: 'AccessProfile',
+      validColumnsToExport: AccessProfileColumnsToExportXLSX
+    }))
+    .use('/', makeUpdateAccessProfileByIdRoute(props, 'access_profile_id', makeUpdateAccessProfileFieldsValidations(), [AuthenticationAccessRules.UpdateAccessProfiles]))
     .use(makeDefaultDeleteGetListEntityWithAuthenticationRoutes(props, {
+      validRepositoryColumns: Object.values(RepositoryAccessProfileFilter),
+      validRequestColumns: Object.values(RequestAccessProfileFilter),
       entityClass: AccessProfileEntity,
       paramIdName: 'access_profile_id',
       entityName: 'AccessProfile',
@@ -37,5 +47,4 @@ export const makeAccessProfileRoute = (
       getByIdAccessRules: [AuthenticationAccessRules.ShowAccessProfiles],
       listAccessRules: [AuthenticationAccessRules.ListAccessProfiles]
     }))
-    .use('/', makeUpdateAccessProfileByIdRoute(props, 'access_profile_id', makeUpdateAccessProfileFieldsValidations(), [AuthenticationAccessRules.UpdateAccessProfiles]))
 }

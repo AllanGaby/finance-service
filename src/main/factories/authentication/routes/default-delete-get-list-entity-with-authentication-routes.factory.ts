@@ -19,6 +19,8 @@ export type DefaultDeleteGetListEntityWithAuthenticationRoutesOptions<EntityType
   entityClass: EntityTarget<EntityType>
   paramIdName: string
   entityName: string
+  validRepositoryColumns: string[]
+  validRequestColumns: string[]
   deleteAccessRules: string[]
   getByIdAccessRules: string[]
   listAccessRules: string[]

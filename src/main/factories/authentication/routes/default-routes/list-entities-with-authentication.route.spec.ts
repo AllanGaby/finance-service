@@ -19,7 +19,7 @@ const makeSut = (): void => {
     secret: datatype.uuid(),
     privateKey,
     publicKey
-  }, DefaultEntity, [])
+  }, DefaultEntity, [], [], [])
 }
 
 const config: ConfigurationModel = ConfigSetup()
@@ -47,6 +47,7 @@ describe('makeListEntitiesWithAuthenticationRoute', () => {
     makeSut()
     expect(getSpy).toHaveBeenCalledWith(
       '/',
+      expect.any(Function),
       expect.any(Function),
       expect.any(Function)
     )

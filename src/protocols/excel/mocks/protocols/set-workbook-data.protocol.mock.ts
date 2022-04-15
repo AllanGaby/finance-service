@@ -1,11 +1,11 @@
 import { SetWorksheetDataDTO, SetWorksheetDataProtocol } from '@/protocols/excel'
 
-export class SetWorksheetDataSpy<WorksheetType = any> implements SetWorksheetDataProtocol<WorksheetType> {
+export class SetWorksheetDataProtocolSpy<WorksheetType = any> implements SetWorksheetDataProtocol<WorksheetType> {
   params: SetWorksheetDataDTO
   worksheet: WorksheetType
 
-  setWorksheetData (params: SetWorksheetDataDTO): WorksheetType {
+  setWorksheetData (worksheet: WorksheetType, params: SetWorksheetDataDTO): void {
     this.params = params
-    return this.worksheet
+    this.worksheet = worksheet
   }
 }

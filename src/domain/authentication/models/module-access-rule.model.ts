@@ -7,4 +7,7 @@ export type ModuleAccessRuleModel = EntityModel & {
   rule_key: string
   module_id: string
   module?: ModuleModel
+  module_name?: string
+  module_key?: string
+  setModuleData?: () => void
 }

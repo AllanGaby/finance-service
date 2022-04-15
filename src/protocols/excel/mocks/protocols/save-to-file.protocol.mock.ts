@@ -1,6 +1,6 @@
 import { SaveToFileProtocol, SetWorksheetDataDTO } from '@/protocols/excel'
 
-export class SaveToFileSpy implements SaveToFileProtocol {
+export class SaveToFileProtocolSpy implements SaveToFileProtocol {
   worksheetData: SetWorksheetDataDTO[]
   filePath: string
 

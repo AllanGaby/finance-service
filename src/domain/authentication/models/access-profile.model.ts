@@ -8,4 +8,7 @@ export type AccessProfileModel = EntityModel & {
   module_id: string
   module?: ModuleModel
   module_access_rules?: ModuleAccessRuleModel[]
+  module_name?: string
+  module_key?: string
+  setModuleData?: () => void
 }

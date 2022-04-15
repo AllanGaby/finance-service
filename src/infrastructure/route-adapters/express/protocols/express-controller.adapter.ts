@@ -4,7 +4,8 @@ import {
   EntityIsNotFoundError,
   InvalidForeignKeyError,
   MissingParamError,
-  ViolateUniqueKeyError
+  ViolateUniqueKeyError,
+  InvalidColumnsError
 } from '@/data/common/errors'
 import { HttpStatusCode, ControllerProtocol, HttpRequest } from '@/protocols/http'
 import { UnauthorizedError, CorruptedAccountError, InvalidCredentialsError } from '@/data/authentication/errors'
@@ -31,13 +32,20 @@ export const ExpressControllerAdapter = <RequestBody = any, ResponseBody = any>(
       const httpResponse = await controller.handle(httpRequest)
       if (httpResponse.statusCode >= 300) {
         return SetErrorResponse(httpResponse.statusCode, httpResponse.body)
+      } else if (httpResponse.file) {
+        const file = Buffer.from(httpResponse.file.fileContent)
+        response.contentType(httpResponse.file.contentType)
+        response.end(file)
+      } else {
+        response
+          .status(httpResponse.statusCode)
+          .json(httpResponse.body)
       }
-      response
-        .status(httpResponse.statusCode)
-        .json(httpResponse.body)
       return response
     } catch (error) {
       switch (error.constructor) {
+        case InvalidColumnsError:
+          return SetErrorResponse(HttpStatusCode.badRequest, error)
         case UnauthorizedError:
           return SetErrorResponse(HttpStatusCode.unauthorized, error)
         case CorruptedAccountError:

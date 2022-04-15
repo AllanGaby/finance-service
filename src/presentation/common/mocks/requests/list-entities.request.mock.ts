@@ -1,9 +1,17 @@
-import { mockOrderDirection, mockCustomFilterConditional, mockCustomFilterOperator } from '@/domain/common'
-import { ListEntitiesRequest } from '@/presentation/common'
+import { mockOrderDirection, mockCustomFilterConditional, mockCustomFilterOperator, mockCustomFilterModel } from '@/domain/common'
+import { ListEntitiesRequest, CustomFiltersRequest } from '@/presentation/common'
 import { HttpRequest } from '@/protocols/http'
 import { datatype, database } from 'faker'
 
-export const mockListEntitiesRequest = (): HttpRequest<any, any, ListEntitiesRequest> => ({
+export const mockListEntitiesRequest = (): HttpRequest<CustomFiltersRequest, any, ListEntitiesRequest> => ({
+  body: {
+    custom_filters: [
+      mockCustomFilterModel(),
+      mockCustomFilterModel(),
+      mockCustomFilterModel(),
+      mockCustomFilterModel()
+    ]
+  },
   queryParams: {
     page: datatype.number(),
     search: datatype.string(),

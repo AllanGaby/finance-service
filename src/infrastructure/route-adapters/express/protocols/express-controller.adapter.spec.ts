@@ -1,8 +1,8 @@
 import { ExpressControllerAdapter } from './express-controller.adapter'
-import { ConditionalMissingParamError, EntityAlreadyExistsError, EntityIsNotFoundError, InvalidForeignKeyError, MissingParamError, ViolateUniqueKeyError } from '@/data/common/errors'
+import { ConditionalMissingParamError, EntityAlreadyExistsError, EntityIsNotFoundError, InvalidColumnsError, InvalidForeignKeyError, MissingParamError, ViolateUniqueKeyError } from '@/data/common/errors'
 import { CorruptedAccountError, InvalidCredentialsError, UnauthorizedError } from '@/data/authentication/errors'
 import { mockPartialExpressRequest, mockPartialExpressResponse } from '@/infrastructure/route-adapters/express/mocks'
-import { HttpStatusCode, ControllerSpy, mockHttpFailStatusCode, mockHttpSuccessStatusCode } from '@/protocols/http'
+import { HttpStatusCode, ControllerSpy, mockHttpFailStatusCode, mockHttpSuccessStatusCode, mockHttpFileResponse } from '@/protocols/http'
 import { Request, Response } from 'express'
 import { datatype, random } from 'faker'
 
@@ -37,28 +37,60 @@ describe('ExpressControllerAdapter', () => {
   })
 
   describe('Request Succeeds', () => {
-    test('Should return correct status code if Controller response between 200 and 299 status code', async () => {
-      const { sut, controller, request, response } = makeSut()
-      const statusSpy = jest.spyOn(response, 'status')
-      const successStatusCode = mockHttpSuccessStatusCode()
-      jest.spyOn(controller, 'handle').mockResolvedValue({
-        statusCode: successStatusCode,
-        body: undefined
+    describe('File is not provided', () => {
+      test('Should return correct status code if Controller response between 200 and 299 status code', async () => {
+        const { sut, controller, request, response } = makeSut()
+        const statusSpy = jest.spyOn(response, 'status')
+        const successStatusCode = mockHttpSuccessStatusCode()
+        jest.spyOn(controller, 'handle').mockResolvedValue({
+          statusCode: successStatusCode,
+          body: undefined
+        })
+        await sut(request, response)
+        expect(statusSpy).toHaveBeenCalledWith(successStatusCode)
       })
-      await sut(request, response)
-      expect(statusSpy).toHaveBeenCalledWith(successStatusCode)
+
+      test('Should return correct body if Controller response between 200 and 299 status code', async () => {
+        const { sut, controller, request, response } = makeSut()
+        const jsonSpy = jest.spyOn(response, 'json')
+        const body = random.objectElement()
+        jest.spyOn(controller, 'handle').mockResolvedValue({
+          statusCode: mockHttpSuccessStatusCode(),
+          body
+        })
+        await sut(request, response)
+        expect(jsonSpy).toHaveBeenCalledWith(body)
+      })
     })
 
-    test('Should return correct body if Controller response between 200 and 299 status code', async () => {
-      const { sut, controller, request, response } = makeSut()
-      const jsonSpy = jest.spyOn(response, 'json')
-      const body = random.objectElement()
-      jest.spyOn(controller, 'handle').mockResolvedValue({
-        statusCode: mockHttpSuccessStatusCode(),
-        body
+    describe('File is provided', () => {
+      test('Should return correct contentType if Controller response between 200 and 299 status code', async () => {
+        const { sut, controller, request, response } = makeSut()
+        const contentTypeSpy = jest.spyOn(response, 'contentType')
+        const successStatusCode = mockHttpSuccessStatusCode()
+        const file = mockHttpFileResponse()
+        jest.spyOn(controller, 'handle').mockResolvedValue({
+          statusCode: successStatusCode,
+          body: undefined,
+          file
+        })
+        await sut(request, response)
+        expect(contentTypeSpy).toHaveBeenCalledWith(file.contentType)
       })
-      await sut(request, response)
-      expect(jsonSpy).toHaveBeenCalledWith(body)
+
+      test('Should return correct body if Controller response between 200 and 299 status code', async () => {
+        const { sut, controller, request, response } = makeSut()
+        const endSpy = jest.spyOn(response, 'end')
+        const successStatusCode = mockHttpSuccessStatusCode()
+        const file = mockHttpFileResponse()
+        jest.spyOn(controller, 'handle').mockResolvedValue({
+          statusCode: successStatusCode,
+          body: undefined,
+          file
+        })
+        await sut(request, response)
+        expect(endSpy).toHaveBeenCalledWith(Buffer.from(file.fileContent))
+      })
     })
   })
 
@@ -91,6 +123,15 @@ describe('ExpressControllerAdapter', () => {
   })
 
   describe('Controller Throws', () => {
+    test('Should return BadRequest Status Code (400) if controller return InvalidColumnsError', async () => {
+      const { sut, controller, request, response } = makeSut()
+      const error = new InvalidColumnsError()
+      const statusSpy = jest.spyOn(response, 'status')
+      jest.spyOn(controller, 'handle').mockRejectedValue(error)
+      await sut(request, response)
+      expect(statusSpy).toHaveBeenCalledWith(HttpStatusCode.badRequest)
+    })
+
     test('Should return Unauthorized Status Code (401) if controller return UnauthorizedError', async () => {
       const { sut, controller, request, response } = makeSut()
       const error = new UnauthorizedError()

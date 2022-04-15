@@ -22,10 +22,10 @@ export const makeAccountAccessModuleRoute = (props: AccountAccessModuleRouteProp
     .use('/account-access-module',
       makeDefaultCRUDEntityWithAuthenticationRoutes<AccountAccessModuleModel>({
         ...props,
-        validRepositoryColumns: Object.values(RepositoryAccountAccessModuleFilter),
-        validRequestColumns: Object.values(RequestAccountAccessModuleFilter),
         repositorySettings: AccountAccessModuleRepositorySettings
       }, {
+        validRepositoryColumns: Object.values(RepositoryAccountAccessModuleFilter),
+        validRequestColumns: Object.values(RequestAccountAccessModuleFilter),
         entityClass: AccountAccessModuleEntity,
         paramIdName: 'account_access_module_id',
         entityName: 'AccountAccessModule',

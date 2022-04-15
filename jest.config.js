@@ -8,7 +8,7 @@ module.exports = {
     '!**/index.ts',
     '!**/server.ts',
     '!**/**type.ts',
-    '!**/memory/**.ts',
+    '!**/infrastructure/**/memory/**.ts',
     '!**/**migration.ts',
     '!**/**.d.ts',
     '!**/**.constants.ts',

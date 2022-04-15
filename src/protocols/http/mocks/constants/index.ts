@@ -1,4 +1,5 @@
 export * from './field-validation-type.constants.mock'
+export * from './http-content-type.mock'
 export * from './http-error-status-code.mock'
 export * from './http-fail-status-code.constants.mock'
 export * from './http-method.mock'

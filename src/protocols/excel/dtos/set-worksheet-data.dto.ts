@@ -7,4 +7,5 @@ export type SetWorksheetDataDTO
      worksheetHeader?: WorksheetHeaderModel
      columnHeaders: ColumnHeaderType[]
      columnData: ColumnDataType[][]
+     password?: string
    }

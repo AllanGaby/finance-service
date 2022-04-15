@@ -1,7 +1,7 @@
 import { SaveToBufferProtocol, SetWorksheetDataDTO } from '@/protocols/excel'
 import { datatype } from 'faker'
 
-export class SaveToBufferSpy implements SaveToBufferProtocol {
+export class SaveToBufferProtocolSpy implements SaveToBufferProtocol {
   worksheetData: SetWorksheetDataDTO[]
   fileContent: Buffer = Buffer.from(datatype.string())
 

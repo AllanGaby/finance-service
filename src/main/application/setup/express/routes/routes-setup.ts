@@ -12,7 +12,8 @@ export const RoutesSetup = async (app: Express): Promise<void> => {
     publicKey: await config.security.getPublicKey(),
     ...config.cache,
     secret: config.security.jwtSecret,
-    accessTokenName: config.authentication.accessTokenName
+    accessTokenName: config.authentication.accessTokenName,
+    logoFilePath: config.logoFilePath
   }
 
   app.use('/authentication', AuthenticationModuleRoute({

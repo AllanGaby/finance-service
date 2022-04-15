@@ -12,9 +12,11 @@ export class DbListEntitiesAndExportToFileUseCase<EntityType> implements ListEnt
   ) {}
 
   async listAndExport ({ columns, ...filter }: ListEntitiesAndExportToFileDTO): Promise<ArrayBuffer | EntityType> {
-    filter.page = 1
-    filter.recordsPerPage = 999999999
-    const entities = await this.listEntitiesUseCase.list(filter)
+    const entities = await this.listEntitiesUseCase.list({
+      ...filter,
+      page: 1,
+      recordsPerPage: 999999999
+    })
     return this.exportEntitiesToFileUseCase.exportToFile({
       columns,
       data: entities.data

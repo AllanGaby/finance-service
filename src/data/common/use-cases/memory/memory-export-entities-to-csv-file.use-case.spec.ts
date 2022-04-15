@@ -1,10 +1,10 @@
-import { MemoryExportEntitiesToFileUseCase } from './memory-export-entities-to-csv-file.use-case'
+import { MemoryExportEntitiesToCSVFileUseCase } from './memory-export-entities-to-csv-file.use-case'
 import {
   EntityColumnsToExportCSVFileDTO,
   EntityModel,
   ExportEntitiesToCSVFileDTO,
   mockEntityModel,
-  mockEntityModelColumnsToExportDTO,
+  mockEntityModelColumnsToExportCSVFileDTO,
   mockExportEntitiesToCSVFileDTO
 } from '@/domain/common'
 import { ColumnToExportModel, ExportToCSVFileProtocolSpy } from '@/protocols/csv'
@@ -15,14 +15,14 @@ import * as uuid from 'uuid'
 jest.mock('uuid')
 
 type sutTypes = {
-  sut: MemoryExportEntitiesToFileUseCase<EntityModel>
+  sut: MemoryExportEntitiesToCSVFileUseCase<EntityModel>
   ExportEntitiesToCSVFileDTO: ExportEntitiesToCSVFileDTO<EntityModel>
   validColumnsToExport: EntityColumnsToExportCSVFileDTO
   exportToCSVAdapter: ExportToCSVFileProtocolSpy
   temporaryFileDir: string
 }
 
-const makeSut = (validColumnsToExport: EntityColumnsToExportCSVFileDTO = mockEntityModelColumnsToExportDTO()): sutTypes => {
+const makeSut = (validColumnsToExport: EntityColumnsToExportCSVFileDTO = mockEntityModelColumnsToExportCSVFileDTO()): sutTypes => {
   const ExportEntitiesToCSVFileDTO = mockExportEntitiesToCSVFileDTO<EntityModel>([
     mockEntityModel(),
     mockEntityModel(),
@@ -30,7 +30,7 @@ const makeSut = (validColumnsToExport: EntityColumnsToExportCSVFileDTO = mockEnt
   ])
   const exportToCSVAdapter = new ExportToCSVFileProtocolSpy()
   const temporaryFileDir = system.filePath()
-  const sut = new MemoryExportEntitiesToFileUseCase<EntityModel>(
+  const sut = new MemoryExportEntitiesToCSVFileUseCase<EntityModel>(
     validColumnsToExport,
     exportToCSVAdapter,
     temporaryFileDir
@@ -44,7 +44,7 @@ const makeSut = (validColumnsToExport: EntityColumnsToExportCSVFileDTO = mockEnt
   }
 }
 
-describe('MemoryExportEntitiesToFileUseCase', () => {
+describe('MemoryExportEntitiesToCSVFileUseCase', () => {
   describe('Valid columns', () => {
     test('Should return InvalidColumnsError if columns is empty list', async () => {
       const { sut, ExportEntitiesToCSVFileDTO } = makeSut()
@@ -70,7 +70,7 @@ describe('MemoryExportEntitiesToFileUseCase', () => {
 
   describe('Export Entities to File', () => {
     test('Should call ExportToCSVAdapter with correct values', async () => {
-      const validColumns = mockEntityModelColumnsToExportDTO()
+      const validColumns = mockEntityModelColumnsToExportCSVFileDTO()
       const entities = mockEntityModel()
       const columns = random.arrayElements<string>(Object.keys(entities), datatype.number({ min: 1, max: 3 }))
       const columnsToExport: ColumnToExportModel[] = []

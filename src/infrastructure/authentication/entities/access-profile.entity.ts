@@ -2,7 +2,7 @@ import 'module-alias/register'
 import { AccessProfileModel } from '@/domain/authentication'
 import { DefaultEntity } from '@/infrastructure/repositories'
 import { ModuleEntity, ModuleAccessRuleEntity } from '@/infrastructure/authentication'
-import { Entity, Column, OneToOne, JoinColumn, ManyToMany, JoinTable } from 'typeorm'
+import { Entity, Column, OneToOne, JoinColumn, ManyToMany, JoinTable, AfterLoad } from 'typeorm'
 
 @Entity('access_profiles')
 export class AccessProfileEntity extends DefaultEntity implements AccessProfileModel {
@@ -37,4 +37,15 @@ export class AccessProfileEntity extends DefaultEntity implements AccessProfileM
     }
   })
   module_access_rules?: ModuleAccessRuleEntity[]
+
+  module_key?: string
+  module_name?: string
+
+  @AfterLoad()
+  setModuleData? (): void {
+    if (this.module) {
+      this.module_key = this.module.module_key
+      this.module_name = this.module.name
+    }
+  }
 }

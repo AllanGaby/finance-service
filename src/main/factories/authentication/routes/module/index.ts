@@ -1,29 +1,38 @@
 import { Router } from 'express'
 import {
   AuthenticationAccessRules,
-  ModuleModel, RepositoryModuleFilter, RequestModuleFilter
+  ModuleModel,
+  RepositoryModuleFilter,
+  RequestModuleFilter,
+  ModuleColumnsToExportXLSX
 } from '@/domain/authentication'
 import {
   ModuleEntity,
   ModuleRepositorySettings
 } from '@/infrastructure/authentication'
+import { makeListModulesAndExportToXLSXFileRoute } from './list-modules-and-export-to-xlsx-file.route'
 import {
   DefaultCRUDEntityWithAuthenticationRoutesProps,
   makeDefaultCRUDEntityWithAuthenticationRoutes
 } from '@/main/factories/authentication/routes'
 import { makeCreateModuleFieldsValidations, makeUpdateModuleFieldsValidations } from '@/main/factories/authentication/fields-validations'
 
-export type ModuleRouteProps = DefaultCRUDEntityWithAuthenticationRoutesProps
+export type ModuleRouteProps = DefaultCRUDEntityWithAuthenticationRoutesProps & {
+  logoFilePath: string
+}
 
-export const makeModuleRoute = (props: ModuleRouteProps): Router =>
-  Router()
+export const makeModuleRoute = (props: ModuleRouteProps): Router => {
+  props.repositorySettings = ModuleRepositorySettings
+  return Router()
+    .use('/module', makeListModulesAndExportToXLSXFileRoute({
+      ...props,
+      entityName: 'Module',
+      validColumnsToExport: ModuleColumnsToExportXLSX
+    }, Object.values(RepositoryModuleFilter), Object.values(RequestModuleFilter)))
     .use('/module',
-      makeDefaultCRUDEntityWithAuthenticationRoutes<ModuleModel>({
-        ...props,
+      makeDefaultCRUDEntityWithAuthenticationRoutes<ModuleModel>(props, {
         validRepositoryColumns: Object.values(RepositoryModuleFilter),
         validRequestColumns: Object.values(RequestModuleFilter),
-        repositorySettings: ModuleRepositorySettings
-      }, {
         entityClass: ModuleEntity,
         paramIdName: 'module_id',
         entityName: 'Module',
@@ -36,3 +45,4 @@ export const makeModuleRoute = (props: ModuleRouteProps): Router =>
         listAccessRules: [AuthenticationAccessRules.ListModules]
       })
     )
+}

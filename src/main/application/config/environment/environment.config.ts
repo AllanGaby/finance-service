@@ -54,6 +54,7 @@ export const ConfigSetup = (): ConfigurationModel => {
   return {
     environment,
     port: Number(process.env.API_PORT) || 9999,
+    logoFilePath: 'public/assets/enterprise.png',
     repositoryType: environment === EnvironmentType.test ? RepositoryType.Memory : process.env.REPOSITORY_TYPE as RepositoryType,
     authentication: {
       accessTokenPrefix: process.env.AUTHENTICATION_ACCESS_TOKEN_PREFIX || 'bearer ',

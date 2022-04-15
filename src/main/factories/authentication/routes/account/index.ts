@@ -1,10 +1,12 @@
 import {
   RequestAccountFilter,
   RepositoryAccountFilter,
-  AuthenticationAccessRules
+  AuthenticationAccessRules,
+  AccountColumnsToExportXLSX
 } from '@/domain/authentication'
 import { CreateAccountRouteProps, makeCreateAccountRoute } from './create-account.route'
 import { UpdateAccountByIdRouteProps, makeUpdateAccountByIdRoute } from './update-account-by-id.route'
+import { makeListAccountsAndExportToXLSXFileRoute } from './list-accounts-and-export-to-xlsx-file.route'
 import {
   DefaultDeleteGetListEntityWithAuthenticationRoutesProps,
   makeDefaultDeleteGetListEntityWithAuthenticationRoutes
@@ -19,19 +21,26 @@ import { Router } from 'express'
 export type AccountRouteProps =
 CreateAccountRouteProps &
 UpdateAccountByIdRouteProps &
-DefaultDeleteGetListEntityWithAuthenticationRoutesProps
+DefaultDeleteGetListEntityWithAuthenticationRoutesProps & {
+  logoFilePath: string
+}
 
 export const makeAccountRoute = (
   props: AccountRouteProps
 ): Router => {
-  props.validRepositoryColumns = Object.values(RepositoryAccountFilter)
-  props.validRequestColumns = Object.values(RequestAccountFilter)
   props.repositorySettings = AccountRepositorySettings
   const paramIdName = 'account_id'
   return Router()
     .use('/', makeCreateAccountRoute(props, makeCreateAccountFieldsValidations()))
+    .use('/', makeListAccountsAndExportToXLSXFileRoute({
+      ...props,
+      entityName: 'Account',
+      validColumnsToExport: AccountColumnsToExportXLSX
+    }))
     .use('/', makeUpdateAccountByIdRoute(props, makeUpdateAccountFieldsValidations(), paramIdName, [AuthenticationAccessRules.UpdateAccount]))
     .use(makeDefaultDeleteGetListEntityWithAuthenticationRoutes(props, {
+      validRepositoryColumns: Object.values(RepositoryAccountFilter),
+      validRequestColumns: Object.values(RequestAccountFilter),
       entityClass: AccountEntity,
       entityName: 'Account',
       paramIdName,

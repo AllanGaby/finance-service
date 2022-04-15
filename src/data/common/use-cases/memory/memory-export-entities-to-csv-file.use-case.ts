@@ -3,7 +3,7 @@ import { InvalidColumnsError } from '@/data/common/errors'
 import { ExportToCSVFileProtocol, ColumnToExportModel } from '@/protocols/csv'
 import { v4 } from 'uuid'
 
-export class MemoryExportEntitiesToFileUseCase<EntityType> implements ExportEntitiesToFileUseCase<EntityType> {
+export class MemoryExportEntitiesToCSVFileUseCase<EntityType> implements ExportEntitiesToFileUseCase<EntityType> {
   constructor (
     private readonly validColumnsToExport: EntityColumnsToExportCSVFileDTO,
     private readonly exportToCSVAdapter: ExportToCSVFileProtocol,
@@ -23,7 +23,7 @@ export class MemoryExportEntitiesToFileUseCase<EntityType> implements ExportEnti
     }
     const destineFileName = v4()
     const destinationFilePath = `${this.temporaryFileDir}/${destineFileName}.csv`
-    return await this.exportToCSVAdapter.exportToCSV({
+    return this.exportToCSVAdapter.exportToCSV({
       data: data,
       filePath: destinationFilePath,
       columns: columnsToExport

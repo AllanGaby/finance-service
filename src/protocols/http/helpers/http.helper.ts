@@ -1,4 +1,4 @@
-import { HttpStatusCode, HttpResponse } from '@/protocols/http'
+import { HttpStatusCode, HttpResponse, HttpFileResponse } from '@/protocols/http'
 
 export class HttpHelper {
   static ok<BodyType, HeadersType = any, RequestQueryParams = any, ParamsType = any>
@@ -9,6 +9,14 @@ export class HttpHelper {
       headers,
       params,
       queryParams
+    }
+  }
+
+  static exportFile (file: HttpFileResponse): HttpResponse<any> {
+    return {
+      statusCode: HttpStatusCode.ok,
+      body: undefined,
+      file
     }
   }
 
