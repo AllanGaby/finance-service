@@ -1,10 +1,11 @@
 import { ListEntitiesController } from './list-entities.controller'
 import { EntityModel, ListEntitiesUseCaseSpy } from '@/domain/common'
-import { mockListEntitiesRequest } from '@/presentation/common'
-import { HttpHelper } from '@/protocols/http'
+import { CustomFiltersRequest, ListEntitiesRequest, mockListEntitiesRequest } from '@/presentation/common'
+import { HttpHelper, HttpRequest } from '@/protocols/http'
 
 type sutTypes = {
   sut: ListEntitiesController<EntityModel>
+  request: HttpRequest<CustomFiltersRequest, any, ListEntitiesRequest>
   listEntitiesUseCase: ListEntitiesUseCaseSpy<EntityModel>
 }
 
@@ -13,21 +14,20 @@ const makeSut = (): sutTypes => {
   const sut = new ListEntitiesController(listEntitiesUseCase)
   return {
     sut,
+    request: mockListEntitiesRequest(),
     listEntitiesUseCase
   }
 }
 
 describe('ListEntitiesController', () => {
   test('Should call ListEntitiesUseCase with correct value', async () => {
-    const { sut, listEntitiesUseCase } = makeSut()
-    const request = mockListEntitiesRequest()
+    const { sut, listEntitiesUseCase, request } = makeSut()
     await sut.handle(request)
     expect(listEntitiesUseCase.filter).toEqual({
       page: request.queryParams.page,
       textToSearch: request.queryParams.search,
       recordsPerPage: request.queryParams.size,
-      orderColumn: request.queryParams.order,
-      orderDirection: request.queryParams.direction,
+      order: request.body.orders,
       filters: request.body.custom_filters
     })
   })

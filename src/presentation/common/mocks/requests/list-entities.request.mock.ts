@@ -16,8 +16,16 @@ export const mockListEntitiesRequest = (): HttpRequest<CustomFiltersRequest, any
     page: datatype.number(),
     search: datatype.string(),
     size: datatype.number(),
-    order: database.column(),
-    direction: mockOrderDirection(),
+    order: [
+      database.column(),
+      database.column(),
+      database.column()
+    ],
+    direction: [
+      mockOrderDirection(),
+      mockOrderDirection(),
+      mockOrderDirection()
+    ],
     field: [
       database.column(),
       database.column()

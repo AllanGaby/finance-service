@@ -29,8 +29,7 @@ describe('ListEntitiesAndExportToFileController', () => {
       page: request.queryParams.page,
       textToSearch: request.queryParams.search,
       recordsPerPage: request.queryParams.size,
-      orderColumn: request.queryParams.order,
-      orderDirection: request.queryParams.direction,
+      order: request.body.orders,
       filters: request.body.custom_filters
     })
   })

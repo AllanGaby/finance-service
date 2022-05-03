@@ -1,11 +1,10 @@
-import { OrderDirection, CustomFilterModel } from '@/domain/common'
+import { CustomFilterModel, ListOrderModel } from '@/domain/common'
 
 export type ListEntitiesDTO = {
   textToSearch?: string
   recordsPerPage?: number
   page?: number
-  orderColumn?: string
-  orderDirection?: OrderDirection
+  order?: ListOrderModel
   complete?: boolean
   filters?: CustomFilterModel[]
 }

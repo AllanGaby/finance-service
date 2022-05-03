@@ -1,10 +1,9 @@
-import { ListEntitiesDTO, mockOrderDirection, mockCustomFilterModel } from '@/domain/common'
-import { database, datatype } from 'faker'
+import { ListEntitiesDTO, mockCustomFilterModel, mockListOrderModel } from '@/domain/common'
+import { datatype } from 'faker'
 
 export const mockListEntitiesDTO = (): ListEntitiesDTO => ({
   textToSearch: datatype.string(),
-  orderColumn: database.column(),
-  orderDirection: mockOrderDirection(),
+  order: mockListOrderModel(),
   page: datatype.number(),
   complete: datatype.boolean(),
   recordsPerPage: datatype.number(),

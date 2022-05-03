@@ -1,25 +1,25 @@
-import { MemoryMapperCustomFilterUseCase } from './memory-mapper-custom-filter.use-case'
-import { CustomFilterConditional, CustomFilterOperator, mockMapperCustomFilterDTO } from '@/domain/common'
-import faker from 'faker'
+import { MemoryCustomFilterMapperUseCase } from './memory-custom-filter-mapper.use-case'
+import { CustomFilterConditional, CustomFilterOperator, mockCustomFilterMapperDTO } from '@/domain/common'
+import { database, random } from 'faker'
 
 type sutTypes = {
-  sut: MemoryMapperCustomFilterUseCase
+  sut: MemoryCustomFilterMapperUseCase
   validParamsColumns: string[]
   validRepositoryColumns: string[]
 }
 
 const makeSut = (): sutTypes => {
   const validParamsColumns = [
-    faker.database.column(),
-    faker.database.column(),
-    faker.database.column()
+    database.column(),
+    database.column(),
+    database.column()
   ]
   const validRepositoryColumns = [
-    faker.database.column(),
-    faker.database.column(),
-    faker.database.column()
+    database.column(),
+    database.column(),
+    database.column()
   ]
-  const sut = new MemoryMapperCustomFilterUseCase(validParamsColumns, validRepositoryColumns)
+  const sut = new MemoryCustomFilterMapperUseCase(validParamsColumns, validRepositoryColumns)
   return {
     sut,
     validParamsColumns,
@@ -27,31 +27,31 @@ const makeSut = (): sutTypes => {
   }
 }
 
-describe('MemoryMapperCustomFilterUseCase', () => {
+describe('MemoryCustomFilterMapperUseCase', () => {
   describe('Fields', () => {
     test('Should return a empty filter if f is not provided', async () => {
       const { sut } = makeSut()
-      const request = mockMapperCustomFilterDTO()
+      const request = mockCustomFilterMapperDTO()
       delete request.fields
-      const filter = await sut.mapperFilters(request)
+      const filter = await sut.getFilters(request)
       expect(filter).toEqual([])
     })
 
     test('Should return a empty filter if f is empty list', async () => {
       const { sut } = makeSut()
-      const request = mockMapperCustomFilterDTO()
+      const request = mockCustomFilterMapperDTO()
       request.fields = []
-      const filter = await sut.mapperFilters(request)
+      const filter = await sut.getFilters(request)
       expect(filter).toEqual([])
     })
 
     test('Should return a filter list with same if f length if all fields are valids', async () => {
       const { sut, validParamsColumns } = makeSut()
-      const request = mockMapperCustomFilterDTO()
+      const request = mockCustomFilterMapperDTO()
       for (let index: number = 0; index < request.fields.length; index++) {
-        request.fields[index] = faker.random.arrayElement(validParamsColumns)
+        request.fields[index] = random.arrayElement(validParamsColumns)
       }
-      const filter = await sut.mapperFilters(request)
+      const filter = await sut.getFilters(request)
       expect(filter).toHaveLength(request.fields.length)
     })
   })
@@ -59,9 +59,9 @@ describe('MemoryMapperCustomFilterUseCase', () => {
   describe('Operators', () => {
     test('Should use and operator if o is not provided', async () => {
       const { sut } = makeSut()
-      const request = mockMapperCustomFilterDTO()
+      const request = mockCustomFilterMapperDTO()
       delete request.operators
-      const filters = await sut.mapperFilters(request)
+      const filters = await sut.getFilters(request)
       filters.forEach(filter => {
         expect(filter.operator).toBe(CustomFilterOperator.and)
       })
@@ -69,9 +69,9 @@ describe('MemoryMapperCustomFilterUseCase', () => {
 
     test('Should use and operator if o is empty list', async () => {
       const { sut } = makeSut()
-      const request = mockMapperCustomFilterDTO()
+      const request = mockCustomFilterMapperDTO()
       request.operators = []
-      const filters = await sut.mapperFilters(request)
+      const filters = await sut.getFilters(request)
       filters.forEach(filter => {
         expect(filter.operator).toBe(CustomFilterOperator.and)
       })
@@ -81,9 +81,9 @@ describe('MemoryMapperCustomFilterUseCase', () => {
   describe('Conditionals', () => {
     test('Should use equal conditional if c is not provided', async () => {
       const { sut } = makeSut()
-      const request = mockMapperCustomFilterDTO()
+      const request = mockCustomFilterMapperDTO()
       delete request.conditionals
-      const filters = await sut.mapperFilters(request)
+      const filters = await sut.getFilters(request)
       filters.forEach(filter => {
         expect(filter.conditional).toBe(CustomFilterConditional.equal)
       })
@@ -91,9 +91,9 @@ describe('MemoryMapperCustomFilterUseCase', () => {
 
     test('Should use equal conditional if c is empty list', async () => {
       const { sut } = makeSut()
-      const request = mockMapperCustomFilterDTO()
+      const request = mockCustomFilterMapperDTO()
       request.conditionals = []
-      const filters = await sut.mapperFilters(request)
+      const filters = await sut.getFilters(request)
       filters.forEach(filter => {
         expect(filter.conditional).toBe(CustomFilterConditional.equal)
       })
@@ -103,9 +103,9 @@ describe('MemoryMapperCustomFilterUseCase', () => {
   describe('Values', () => {
     test('Should use undefined value if v is not provided', async () => {
       const { sut } = makeSut()
-      const request = mockMapperCustomFilterDTO()
+      const request = mockCustomFilterMapperDTO()
       delete request.values
-      const filters = await sut.mapperFilters(request)
+      const filters = await sut.getFilters(request)
       filters.forEach(filter => {
         expect(filter.value).toBe(undefined)
       })
@@ -113,9 +113,9 @@ describe('MemoryMapperCustomFilterUseCase', () => {
 
     test('Should use undefined value if v is empty list', async () => {
       const { sut } = makeSut()
-      const request = mockMapperCustomFilterDTO()
+      const request = mockCustomFilterMapperDTO()
       request.values = []
-      const filters = await sut.mapperFilters(request)
+      const filters = await sut.getFilters(request)
       filters.forEach(filter => {
         expect(filter.value).toBe(undefined)
       })
@@ -124,11 +124,11 @@ describe('MemoryMapperCustomFilterUseCase', () => {
 
   test('Should return a filter list with correct values', async () => {
     const { sut, validParamsColumns, validRepositoryColumns } = makeSut()
-    const request = mockMapperCustomFilterDTO()
+    const request = mockCustomFilterMapperDTO()
     for (let index: number = 0; index < request.fields.length; index++) {
-      request.fields[index] = faker.random.arrayElement(validParamsColumns)
+      request.fields[index] = random.arrayElement(validParamsColumns)
     }
-    const filters = await sut.mapperFilters(request)
+    const filters = await sut.getFilters(request)
     filters.forEach((filter, index) => {
       const paramColumnIndex = validParamsColumns.indexOf(request.fields[index])
       expect(filter.field).toBe(validRepositoryColumns[paramColumnIndex])

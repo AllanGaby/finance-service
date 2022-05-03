@@ -4,16 +4,17 @@ import {
   ModuleModel,
   RepositoryModuleFilter,
   RequestModuleFilter,
-  ModuleColumnsToExportXLSX
+  ModuleColumnsToExportXLSX,
+  RequestModuleOrder
 } from '@/domain/authentication'
 import {
   ModuleEntity,
   ModuleRepositorySettings
 } from '@/infrastructure/authentication'
-import { makeListModulesAndExportToXLSXFileRoute } from './list-modules-and-export-to-xlsx-file.route'
 import {
   DefaultCRUDEntityWithAuthenticationRoutesProps,
-  makeDefaultCRUDEntityWithAuthenticationRoutes
+  makeDefaultCRUDEntityWithAuthenticationRoutes,
+  makeListEntitiesAndExportToXLSXFileWithAuthenticationRoute
 } from '@/main/factories/authentication/routes'
 import { makeCreateModuleFieldsValidations, makeUpdateModuleFieldsValidations } from '@/main/factories/authentication/fields-validations'
 
@@ -23,16 +24,24 @@ export type ModuleRouteProps = DefaultCRUDEntityWithAuthenticationRoutesProps & 
 
 export const makeModuleRoute = (props: ModuleRouteProps): Router => {
   props.repositorySettings = ModuleRepositorySettings
+
   return Router()
-    .use('/module', makeListModulesAndExportToXLSXFileRoute({
+    .use('/module', makeListEntitiesAndExportToXLSXFileWithAuthenticationRoute({
       ...props,
       entityName: 'Module',
       validColumnsToExport: ModuleColumnsToExportXLSX
-    }, Object.values(RepositoryModuleFilter), Object.values(RequestModuleFilter)))
+    },
+    ModuleEntity,
+    [AuthenticationAccessRules.ListModules],
+    Object.values(RepositoryModuleFilter),
+    Object.values(RequestModuleFilter),
+    Object.values(RequestModuleOrder)
+    ))
     .use('/module',
       makeDefaultCRUDEntityWithAuthenticationRoutes<ModuleModel>(props, {
         validRepositoryColumns: Object.values(RepositoryModuleFilter),
         validRequestColumns: Object.values(RequestModuleFilter),
+        validRepositoryOrders: Object.values(RequestModuleOrder),
         entityClass: ModuleEntity,
         paramIdName: 'module_id',
         entityName: 'Module',

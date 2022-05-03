@@ -2,14 +2,15 @@ import {
   RequestAccessProfileFilter,
   RepositoryAccessProfileFilter,
   AuthenticationAccessRules,
-  AccessProfileColumnsToExportXLSX
+  AccessProfileColumnsToExportXLSX,
+  RequestAccessProfileOrder
 } from '@/domain/authentication'
 import { CreateAccessProfileRouteProps, makeCreateAccessProfileRoute } from './create-access-profile.route'
 import { UpdateAccessProfileByIdRouteProps, makeUpdateAccessProfileByIdRoute } from './update-access-profile-by-id.route'
-import { makeListAccessProfilesAndExportToXLSXFileRoute } from './list-access-profiles-and-export-to-xlsx-file.route'
 import {
   DefaultDeleteGetListEntityWithAuthenticationRoutesProps,
-  makeDefaultDeleteGetListEntityWithAuthenticationRoutes
+  makeDefaultDeleteGetListEntityWithAuthenticationRoutes,
+  makeListEntitiesAndExportToXLSXFileWithAuthenticationRoute
 } from '@/main/factories/authentication/routes'
 import {
   makeCreateAccessProfileFieldsValidations,
@@ -31,15 +32,22 @@ export const makeAccessProfileRoute = (
   props.repositorySettings = AccessProfileRepositorySettings
   return Router()
     .use('/', makeCreateAccessProfileRoute(props, makeCreateAccessProfileFieldsValidations(), [AuthenticationAccessRules.CreateAccessProfiles]))
-    .use('/', makeListAccessProfilesAndExportToXLSXFileRoute({
+    .use('/', makeListEntitiesAndExportToXLSXFileWithAuthenticationRoute({
       ...props,
       entityName: 'AccessProfile',
       validColumnsToExport: AccessProfileColumnsToExportXLSX
-    }))
+    },
+    AccessProfileEntity,
+    [AuthenticationAccessRules.ListAccessProfiles],
+    Object.values(RepositoryAccessProfileFilter),
+    Object.values(RequestAccessProfileFilter),
+    Object.values(RequestAccessProfileOrder)
+    ))
     .use('/', makeUpdateAccessProfileByIdRoute(props, 'access_profile_id', makeUpdateAccessProfileFieldsValidations(), [AuthenticationAccessRules.UpdateAccessProfiles]))
     .use(makeDefaultDeleteGetListEntityWithAuthenticationRoutes(props, {
       validRepositoryColumns: Object.values(RepositoryAccessProfileFilter),
       validRequestColumns: Object.values(RequestAccessProfileFilter),
+      validRepositoryOrders: Object.values(RequestAccessProfileOrder),
       entityClass: AccessProfileEntity,
       paramIdName: 'access_profile_id',
       entityName: 'AccessProfile',

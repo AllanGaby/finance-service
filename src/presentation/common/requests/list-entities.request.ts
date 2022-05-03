@@ -4,8 +4,8 @@ export type ListEntitiesRequest = {
   search?: string
   page?: number
   size?: number
-  order?: string
-  direction?: OrderDirection
+  order?: string | string[]
+  direction?: OrderDirection | OrderDirection[]
   field?: string | string[]
   operator?: CustomFilterOperator | CustomFilterOperator[]
   conditional?: CustomFilterConditional | CustomFilterConditional[]

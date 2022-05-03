@@ -13,16 +13,13 @@ export class ListEntitiesController<EntityType extends EntityModel> implements C
     const {
       page,
       search,
-      size,
-      order,
-      direction
+      size
     } = request.queryParams
     const list = await this.listEntitiesUseCase.list({
       page,
       textToSearch: search,
       recordsPerPage: size,
-      orderColumn: order,
-      orderDirection: direction,
+      order: request.body.orders,
       filters: request.body.custom_filters
     })
     return HttpHelper.ok(list)

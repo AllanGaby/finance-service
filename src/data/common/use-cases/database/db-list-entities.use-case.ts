@@ -1,4 +1,4 @@
-import { ListEntitiesUseCase, ListEntitiesDTO, OrderDirection, ListEntityModel } from '@/domain/common'
+import { ListEntitiesUseCase, ListEntitiesDTO, ListEntityModel } from '@/domain/common'
 import { ListEntitiesRepository, CountEntitiesRepository, RepositoryOptionsModel } from '@/protocols/repositories'
 
 export class DbListEntitiesUseCase<EntityType> implements ListEntitiesUseCase<EntityType> {
@@ -10,7 +10,14 @@ export class DbListEntitiesUseCase<EntityType> implements ListEntitiesUseCase<En
     }
   ) {}
 
-  async list ({ textToSearch, page = 1, recordsPerPage = 15, orderDirection = OrderDirection.ASC, orderColumn, filters, complete = false }: ListEntitiesDTO): Promise<ListEntityModel<EntityType>> {
+  async list ({
+    textToSearch,
+    order,
+    page = 1,
+    recordsPerPage = 15,
+    filters,
+    complete = false
+  }: ListEntitiesDTO): Promise<ListEntityModel<EntityType>> {
     const options: RepositoryOptionsModel = {
       returnDeletedEntities: this.options.returnDeletedEntities,
       returnCompleteData: complete
@@ -30,9 +37,8 @@ export class DbListEntitiesUseCase<EntityType> implements ListEntitiesUseCase<En
     const data = await this.listEntitiesRepository.list({
       skip,
       recordsPerPage: pageSize,
+      order,
       textToSearch,
-      orderColumn,
-      orderDirection,
       filters
     }, options)
 

@@ -1,6 +1,7 @@
 export * from './create-entity.route'
 export * from './delete-entity-by-id.route'
 export * from './get-entity-by-id.route'
+export * from './list-entities-and-export-to-xlsx-file.route'
 export * from './list-entities.route'
 export * from './update-entity-by-id.route'
 export * from './update-versioned-entity-by-id.route'

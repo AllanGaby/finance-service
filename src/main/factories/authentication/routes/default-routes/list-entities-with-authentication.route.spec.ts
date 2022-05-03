@@ -49,6 +49,7 @@ describe('makeListEntitiesWithAuthenticationRoute', () => {
       '/',
       expect.any(Function),
       expect.any(Function),
+      expect.any(Function),
       expect.any(Function)
     )
   })

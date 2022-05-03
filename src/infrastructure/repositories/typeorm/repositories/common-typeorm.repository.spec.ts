@@ -1,5 +1,5 @@
 import { CommonTypeORMRepository, defaultRepositoryOptionsModel } from './common-typeorm.repository'
-import { CustomFilterConditional, mockCustomFilterModel, mockEntityModel, OrderDirection } from '@/domain/common'
+import { CustomFilterConditional, mockCustomFilterModel, mockEntityModel, mockListOrderModel } from '@/domain/common'
 import { InvalidForeignKeyError, MissingParamError, RepositoryError, RepositoryErrorType, ViolateUniqueKeyError } from '@/data/common/errors'
 import { mockListEntitiesRepositoryDTO, mockRepositoryOptionsModel } from '@/protocols/repositories'
 import { DefaultEntity, CommonRepositorySettingsModel } from '@/infrastructure/repositories'
@@ -908,32 +908,43 @@ describe('CommonTypeORMRepository', () => {
       expect(getRepositoryTypeORMSpy).toHaveBeenCalledTimes(1)
     })
 
-    describe('Filter is not provided', () => {
-      test('Should call GetWhere with correct values', async () => {
+    describe('GetJoin', () => {
+      test('Should call getJoin with correct value if options is not provided', async () => {
         const { sut } = makeSut()
-        const getWhereSpy = jest.spyOn(sut, 'getWhere')
-        await sut.list()
-        expect(getWhereSpy).toHaveBeenCalledWith(undefined, '')
+        const getJoinSpy = jest.spyOn(sut, 'getJoin')
+        await sut.list(mockListEntitiesRepositoryDTO())
+        expect(getJoinSpy).toHaveBeenCalledWith(defaultRepositoryOptionsModel.returnCompleteData)
       })
 
-      test('Should call Find with correct value', async () => {
+      test('Should call getJoin with correct value if options is provided', async () => {
         const { sut } = makeSut()
-        const where = datatype.uuid()
-        jest.spyOn(sut, 'getWhere').mockReturnValueOnce(where)
-        const findSpy = jest.spyOn(sut.repositoryTypeORM, 'find')
-        await sut.list()
-        expect(findSpy).toHaveBeenCalledWith({
-          where,
-          skip: 0,
-          order: {
-            created_at: OrderDirection.ASC
-          }
-        })
+        const getJoinSpy = jest.spyOn(sut, 'getJoin')
+        const options = mockRepositoryOptionsModel()
+        await sut.list(mockListEntitiesRepositoryDTO(), options)
+        expect(getJoinSpy).toHaveBeenCalledWith(options.returnCompleteData)
       })
     })
 
-    describe('Filter is provided', () => {
-      test('Should call GetWhere with correct values', async () => {
+    test('Should call CreateQueryBuilder with correct value if join is provided', async () => {
+      const { sut } = makeSut()
+      sut.join = {
+        alias: datatype.uuid()
+      }
+      const createQueryBuilderSpy = jest.spyOn(sut.repositoryTypeORM, 'createQueryBuilder')
+      await sut.list(mockListEntitiesRepositoryDTO())
+      expect(createQueryBuilderSpy).toHaveBeenCalledWith(sut.join.alias)
+    })
+
+    test('Should call CreateQueryBuilder with correct value if join is not provided', async () => {
+      const { sut } = makeSut()
+      delete sut.join
+      const createQueryBuilderSpy = jest.spyOn(sut.repositoryTypeORM, 'createQueryBuilder')
+      await sut.list(mockListEntitiesRepositoryDTO())
+      expect(createQueryBuilderSpy).toHaveBeenCalledWith('entity')
+    })
+
+    describe('GetWhere', () => {
+      test('Should call GetWhere with correct values if filters and textToSearch is provided', async () => {
         const { sut } = makeSut()
         const getWhereSpy = jest.spyOn(sut, 'getWhere')
         const request = mockListEntitiesRepositoryDTO()
@@ -941,171 +952,301 @@ describe('CommonTypeORMRepository', () => {
         expect(getWhereSpy).toHaveBeenCalledWith(request.filters, request.textToSearch)
       })
 
-      describe('Order', () => {
-        test('Should call Find with correct value if order is not provided', async () => {
+      test('Should call GetWhere with correct values if only textToSearch is provided', async () => {
+        const { sut } = makeSut()
+        const getWhereSpy = jest.spyOn(sut, 'getWhere')
+        const request = mockListEntitiesRepositoryDTO()
+        delete request.filters
+        await sut.list(request)
+        expect(getWhereSpy).toHaveBeenCalledWith([], request.textToSearch)
+      })
+
+      test('Should call GetWhere with correct values if only filters is provided', async () => {
+        const { sut } = makeSut()
+        const getWhereSpy = jest.spyOn(sut, 'getWhere')
+        const request = mockListEntitiesRepositoryDTO()
+        delete request.textToSearch
+        await sut.list(request)
+        expect(getWhereSpy).toHaveBeenCalledWith(request.filters, '')
+      })
+
+      test('Should call GetWhere with correct values if filters and textToSearch are not provided', async () => {
+        const { sut } = makeSut()
+        const getWhereSpy = jest.spyOn(sut, 'getWhere')
+        const request = mockListEntitiesRepositoryDTO()
+        delete request.filters
+        delete request.textToSearch
+        await sut.list(request)
+        expect(getWhereSpy).toHaveBeenCalledWith([], '')
+      })
+
+      test('Should call GetWhere with correct values if filter is not provided', async () => {
+        const { sut } = makeSut()
+        const getWhereSpy = jest.spyOn(sut, 'getWhere')
+        await sut.list(undefined)
+        expect(getWhereSpy).toHaveBeenCalledWith([], '')
+      })
+    })
+
+    describe('Order', () => {
+      test('Should not call OrderBy if order is not provided', async () => {
+        const { sut } = makeSut()
+        const orderBySpy = jest.spyOn(TypeOrmRepositorySpy.queryBuilder, 'orderBy')
+        const request = mockListEntitiesRepositoryDTO()
+        delete request.order
+        await sut.list(request)
+        expect(orderBySpy).not.toHaveBeenCalled()
+      })
+
+      test('Should not call OrderBy if filters is not provided', async () => {
+        const { sut } = makeSut()
+        const orderBySpy = jest.spyOn(TypeOrmRepositorySpy.queryBuilder, 'orderBy')
+        await sut.list(undefined)
+        expect(orderBySpy).not.toHaveBeenCalled()
+      })
+
+      test('Should call OrderBy with correct value if order provided', async () => {
+        const { sut } = makeSut()
+        const orderBySpy = jest.spyOn(TypeOrmRepositorySpy.queryBuilder, 'orderBy')
+        const request = mockListEntitiesRepositoryDTO()
+        request.order = mockListOrderModel()
+        await sut.list(request)
+        expect(orderBySpy).toHaveBeenCalledWith(request.order)
+      })
+    })
+
+    describe('Join', () => {
+      describe('LeftJoin', () => {
+        test('Should not call LeftJoinAndSelect if join is not provided', async () => {
           const { sut } = makeSut()
-          const where = datatype.uuid()
-          jest.spyOn(sut, 'getWhere').mockReturnValueOnce(where)
-          const findSpy = jest.spyOn(sut.repositoryTypeORM, 'find')
+          delete sut.join
+          const leftJoinAndSelectSpy = jest.spyOn(TypeOrmRepositorySpy.queryBuilder, 'leftJoinAndSelect')
           const request = mockListEntitiesRepositoryDTO()
-          delete request.orderColumn
           await sut.list(request)
-          const { skip, recordsPerPage } = request
-          expect(findSpy).toHaveBeenCalledWith({
-            where,
-            skip,
-            take: recordsPerPage,
-            order: {
-              created_at: request.orderDirection
-            }
-          })
+          expect(leftJoinAndSelectSpy).not.toHaveBeenCalled()
         })
 
-        test('Should call Find with correct value if order is provided', async () => {
+        test('Should not call LeftJoinAndSelect if join is provided without leftJoinAndSelect', async () => {
           const { sut } = makeSut()
-          const where = datatype.uuid()
-          jest.spyOn(sut, 'getWhere').mockReturnValueOnce(where)
-          const findSpy = jest.spyOn(sut.repositoryTypeORM, 'find')
+          sut.join = {
+            alias: datatype.uuid()
+          }
+          const leftJoinAndSelectSpy = jest.spyOn(TypeOrmRepositorySpy.queryBuilder, 'leftJoinAndSelect')
           const request = mockListEntitiesRepositoryDTO()
           await sut.list(request)
-          const { skip, recordsPerPage, orderColumn, orderDirection } = request
-          expect(findSpy).toHaveBeenCalledWith({
-            where,
-            skip,
-            take: recordsPerPage,
-            order: {
-              [orderColumn]: orderDirection
+          expect(leftJoinAndSelectSpy).not.toHaveBeenCalled()
+        })
+
+        test('Should not call LeftJoinAndSelect if join is provided with empty leftJoinAndSelect', async () => {
+          const { sut } = makeSut()
+          sut.join = {
+            alias: datatype.uuid(),
+            leftJoinAndSelect: {}
+          }
+          const leftJoinAndSelectSpy = jest.spyOn(TypeOrmRepositorySpy.queryBuilder, 'leftJoinAndSelect')
+          const request = mockListEntitiesRepositoryDTO()
+          await sut.list(request)
+          expect(leftJoinAndSelectSpy).not.toHaveBeenCalled()
+        })
+
+        test('Should call LeftJoinAndSelect with correct value if join is provided with leftJoinAndSelect', async () => {
+          const { sut } = makeSut()
+          sut.join = {
+            alias: datatype.uuid(),
+            leftJoinAndSelect: {
+              [database.column()]: datatype.uuid(),
+              [database.column()]: datatype.uuid(),
+              [database.column()]: datatype.uuid()
             }
+          }
+          const leftJoinAndSelectSpy = jest.spyOn(TypeOrmRepositorySpy.queryBuilder, 'leftJoinAndSelect')
+          const request = mockListEntitiesRepositoryDTO()
+          await sut.list(request)
+          const leftJoinsKeys = Object.keys(sut.join?.leftJoinAndSelect)
+          const leftJoinsValues = Object.values(sut.join.leftJoinAndSelect)
+          leftJoinsKeys.forEach((key, index) => {
+            expect(leftJoinAndSelectSpy).toHaveBeenCalledWith(leftJoinsValues[index], key)
           })
         })
       })
 
-      describe('Order Direction', () => {
-        test('Should call Find with correct value if order direction is not provided', async () => {
+      describe('InnerJoin', () => {
+        test('Should not call innerJoinAndSelect if join is not provided', async () => {
           const { sut } = makeSut()
-          const where = datatype.uuid()
-          jest.spyOn(sut, 'getWhere').mockReturnValueOnce(where)
-          const findSpy = jest.spyOn(sut.repositoryTypeORM, 'find')
+          delete sut.join
+          const innerJoinAndSelectSpy = jest.spyOn(TypeOrmRepositorySpy.queryBuilder, 'innerJoinAndSelect')
           const request = mockListEntitiesRepositoryDTO()
-          delete request.orderDirection
           await sut.list(request)
-          const { skip, recordsPerPage, orderColumn } = request
-          expect(findSpy).toHaveBeenCalledWith({
-            where,
-            skip,
-            take: recordsPerPage,
-            order: {
-              [orderColumn]: OrderDirection.ASC
-            }
-          })
+          expect(innerJoinAndSelectSpy).not.toHaveBeenCalled()
         })
 
-        test('Should call Find with correct value if order direction is provided', async () => {
+        test('Should not call innerJoinAndSelect if join is provided without innerJoinAndSelect', async () => {
           const { sut } = makeSut()
-          const where = datatype.uuid()
-          jest.spyOn(sut, 'getWhere').mockReturnValueOnce(where)
-          const findSpy = jest.spyOn(sut.repositoryTypeORM, 'find')
+          sut.join = {
+            alias: datatype.uuid()
+          }
+          const innerJoinAndSelectSpy = jest.spyOn(TypeOrmRepositorySpy.queryBuilder, 'innerJoinAndSelect')
           const request = mockListEntitiesRepositoryDTO()
           await sut.list(request)
-          const { skip, recordsPerPage, orderColumn, orderDirection } = request
-          expect(findSpy).toHaveBeenCalledWith({
-            where,
-            skip,
-            take: recordsPerPage,
-            order: {
-              [orderColumn]: orderDirection
-            }
-          })
-        })
-      })
-
-      describe('Join', () => {
-        test('Should call Find with correct value if join is provided', async () => {
-          const { sut } = makeSut()
-          sut.join = random.objectElement<JoinOptions>()
-          const where = datatype.uuid()
-          jest.spyOn(sut, 'getWhere').mockReturnValueOnce(where)
-          const findSpy = jest.spyOn(sut.repositoryTypeORM, 'find')
-          const request = mockListEntitiesRepositoryDTO()
-          await sut.list(request)
-          const { skip, recordsPerPage, orderColumn, orderDirection } = request
-          expect(findSpy).toHaveBeenCalledWith({
-            join: sut.join,
-            where,
-            skip,
-            take: recordsPerPage,
-            order: {
-              [orderColumn]: orderDirection
-            }
-          })
+          expect(innerJoinAndSelectSpy).not.toHaveBeenCalled()
         })
 
-        test('Should call Find with correct value if join is not provided', async () => {
+        test('Should not call innerJoinAndSelect if join is provided with empty innerJoinAndSelect', async () => {
           const { sut } = makeSut()
-          const where = datatype.uuid()
-          jest.spyOn(sut, 'getWhere').mockReturnValueOnce(where)
-          const findSpy = jest.spyOn(sut.repositoryTypeORM, 'find')
+          sut.join = {
+            alias: datatype.uuid(),
+            innerJoinAndSelect: {}
+          }
+          const innerJoinAndSelectSpy = jest.spyOn(TypeOrmRepositorySpy.queryBuilder, 'innerJoinAndSelect')
           const request = mockListEntitiesRepositoryDTO()
           await sut.list(request)
-          const { skip, recordsPerPage, orderColumn, orderDirection } = request
-          expect(findSpy).toHaveBeenCalledWith({
-            where,
-            skip,
-            take: recordsPerPage,
-            order: {
-              [orderColumn]: orderDirection
-            }
-          })
-        })
-      })
-
-      describe('Where', () => {
-        test('Should call Find with correct value if GetWhere return a value', async () => {
-          const { sut } = makeSut()
-          sut.join = random.objectElement<JoinOptions>()
-          const where = datatype.uuid()
-          jest.spyOn(sut, 'getWhere').mockReturnValueOnce(where)
-          const findSpy = jest.spyOn(sut.repositoryTypeORM, 'find')
-          const request = mockListEntitiesRepositoryDTO()
-          await sut.list(request)
-          const { skip, recordsPerPage, orderColumn, orderDirection } = request
-          expect(findSpy).toHaveBeenCalledWith({
-            join: sut.join,
-            where,
-            skip,
-            take: recordsPerPage,
-            order: {
-              [orderColumn]: orderDirection
-            }
-          })
+          expect(innerJoinAndSelectSpy).not.toHaveBeenCalled()
         })
 
-        test('Should call Find with correct value if GetWhere return undefined', async () => {
+        test('Should call innerJoinAndSelect with correct value if join is provided with innerJoinAndSelect', async () => {
           const { sut } = makeSut()
-          sut.join = random.objectElement<JoinOptions>()
-          jest.spyOn(sut, 'getWhere').mockReturnValueOnce(undefined)
-          const findSpy = jest.spyOn(sut.repositoryTypeORM, 'find')
+          sut.join = {
+            alias: datatype.uuid(),
+            innerJoinAndSelect: {
+              [database.column()]: datatype.uuid(),
+              [database.column()]: datatype.uuid(),
+              [database.column()]: datatype.uuid()
+            }
+          }
+          const innerJoinAndSelectSpy = jest.spyOn(TypeOrmRepositorySpy.queryBuilder, 'innerJoinAndSelect')
           const request = mockListEntitiesRepositoryDTO()
           await sut.list(request)
-          const { skip, recordsPerPage, orderColumn, orderDirection } = request
-          expect(findSpy).toHaveBeenCalledWith({
-            join: sut.join,
-            skip,
-            take: recordsPerPage,
-            order: {
-              [orderColumn]: orderDirection
-            }
+          const innerJoinsKeys = Object.keys(sut.join?.innerJoinAndSelect)
+          const innerJoinsValues = Object.values(sut.join.innerJoinAndSelect)
+          innerJoinsKeys.forEach((key, index) => {
+            expect(innerJoinAndSelectSpy).toHaveBeenCalledWith(innerJoinsValues[index], key)
           })
         })
       })
     })
 
-    test('Should return same Find return', async () => {
-      const { sut } = makeSut()
-      const entity = mockEntityModel()
-      jest.spyOn(sut.repositoryTypeORM, 'find').mockResolvedValue([entity, entity])
-      const findEntity = await sut.list(mockListEntitiesRepositoryDTO())
-      expect(findEntity).toEqual([entity, entity])
+    describe('Where', () => {
+      test('Should call Where with correct value if GetWhere return a value', async () => {
+        const { sut } = makeSut()
+        const where = datatype.uuid()
+        jest.spyOn(sut, 'getWhere').mockReturnValueOnce(where)
+        const whereSpy = jest.spyOn(TypeOrmRepositorySpy.queryBuilder, 'where')
+        await sut.list(mockListEntitiesRepositoryDTO())
+        expect(whereSpy).toHaveBeenCalledWith(where)
+      })
+
+      test('Should call Where with correct value if GetWhere return undefined', async () => {
+        const { sut } = makeSut()
+        jest.spyOn(sut, 'getWhere').mockReturnValueOnce(undefined)
+        const whereSpy = jest.spyOn(TypeOrmRepositorySpy.queryBuilder, 'where')
+        await sut.list(mockListEntitiesRepositoryDTO())
+        expect(whereSpy).toHaveBeenCalledWith({})
+      })
+    })
+
+    describe('Options', () => {
+      test('Should not call WithDeleted if options returnDeletedEntities is false', async () => {
+        const { sut } = makeSut()
+        const withDeletedSpy = jest.spyOn(TypeOrmRepositorySpy.queryBuilder, 'withDeleted')
+        const options = mockRepositoryOptionsModel()
+        options.returnDeletedEntities = false
+        await sut.list(mockListEntitiesRepositoryDTO(), options)
+        expect(withDeletedSpy).not.toHaveBeenCalled()
+      })
+
+      test('Should not call WithDeleted if options returnDeletedEntities is not provided', async () => {
+        const { sut } = makeSut()
+        const withDeletedSpy = jest.spyOn(TypeOrmRepositorySpy.queryBuilder, 'withDeleted')
+        const options = mockRepositoryOptionsModel()
+        delete options.returnDeletedEntities
+        await sut.list(mockListEntitiesRepositoryDTO(), options)
+        expect(withDeletedSpy).not.toHaveBeenCalled()
+      })
+
+      test('Should call WithDeleted if options returnDeletedEntities is true', async () => {
+        const { sut } = makeSut()
+        const withDeletedSpy = jest.spyOn(TypeOrmRepositorySpy.queryBuilder, 'withDeleted')
+        const options = mockRepositoryOptionsModel()
+        options.returnDeletedEntities = true
+        await sut.list(mockListEntitiesRepositoryDTO(), options)
+        expect(withDeletedSpy).toHaveBeenCalled()
+      })
+    })
+
+    describe('Skip', () => {
+      test('Should call Skip with correct value if skip is provided', async () => {
+        const { sut } = makeSut()
+        const request = mockListEntitiesRepositoryDTO()
+        request.skip = datatype.number()
+        const skipSpy = jest.spyOn(TypeOrmRepositorySpy.queryBuilder, 'skip')
+        await sut.list(request)
+        expect(skipSpy).toHaveBeenCalledWith(request.skip)
+      })
+
+      test('Should call Skip with correct value if skip is not provided', async () => {
+        const { sut } = makeSut()
+        const request = mockListEntitiesRepositoryDTO()
+        delete request.skip
+        const skipSpy = jest.spyOn(TypeOrmRepositorySpy.queryBuilder, 'skip')
+        await sut.list(request)
+        expect(skipSpy).toHaveBeenCalledWith(0)
+      })
+
+      test('Should call Skip with correct value if filters is not provided', async () => {
+        const { sut } = makeSut()
+        const skipSpy = jest.spyOn(TypeOrmRepositorySpy.queryBuilder, 'skip')
+        await sut.list(undefined)
+        expect(skipSpy).toHaveBeenCalledWith(0)
+      })
+    })
+
+    describe('Take', () => {
+      test('Should call Take with correct value if recordsPerPage is provided', async () => {
+        const { sut } = makeSut()
+        const request = mockListEntitiesRepositoryDTO()
+        request.recordsPerPage = datatype.number()
+        const takeSpy = jest.spyOn(TypeOrmRepositorySpy.queryBuilder, 'take')
+        await sut.list(request)
+        expect(takeSpy).toHaveBeenCalledWith(request.recordsPerPage)
+      })
+
+      test('Should call Take with correct value if fitlers is not provided', async () => {
+        const { sut } = makeSut()
+        const takeSpy = jest.spyOn(TypeOrmRepositorySpy.queryBuilder, 'take')
+        await sut.list(undefined)
+        expect(takeSpy).toHaveBeenCalledWith(25)
+      })
+
+      test('Should call Take with correct value if recordsPerPage is not provided', async () => {
+        const { sut } = makeSut()
+        const request = mockListEntitiesRepositoryDTO()
+        delete request.recordsPerPage
+        const takeSpy = jest.spyOn(TypeOrmRepositorySpy.queryBuilder, 'take')
+        await sut.list(request)
+        expect(takeSpy).toHaveBeenCalledWith(25)
+      })
+    })
+
+    describe('GetMany', () => {
+      test('Should call GetMany', async () => {
+        const { sut } = makeSut()
+        const getManySpy = jest.spyOn(TypeOrmRepositorySpy.queryBuilder, 'getMany')
+        await sut.list(mockListEntitiesRepositoryDTO())
+        expect(getManySpy).toHaveBeenCalled()
+      })
+
+      test('Should return same GetMany return', async () => {
+        const { sut } = makeSut()
+        const list = [
+          mockEntityModel(),
+          mockEntityModel(),
+          mockEntityModel(),
+          mockEntityModel()
+        ]
+        jest.spyOn(TypeOrmRepositorySpy.queryBuilder, 'getMany').mockResolvedValue(list)
+        const response = await sut.list(mockListEntitiesRepositoryDTO())
+        expect(response).toEqual(list)
+      })
     })
   })
 

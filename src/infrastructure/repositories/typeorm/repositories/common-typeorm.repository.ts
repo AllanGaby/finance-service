@@ -15,7 +15,7 @@ import {
   UpdateEntityRepository,
   ListEntitiesRepositoryDTO
 } from '@/protocols/repositories'
-import { CreateEntityDTO, CustomFilterConditional, CustomFilterModel, OrderDirection } from '@/domain/common'
+import { CreateEntityDTO, CustomFilterConditional, CustomFilterModel } from '@/domain/common'
 import { InvalidForeignKeyError, MissingParamError, RepositoryError, RepositoryErrorType, ViolateUniqueKeyError } from '@/data/common/errors'
 import { TypeORMConnection } from '@/infrastructure/repositories/typeorm/connection'
 import { DefaultEntity, TypeOrmRepositorySettingsModel } from '@/infrastructure/repositories'
@@ -266,32 +266,44 @@ implements CountEntitiesRepository<EntityType>,
     return repository.count(options)
   }
 
-  async list (filter?: ListEntitiesRepositoryDTO): Promise<EntityType[]> {
-    const textToSearch: string = filter?.textToSearch || ''
-    const skip: number = filter?.skip || 0
-    const recordsPerPage: number = filter?.recordsPerPage || 0
-    const orderDirection: OrderDirection = filter?.orderDirection || OrderDirection.ASC
-    const orderColumn: string = filter?.orderColumn || 'created_at'
-    const filters = filter?.filters
-
+  async list (filter: ListEntitiesRepositoryDTO, options: RepositoryOptionsModel = defaultRepositoryOptionsModel): Promise<EntityType[]> {
+    const textToSearch = filter?.textToSearch || ''
+    const skip = filter?.skip || 0
+    const filters = filter?.filters || []
+    const order = filter?.order || undefined
+    const recordsPerPage = filter?.recordsPerPage || 25
     const repository = await this.getRepositoryTypeORM()
-    const options: FindManyOptions = {
-      skip
+    const usedJoin = this.getJoin(options.returnCompleteData)
+    let queryBuilder = repository.createQueryBuilder(usedJoin?.alias || 'entity')
+    if (options.returnDeletedEntities) {
+      queryBuilder = queryBuilder.withDeleted()
     }
-    if (recordsPerPage > 0) {
-      options.take = recordsPerPage
+    if (usedJoin?.leftJoinAndSelect) {
+      const leftJoinsKeys = Object.keys(usedJoin.leftJoinAndSelect)
+      if (leftJoinsKeys.length > 0) {
+        const leftJoinsValues = Object.values(usedJoin.leftJoinAndSelect)
+        leftJoinsKeys.forEach((key, index) => {
+          queryBuilder = queryBuilder.leftJoinAndSelect(leftJoinsValues[index], key)
+        })
+      }
     }
-    const where = this.getWhere(filters, textToSearch)
-    if (where) {
-      options.where = where
+    if (usedJoin?.innerJoinAndSelect) {
+      const innerJoinsKeys = Object.keys(usedJoin.innerJoinAndSelect)
+      if (innerJoinsKeys.length > 0) {
+        const innerJoinsValues = Object.values(usedJoin.innerJoinAndSelect)
+        innerJoinsKeys.forEach((key, index) => {
+          queryBuilder = queryBuilder.innerJoinAndSelect(innerJoinsValues[index], key)
+        })
+      }
     }
-    if (this.join) {
-      options.join = this.join
+    if (order) {
+      queryBuilder = queryBuilder.orderBy(order)
     }
-    options.order = {
-      [orderColumn]: orderDirection
-    }
-    return repository.find(options)
+    queryBuilder
+      .where(this.getWhere(filters, textToSearch) || {})
+      .skip(skip)
+      .take(recordsPerPage)
+    return queryBuilder.getMany()
   }
 
   async listByListId (listIds: string[]): Promise<EntityType[]> {

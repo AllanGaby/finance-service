@@ -1,5 +1,6 @@
 export * from './custom-filter.model.mock'
 export * from './entity.model.mock'
 export * from './list-entity.model.mock'
+export * from './list-order.model.mock'
 export * from './settings.model.mock'
 export * from './versioned-entity.model.mock'

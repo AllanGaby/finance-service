@@ -1,7 +1,7 @@
-import { MapperCustomFilterDTO, CustomFilterConditional, mockCustomFilterConditional, CustomFilterOperator, mockCustomFilterOperator } from '@/domain/common'
+import { CustomFilterMapperDTO, CustomFilterConditional, mockCustomFilterConditional, CustomFilterOperator, mockCustomFilterOperator } from '@/domain/common'
 import { database, datatype } from 'faker'
 
-export const mockMapperCustomFilterDTO = (filterLength: number = datatype.number({ min: 1, max: 10 })): MapperCustomFilterDTO => {
+export const mockCustomFilterMapperDTO = (filterLength: number = datatype.number({ min: 1, max: 10 })): CustomFilterMapperDTO => {
   const fields: string[] = []
   const values: string[] = []
   const operators: CustomFilterOperator[] = []

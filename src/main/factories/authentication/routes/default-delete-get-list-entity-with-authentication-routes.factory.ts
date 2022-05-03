@@ -21,6 +21,7 @@ export type DefaultDeleteGetListEntityWithAuthenticationRoutesOptions<EntityType
   entityName: string
   validRepositoryColumns: string[]
   validRequestColumns: string[]
+  validRepositoryOrders?: string[]
   deleteAccessRules: string[]
   getByIdAccessRules: string[]
   listAccessRules: string[]
@@ -34,10 +35,13 @@ export const makeDefaultDeleteGetListEntityWithAuthenticationRoutes = <EntityTyp
     paramIdName,
     deleteAccessRules,
     getByIdAccessRules,
-    listAccessRules
+    listAccessRules,
+    validRepositoryColumns,
+    validRequestColumns,
+    validRepositoryOrders
   }: DefaultDeleteGetListEntityWithAuthenticationRoutesOptions<EntityType>
 ): Router =>
     Router()
       .use('/', makeDeleteEntityByIdWithAuthenticationRoute<EntityType>(props, entityClass, paramIdName, deleteAccessRules))
       .use('/', makeGetEntityByIdWithAuthenticationRoute<EntityType>(props, entityClass, paramIdName, entityName, getByIdAccessRules))
-      .use('/', makeListEntitiesWithAuthenticationRoute<EntityType>(props, entityClass, listAccessRules))
+      .use('/', makeListEntitiesWithAuthenticationRoute<EntityType>(props, entityClass, listAccessRules, validRepositoryColumns, validRequestColumns, validRepositoryOrders))

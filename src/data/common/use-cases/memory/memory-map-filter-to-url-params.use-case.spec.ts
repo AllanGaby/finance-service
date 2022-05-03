@@ -1,5 +1,5 @@
 import { MemoryMapFilterToURLParamsUseCase } from './memory-map-filter-to-url-params.use-case'
-import { ListEntitiesDTO, mockCustomFilterModel, mockListEntitiesDTO, mockOrderDirection } from '@/domain/common'
+import { ListEntitiesDTO, mockCustomFilterModel, mockListEntitiesDTO, mockListOrderModel } from '@/domain/common'
 import { datatype } from 'faker'
 
 type sutTypes = {
@@ -30,34 +30,32 @@ describe('MemoryMapFilterToURLParamsUseCase', () => {
   })
 
   describe('Order', () => {
-    test('Should return order param if orderColumn is provided', () => {
+    test('Should not container order params if order is not provided', async () => {
       const { sut, dto } = makeSut()
-      dto.orderColumn = datatype.uuid()
-      const urlParams = sut.map(dto)
-      expect(urlParams).toContain(`order=${dto.orderColumn}`)
-    })
-
-    test('Should not return order param if orderColumn is not provided', () => {
-      const { sut, dto } = makeSut()
-      delete dto.orderColumn
+      delete dto.order
       const urlParams = sut.map(dto)
       expect(urlParams).not.toContain('order=')
     })
-  })
 
-  describe('Direction', () => {
-    test('Should return direction param if orderDirection is provided', () => {
+    test('Should not container direction params if order is not provided', async () => {
       const { sut, dto } = makeSut()
-      dto.orderDirection = mockOrderDirection()
-      const urlParams = sut.map(dto)
-      expect(urlParams).toContain(`direction=${dto.orderDirection}`)
-    })
-
-    test('Should not return direction param if orderDirection is not provided', () => {
-      const { sut, dto } = makeSut()
-      delete dto.orderDirection
+      delete dto.order
       const urlParams = sut.map(dto)
       expect(urlParams).not.toContain('direction=')
+    })
+
+    test('Should container correct order params if order is provided', async () => {
+      const { sut, dto } = makeSut()
+      dto.order = mockListOrderModel()
+      const urlParams = sut.map(dto)
+      Object.keys(dto.order).forEach(field => expect(urlParams).toContain(`order=${field}`))
+    })
+
+    test('Should container correct direction params if order is provided', async () => {
+      const { sut, dto } = makeSut()
+      dto.order = mockListOrderModel()
+      const urlParams = sut.map(dto)
+      Object.keys(dto.order).forEach(field => expect(urlParams).toContain(`direction=${dto.order[field]}`))
     })
   })
 
@@ -94,14 +92,14 @@ describe('MemoryMapFilterToURLParamsUseCase', () => {
   })
 
   describe('Filters', () => {
-    test('Should not container f params if filters is not provided', async () => {
+    test('Should not container field params if filters is not provided', async () => {
       const { sut, dto } = makeSut()
       delete dto.filters
       const urlParams = sut.map(dto)
-      expect(urlParams).not.toContain('f=')
+      expect(urlParams).not.toContain('field=')
     })
 
-    test('Should container correct f params if filters is provided', async () => {
+    test('Should container correct field params if filters is provided', async () => {
       const { sut, dto } = makeSut()
       dto.filters = [
         mockCustomFilterModel(),
@@ -109,10 +107,10 @@ describe('MemoryMapFilterToURLParamsUseCase', () => {
         mockCustomFilterModel()
       ]
       const urlParams = sut.map(dto)
-      dto.filters.forEach(item => expect(urlParams).toContain(`f=${item.field}`))
+      dto.filters.forEach(item => expect(urlParams).toContain(`field=${item.field}`))
     })
 
-    test('Should container correct c params if filters is provided', async () => {
+    test('Should container correct conditional params if filters is provided', async () => {
       const { sut, dto } = makeSut()
       const customFilterWithoutConditional = mockCustomFilterModel()
       delete customFilterWithoutConditional.conditional
@@ -125,12 +123,12 @@ describe('MemoryMapFilterToURLParamsUseCase', () => {
       const urlParams = sut.map(dto)
       dto.filters.forEach(item => {
         if (item.conditional) {
-          expect(urlParams).toContain(`c=${item.conditional}`)
+          expect(urlParams).toContain(`conditional=${item.conditional}`)
         }
       })
     })
 
-    test('Should container correct v params if filters is provided', async () => {
+    test('Should container correct value params if filters is provided', async () => {
       const { sut, dto } = makeSut()
       const customFilterWithoutValue = mockCustomFilterModel()
       delete customFilterWithoutValue.value
@@ -143,12 +141,12 @@ describe('MemoryMapFilterToURLParamsUseCase', () => {
       const urlParams = sut.map(dto)
       dto.filters.forEach(item => {
         if (item.value) {
-          expect(urlParams).toContain(`v=${item.value.toString()}`)
+          expect(urlParams).toContain(`value=${item.value.toString()}`)
         }
       })
     })
 
-    test('Should container correct o params if filters is provided', async () => {
+    test('Should container correct operator params if filters is provided', async () => {
       const { sut, dto } = makeSut()
       const customFilterWithoutOperator = mockCustomFilterModel()
       delete customFilterWithoutOperator.operator
@@ -161,7 +159,7 @@ describe('MemoryMapFilterToURLParamsUseCase', () => {
       const urlParams = sut.map(dto)
       dto.filters.forEach(item => {
         if (item.operator) {
-          expect(urlParams).toContain(`o=${item.operator}`)
+          expect(urlParams).toContain(`operator=${item.operator}`)
         }
       })
     })

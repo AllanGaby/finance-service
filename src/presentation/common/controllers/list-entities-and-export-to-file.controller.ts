@@ -13,17 +13,14 @@ export class ListEntitiesAndExportToFileController<EntityType extends EntityMode
     const {
       page,
       search,
-      size,
-      order,
-      direction
+      size
     } = request.queryParams
     const fileContent = await this.listEntitiesAndExportToFileUseCase.listAndExport({
       columns: request.params.columns.split(','),
       page,
       textToSearch: search,
       recordsPerPage: size,
-      orderColumn: order,
-      orderDirection: direction,
+      order: request.body.orders,
       filters: request.body.custom_filters
     }) as ArrayBuffer
     return HttpHelper.exportFile({

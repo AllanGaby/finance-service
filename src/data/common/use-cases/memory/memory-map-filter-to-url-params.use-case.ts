@@ -11,18 +11,22 @@ export class MemoryMapFilterToURLParamsUseCase implements MapFilterToURLParamsUs
 
   map (filter: ListEntitiesDTO = {}): string {
     this.urlParams = ''
-    const { textToSearch, orderColumn, orderDirection, recordsPerPage, page, filters } = filter
+    const { textToSearch, order, recordsPerPage, page, filters } = filter
     this.addUrlParams('search', textToSearch)
-    this.addUrlParams('order', orderColumn)
-    this.addUrlParams('direction', orderDirection)
     this.addUrlParams('size', recordsPerPage?.toString())
     this.addUrlParams('page', page?.toString())
+    if (order) {
+      Object.keys(order).forEach(field => {
+        this.addUrlParams('order', field)
+        this.addUrlParams('direction', order[field])
+      })
+    }
     filters?.forEach(item => {
       const { field, conditional, value, operator } = item
-      this.addUrlParams('f', field)
-      this.addUrlParams('c', conditional)
-      this.addUrlParams('v', value?.toString())
-      this.addUrlParams('o', operator)
+      this.addUrlParams('field', field)
+      this.addUrlParams('conditional', conditional)
+      this.addUrlParams('value', value?.toString())
+      this.addUrlParams('operator', operator)
     })
     if (this.urlParams) {
       return `?${this.urlParams}`

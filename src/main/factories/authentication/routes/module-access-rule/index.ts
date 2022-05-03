@@ -4,7 +4,8 @@ import {
   ModuleAccessRuleModel,
   ModuleAccessRuleColumnsToExportXLSX,
   RepositoryModuleAccessRuleFilter,
-  RequestModuleAccessRuleFilter
+  RequestModuleAccessRuleFilter,
+  RequestModuleAccessRuleOrders
 } from '@/domain/authentication'
 import {
   ModuleAccessRuleEntity,
@@ -12,9 +13,9 @@ import {
 } from '@/infrastructure/authentication'
 import {
   DefaultCRUDEntityWithAuthenticationRoutesProps,
-  makeDefaultCRUDEntityWithAuthenticationRoutes
+  makeDefaultCRUDEntityWithAuthenticationRoutes,
+  makeListEntitiesAndExportToXLSXFileWithAuthenticationRoute
 } from '@/main/factories/authentication/routes'
-import { makeListModuleAccessRulesAndExportToXLSXFileRoute } from './list-module-access-rules-and-export-to-xlsx-file.route'
 import { makeCreateModuleAccessRuleFieldsValidations, makeUpdateModuleAccessRuleFieldsValidations } from '@/main/factories/authentication/fields-validations'
 
 export type ModuleAccessRuleRouteProps =
@@ -25,16 +26,23 @@ DefaultCRUDEntityWithAuthenticationRoutesProps & {
 export const makeModuleAccessRuleRoute = (props: ModuleAccessRuleRouteProps): Router => {
   props.repositorySettings = ModuleAccessRuleRepositorySettings
   return Router()
-    .use('/module-access-rule', makeListModuleAccessRulesAndExportToXLSXFileRoute({
+    .use('/module-access-rule', makeListEntitiesAndExportToXLSXFileWithAuthenticationRoute({
       ...props,
       entityName: 'ModuleAccessRule',
       validColumnsToExport: ModuleAccessRuleColumnsToExportXLSX
-    }, Object.values(RepositoryModuleAccessRuleFilter), Object.values(RequestModuleAccessRuleFilter)))
+    },
+    ModuleAccessRuleEntity,
+    [AuthenticationAccessRules.ListModuleAccessRules],
+    Object.values(RepositoryModuleAccessRuleFilter),
+    Object.values(RequestModuleAccessRuleFilter),
+    Object.values(RequestModuleAccessRuleOrders)
+    ))
     .use('/module-access-rule',
       makeDefaultCRUDEntityWithAuthenticationRoutes<ModuleAccessRuleModel>(props, {
         entityClass: ModuleAccessRuleEntity,
         validRepositoryColumns: Object.values(RepositoryModuleAccessRuleFilter),
         validRequestColumns: Object.values(RequestModuleAccessRuleFilter),
+        validRepositoryOrders: Object.values(RequestModuleAccessRuleOrders),
         paramIdName: 'module_access_rule_id',
         entityName: 'ModuleAccessRule',
         createFieldsValidation: makeCreateModuleAccessRuleFieldsValidations(),

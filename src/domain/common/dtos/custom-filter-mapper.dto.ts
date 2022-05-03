@@ -1,6 +1,6 @@
 import { CustomFilterConditional, CustomFilterOperator } from '@/domain/common'
 
-export type MapperCustomFilterDTO = {
+export type CustomFilterMapperDTO = {
   fields: string[]
   operators: CustomFilterOperator[]
   values: string[]

@@ -3,7 +3,8 @@ import {
   AccountAccessModuleModel,
   RepositoryAccountAccessModuleFilter,
   RequestAccountAccessModuleFilter,
-  AuthenticationAccessRules
+  AuthenticationAccessRules,
+  RequestAccountAccessModuleOrder
 } from '@/domain/authentication'
 import {
   AccountAccessModuleEntity,
@@ -26,6 +27,7 @@ export const makeAccountAccessModuleRoute = (props: AccountAccessModuleRouteProp
       }, {
         validRepositoryColumns: Object.values(RepositoryAccountAccessModuleFilter),
         validRequestColumns: Object.values(RequestAccountAccessModuleFilter),
+        validRepositoryOrders: Object.values(RequestAccountAccessModuleOrder),
         entityClass: AccountAccessModuleEntity,
         paramIdName: 'account_access_module_id',
         entityName: 'AccountAccessModule',

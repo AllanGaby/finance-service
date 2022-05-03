@@ -1,6 +1,6 @@
-import { MapperCustomFilterUseCase, MapperCustomFilterDTO, CustomFilterModel, CustomFilterOperator, CustomFilterConditional } from '@/domain/common'
+import { CustomFilterMapperUseCase, CustomFilterMapperDTO, CustomFilterModel, CustomFilterOperator, CustomFilterConditional } from '@/domain/common'
 
-export class MemoryMapperCustomFilterUseCase implements MapperCustomFilterUseCase {
+export class MemoryCustomFilterMapperUseCase implements CustomFilterMapperUseCase {
   constructor (
     private readonly validParamsColumns: string[],
     private readonly validRepositoryColumns: string[]
@@ -13,7 +13,7 @@ export class MemoryMapperCustomFilterUseCase implements MapperCustomFilterUseCas
     return defaultValue
   }
 
-  async mapperFilters ({ fields, operators, values, conditionals }: MapperCustomFilterDTO): Promise<CustomFilterModel[]> {
+  async getFilters ({ fields, operators, values, conditionals }: CustomFilterMapperDTO): Promise<CustomFilterModel[]> {
     const filters: CustomFilterModel[] = []
     fields?.forEach((field, index) => {
       if (this.validParamsColumns.includes(field)) {

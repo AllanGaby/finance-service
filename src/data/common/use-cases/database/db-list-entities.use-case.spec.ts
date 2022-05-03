@@ -1,7 +1,6 @@
 import { DbListEntitiesUseCase } from './db-list-entities.use-case'
-import { mockListEntitiesDTO, OrderDirection, EntityModel, ListEntitiesDTO } from '@/domain/common'
-import { CountEntitiesRepositorySpy, ListEntitiesRepositorySpy, mockRepositoryOptionsModel } from '@/protocols/repositories'
-import { RepositoryOptionsModel } from '@/protocols/repositories'
+import { mockListEntitiesDTO, EntityModel, ListEntitiesDTO } from '@/domain/common'
+import { CountEntitiesRepositorySpy, ListEntitiesRepositorySpy, mockRepositoryOptionsModel, RepositoryOptionsModel } from '@/protocols/repositories'
 import { datatype } from 'faker'
 
 type sutTypes = {
@@ -248,43 +247,59 @@ describe('DbListEntitiesUseCase', () => {
       })
     })
 
-    test('Should call ListEntitiesRepository with correct if orderDirection is not provided', async () => {
-      const { sut, listEntitiesRepository, request, skip } = makeSut()
-      const listSpy = jest.spyOn(listEntitiesRepository, 'list')
-      delete request.orderDirection
-      const { complete, ...filters } = request
-      await sut.list(request)
-      delete filters.page
-      expect(listSpy).toHaveBeenCalledWith({
-        ...filters,
-        skip,
-        orderDirection: OrderDirection.ASC
-      }, expect.any(Object))
-    })
+    describe('Order', () => {
+      test('Should call ListEntitiesRepository with correct value if order is provided', async () => {
+        const { sut, listEntitiesRepository, request, skip } = makeSut()
+        const listSpy = jest.spyOn(listEntitiesRepository, 'list')
+        const { complete, ...filters } = request
+        await sut.list(request)
+        delete filters.page
+        expect(listSpy).toHaveBeenCalledWith({
+          ...filters,
+          skip
+        }, expect.any(Object))
+      })
 
-    test('Should return correct list model if succeeds', async () => {
-      const { sut, listEntitiesRepository, countEntitiesRepository, request } = makeSut()
-      const list = await sut.list(request)
-      const lastPage = countEntitiesRepository.recordCount % request.recordsPerPage === 0
-        ? Math.trunc(countEntitiesRepository.recordCount / request.recordsPerPage)
-        : Math.trunc(countEntitiesRepository.recordCount / request.recordsPerPage) + 1
-      expect(list).toEqual({
-        data: listEntitiesRepository.entities,
-        page: request.page,
-        record_count: countEntitiesRepository.recordCount,
-        last_page: Math.round(lastPage)
+      test('Should call ListEntitiesRepository with correct value if order is not provided', async () => {
+        const { sut, listEntitiesRepository, request, skip } = makeSut()
+        const listSpy = jest.spyOn(listEntitiesRepository, 'list')
+        delete request.order
+        const { complete, ...filters } = request
+        await sut.list(request)
+        delete filters.page
+        expect(listSpy).toHaveBeenCalledWith({
+          ...filters,
+          order: undefined,
+          skip
+        }, expect.any(Object))
       })
     })
 
-    test('Should return correct list model if succeeds and recordCount is divisible per recordsPerPage', async () => {
-      const { sut, listEntitiesRepository, countEntitiesRepository, request } = makeSut()
-      countEntitiesRepository.recordCount = request.recordsPerPage * datatype.number()
-      const list = await sut.list(request)
-      expect(list).toEqual({
-        data: listEntitiesRepository.entities,
-        page: request.page,
-        record_count: countEntitiesRepository.recordCount,
-        last_page: Math.round(countEntitiesRepository.recordCount / request.recordsPerPage)
+    describe('Return correct values', () => {
+      test('Should return correct list model if succeeds', async () => {
+        const { sut, listEntitiesRepository, countEntitiesRepository, request } = makeSut()
+        const list = await sut.list(request)
+        const lastPage = countEntitiesRepository.recordCount % request.recordsPerPage === 0
+          ? Math.trunc(countEntitiesRepository.recordCount / request.recordsPerPage)
+          : Math.trunc(countEntitiesRepository.recordCount / request.recordsPerPage) + 1
+        expect(list).toEqual({
+          data: listEntitiesRepository.entities,
+          page: request.page,
+          record_count: countEntitiesRepository.recordCount,
+          last_page: Math.round(lastPage)
+        })
+      })
+
+      test('Should return correct list model if succeeds and recordCount is divisible per recordsPerPage', async () => {
+        const { sut, listEntitiesRepository, countEntitiesRepository, request } = makeSut()
+        countEntitiesRepository.recordCount = request.recordsPerPage * datatype.number()
+        const list = await sut.list(request)
+        expect(list).toEqual({
+          data: listEntitiesRepository.entities,
+          page: request.page,
+          record_count: countEntitiesRepository.recordCount,
+          last_page: Math.round(countEntitiesRepository.recordCount / request.recordsPerPage)
+        })
       })
     })
   })

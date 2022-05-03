@@ -12,7 +12,8 @@ const makeSut = (): void => {
   makeListEntitiesRoute({
     repositoryType: RepositoryType.Memory,
     validRepositoryColumns: [],
-    validRequestColumns: []
+    validRequestColumns: [],
+    validRepositoryOrders: []
   }, DefaultEntity)
 }
 
@@ -32,6 +33,7 @@ describe('makeListEntitiesRoute', () => {
     makeSut()
     expect(getSpy).toHaveBeenCalledWith(
       '/',
+      expect.any(Function),
       expect.any(Function),
       expect.any(Function)
     )
