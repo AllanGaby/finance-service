@@ -22,7 +22,7 @@ const makeSut = (): void => {
     secret: datatype.uuid(),
     privateKey,
     publicKey
-  }, DefaultEntity, [], [], [])
+  }, DefaultEntity, [], [], [], [])
 }
 
 const config: ConfigurationModel = ConfigSetup()

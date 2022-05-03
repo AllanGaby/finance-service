@@ -16,9 +16,9 @@ export const makeListEntitiesAndExportToXLSXFileWithAuthenticationRoute = <Entit
   props: ListEntitiesAndExportToXLSXFileWithAuthenticationRouteProps,
   entityClass: EntityTarget<EntityType>,
   listAccessRules: string[],
-  validRepositoryColumns: string[] = [],
-  validRequestColumns: string[] = [],
-  validRepositoryOrders: string[] = []
+  validRepositoryColumns: string[],
+  validRequestColumns: string[],
+  validRepositoryOrders: string[]
 ): Router =>
     Router()
       .get('/xlsx/:columns',
