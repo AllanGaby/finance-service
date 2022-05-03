@@ -1,6 +1,6 @@
 import { MemoryListOrderMapperUseCase } from './memory-list-order-mapper.use-case'
 import { ListOrderModel, mockOrderDirection, OrderDirection } from '@/domain/common'
-import { database, datatype } from 'faker'
+import { datatype } from 'faker'
 
 type sutTypes = {
   sut: MemoryListOrderMapperUseCase
@@ -10,14 +10,14 @@ type sutTypes = {
 
 const makeSut = (): sutTypes => {
   const validParamsColumns = [
-    database.column(),
-    database.column(),
-    database.column()
+    datatype.uuid(),
+    datatype.uuid(),
+    datatype.uuid()
   ]
   const validRepositoryColumns = [
-    database.column(),
-    database.column(),
-    database.column()
+    datatype.uuid(),
+    datatype.uuid(),
+    datatype.uuid()
   ]
   const sut = new MemoryListOrderMapperUseCase(validParamsColumns, validRepositoryColumns)
   return {
