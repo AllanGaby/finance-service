@@ -1,15 +1,13 @@
-import { GetCurrentSettingsUseCase, SettingsModel } from '@/domain/common'
-import { DbGetCurrentSettingsUseCase } from '@/data/common/use-cases'
-import { GetOneEntityRepository } from '@/protocols/repositories'
-import { CommonRepositoryFactory } from '@/infrastructure/repositories'
-import { CommonUseCaseProps, SettingsEntity } from '@/infrastructure/common'
+import { GetCurrentSettingsUseCase } from '@/domain/common'
+import { CacheGetCurrentSettingsUseCase } from '@/data/common/use-cases'
+import { CacheFactory, CacheConfigurationModel } from '@/infrastructure/cache'
 
-export type GetCurrentSettingsUseCaseProps = CommonUseCaseProps
+export type GetCurrentSettingsUseCaseProps = CacheConfigurationModel
 
 export const makeGetCurrentSettingsUseCase = (
   props: GetCurrentSettingsUseCaseProps
 ):
 GetCurrentSettingsUseCase =>
-  new DbGetCurrentSettingsUseCase(
-    CommonRepositoryFactory.getRepository<SettingsModel, GetOneEntityRepository<SettingsModel>>(props.repositoryType, SettingsEntity)
+  new CacheGetCurrentSettingsUseCase(
+    CacheFactory.getCacheAdapter(props)
   )

@@ -3,12 +3,16 @@ import {
   AccountModel,
   mockAccountModel
 } from '@/domain/authentication'
-import { CommonMemoryRepository } from '@/infrastructure/repositories'
 import { HttpMethod, HttpStatusCode } from '@/protocols/http'
+import { RecoverCacheByKeyProtocol } from '@/protocols/cache'
+import { CommonMemoryRepository } from '@/infrastructure/repositories'
+import { CacheFactory, CacheType } from '@/infrastructure/cache'
+
 import { CommonRouteHelperDTO, RouteHelpers } from '@/main/factories/common/helpers'
 import { CreateAccountRequest, mockCreateAccountRequest } from '@/presentation/authentication'
 import http from 'http'
 import supertest, { SuperAgentTest } from 'supertest'
+import { mockSettingsModel } from '@/domain/common'
 
 const url = '/authentication/request-recover-password/'
 let createAccountRequest: CreateAccountRequest
@@ -40,6 +44,7 @@ describe('POST /authentication/request-recover-password/ - Create a new RequestR
     createAccountRequest = mockCreateAccountRequest()
     createdAccount = mockAccountModel()
 
+    jest.spyOn(CacheFactory.getCacheAdapter<RecoverCacheByKeyProtocol>({ cacheType: CacheType.Memory }), 'recover').mockResolvedValue(mockSettingsModel())
     jest.spyOn(CommonMemoryRepository.getRepository(), 'getOne').mockResolvedValue(createdAccount)
     jest.spyOn(CommonMemoryRepository.getRepository(), 'create').mockResolvedValue(createdAccount)
   })

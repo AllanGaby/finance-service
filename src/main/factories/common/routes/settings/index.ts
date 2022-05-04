@@ -7,17 +7,16 @@ import {
 } from '@/infrastructure/common'
 import {
   ListEntitiesWithAuthenticationRouteProps,
-  UpdateVersionedEntityByIdWithAuthenticationRouteProps,
-  makeListEntitiesWithAuthenticationRoute,
-  makeUpdateVersionedEntityByIdWithAuthenticationRoute
+  makeListEntitiesWithAuthenticationRoute
 } from '@/main/factories/authentication/routes'
+import { makeUpdateSettingsByIdRoute, UpdateSettingsByIdRouteProps } from './update-settings-by-id.route'
 import { makeUpdateSettingsFieldsValidations } from '@/main/factories/common/fields-validations'
 
 export type SettingsRouteProps =
 ListEntitiesWithAuthenticationRouteProps &
-UpdateVersionedEntityByIdWithAuthenticationRouteProps
+UpdateSettingsByIdRouteProps
 
 export const makeSettingsRoute = (props: SettingsRouteProps): Router =>
   Router()
     .use(makeListEntitiesWithAuthenticationRoute<SettingsEntity>(props, SettingsEntity, [CommonAccessRules.ListSettings]))
-    .use(makeUpdateVersionedEntityByIdWithAuthenticationRoute<SettingsEntity>(props, SettingsEntity, 'settings_id', 'Settings', makeUpdateSettingsFieldsValidations(), [CommonAccessRules.UpdateSettings]))
+    .use(makeUpdateSettingsByIdRoute(props, makeUpdateSettingsFieldsValidations(), [CommonAccessRules.UpdateSettings]))
