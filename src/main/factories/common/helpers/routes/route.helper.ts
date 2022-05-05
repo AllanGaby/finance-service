@@ -149,7 +149,7 @@ export class RouteHelpers {
     publicKey,
     ...props
   }: BiggerValidationRouteHelperDTO): Promise<void> {
-    body[field] = random.alphaNumeric(datatype.number({ min: maxLength + 1, max: maxLength + 100 }))
+    body[field] = random.alphaNumeric(datatype.number({ min: maxLength + 1, max: maxLength + 50 }))
     const response: HttpResponse = await RouteHelpers.GetHttpResponse({ body: RouteHelpers.GetBody(body, cryptography, tokenField, publicKey), ...props })
     expect(response.statusCode).toEqual(HttpStatusCode.unprocessableEntity)
     const validations = response.body.error as RequestValidatorModel[]

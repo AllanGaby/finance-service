@@ -1,17 +1,21 @@
-import { CreateAccessSessionRouteProps, makeCreateAccessSessionRoute } from './create-access-session.route'
+import { LoginRouteProps, makeLoginRoute } from './login.route'
 import { DeleteAccessSessionRouteProps, makeDeleteAccessSessionRoute } from './delete-access-session.route'
+import { RefreshAccessTokenRouteProps, makeRefreshAccessTokenRoute } from './refresh-access-token.route'
 import {
-  makeCreateAccessSessionFieldsValidations
+  makeLoginFieldsValidations,
+  makeRefreshAccessTokenFieldsValidations
 } from '@/main/factories/authentication/fields-validations'
 import { Router } from 'express'
 
 export type AccessSessionRouteProps =
-CreateAccessSessionRouteProps &
+LoginRouteProps &
+RefreshAccessTokenRouteProps &
 DeleteAccessSessionRouteProps
 
 export const makeAccessSessionRoute = (
   props: AccessSessionRouteProps
 ): Router =>
   Router()
-    .use('/', makeCreateAccessSessionRoute(props, makeCreateAccessSessionFieldsValidations()))
+    .use('/', makeLoginRoute(props, makeLoginFieldsValidations()))
+    .use('/', makeRefreshAccessTokenRoute(props, makeRefreshAccessTokenFieldsValidations()))
     .use('/', makeDeleteAccessSessionRoute(props))

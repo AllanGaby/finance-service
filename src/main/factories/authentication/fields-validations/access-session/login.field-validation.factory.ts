@@ -1,6 +1,6 @@
 import { FieldValidationModel, TypeFieldValidation } from '@/protocols/request-validator'
 
-export const makeCreateAccessSessionFieldsValidations = (): FieldValidationModel[] => ([
+export const makeLoginFieldsValidations = (): FieldValidationModel[] => ([
   {
     name: 'login',
     type: TypeFieldValidation.String,
