@@ -8,5 +8,9 @@ export const mockSettingsModel = (): SettingsModel => ({
   smtp_auth_account: internet.email(),
   smtp_auth_password: internet.password(),
   smtp_service: internet.url(),
-  enabled_send_mail: datatype.boolean()
+  enabled_send_mail: datatype.boolean(),
+  google_callback_url: internet.url(),
+  google_client_id: datatype.uuid(),
+  google_client_secret: datatype.uuid(),
+  google_scopes: datatype.uuid()
 })

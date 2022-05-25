@@ -8,7 +8,8 @@ export const AccountRepositorySettings: CommonRepositorySettingsModel = {
       modules: 'account.modules',
       access_profile: 'modules.access_profile',
       module: 'access_profile.module',
-      module_access_rules: 'access_profile.module_access_rules'
+      module_access_rules: 'access_profile.module_access_rules',
+      providers: 'account.providers'
     }
   },
   columnsToFilter: Object.values(RepositoryAccountFilter)

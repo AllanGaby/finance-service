@@ -25,7 +25,9 @@ module.exports = {
     '!**/**.seeds.ts',
     '!**/**.setup.ts',
     '!**/connection.ts',
-    '!**/create-token.ts'
+    '!**/create-token.ts',
+    '!**/imap.adapter.ts',
+    '!**/create-access-session-by-google.route.ts'
   ],
   testResultsProcessor: 'jest-sonar-reporter',
   collectCoverage: true,

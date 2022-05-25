@@ -6,8 +6,8 @@ import {
   mockAccessProfileModel,
   AuthenticationAccessRules
 } from '@/domain/authentication'
-import { CommonMemoryRepository } from '@/infrastructure/repositories'
 import { HttpMethod, HttpStatusCode } from '@/protocols/http'
+import { CommonMemoryRepository } from '@/infrastructure/repositories'
 import { CommonRouteHelperDTO, RouteHelpers } from '@/main/factories/common/helpers'
 import { ConfigSetup } from '@/main/application/config'
 import http from 'http'

@@ -22,4 +22,16 @@ export class SettingsEntity extends VersionedDefaultEntity implements SettingsMo
 
   @Column()
   enabled_send_mail?: boolean
+
+  @Column()
+  google_callback_url?: string
+
+  @Column()
+  google_client_id?: string
+
+  @Column()
+  google_client_secret?: string
+
+  @Column()
+  google_scopes?: string
 }

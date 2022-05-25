@@ -7,7 +7,8 @@ export const ExpressMiddlewareAdapter = (middleware: MiddlewareProtocol<any, any
       headers: request.headers,
       body: request.body,
       params: request.params,
-      queryParams: request.query
+      queryParams: request.query,
+      user: request.user
     }
 
     const httpResponse = await middleware.handle(httpRequest)
@@ -15,6 +16,7 @@ export const ExpressMiddlewareAdapter = (middleware: MiddlewareProtocol<any, any
       request.body = httpResponse.body
       request.headers = httpResponse.headers
       request.params = httpResponse.params
+      request.user = httpResponse.user
       next()
     } else {
       response.status(httpResponse.statusCode).json({

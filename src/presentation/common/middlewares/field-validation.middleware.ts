@@ -15,6 +15,6 @@ export class FieldValidationMiddleware implements MiddlewareProtocol<any, any> {
         return HttpHelper.unprocessableEntity(errors)
       }
     }
-    return HttpHelper.ok(request.body, request.headers, request.queryParams, request.params)
+    return HttpHelper.ok(request.body, request.headers, request.queryParams, request.params, request.user)
   }
 }

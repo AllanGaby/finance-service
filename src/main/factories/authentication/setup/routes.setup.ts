@@ -1,4 +1,4 @@
-import { Router } from 'express'
+import { Router, Express } from 'express'
 import {
   AccessProfileRouteProps,
   AccessSessionRouteProps,
@@ -23,14 +23,18 @@ AccountRouteProps &
 AccountAccessModuleRouteProps &
 ModuleAccessRuleRouteProps &
 ModuleRouteProps &
-RequestRecoverPasswordRouteProps
+RequestRecoverPasswordRouteProps & {
+  app: Express
+}
 
-export const AuthenticationModuleRoute = (props: AuthenticationRouteProps): Router =>
-  Router()
+export const AuthenticationModuleRoute = async (props: AuthenticationRouteProps): Promise<Router> => {
+  const accessSessionRoute = await makeAccessSessionRoute(props)
+  return Router()
     .use('/access-profile', makeAccessProfileRoute(props))
     .use('/account', makeAccountRoute(props))
-    .use('/access-session', makeAccessSessionRoute(props))
+    .use('/access-session', accessSessionRoute)
     .use(makeAccountAccessModuleRoute(props))
     .use(makeModuleAccessRuleRoute(props))
     .use(makeModuleRoute(props))
     .use('/request-recover-password', makeRequestRecoverPasswordRoute(props))
+}

@@ -16,7 +16,8 @@ import {
 } from '@/main/factories/authentication/routes'
 import { makeCreateAccountAccessModuleFieldsValidations, makeUpdateAccountAccessModuleFieldsValidations } from '@/main/factories/authentication/fields-validations'
 
-export type AccountAccessModuleRouteProps = DefaultCRUDEntityWithAuthenticationRoutesProps
+export type AccountAccessModuleRouteProps =
+DefaultCRUDEntityWithAuthenticationRoutesProps
 
 export const makeAccountAccessModuleRoute = (props: AccountAccessModuleRouteProps): Router =>
   Router()

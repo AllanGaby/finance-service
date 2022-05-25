@@ -16,6 +16,6 @@ export enum RequestAccountOrder {
   ModuleAccessRuleTitle = 'module_access_rules.title',
   ModuleAccessRuleDescription = 'module_access_rules.description',
   ModuleAccessRuleKey = 'module_access_rules.rule_key',
-  CreatedAt = ',account.created_at',
-  UpdatedAt = ',account.updated_at'
+  CreatedAt = 'account.created_at',
+  UpdatedAt = 'account.updated_at'
 }

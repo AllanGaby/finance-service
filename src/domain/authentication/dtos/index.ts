@@ -1,4 +1,5 @@
 export * from './create-access-profile.dto'
+export * from './create-access-session-by-provider.dto'
 export * from './create-access-session.dto'
 export * from './create-account.dto'
 export * from './create-request-recover-password.dto'

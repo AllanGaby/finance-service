@@ -93,13 +93,15 @@ describe('FieldValidationMiddleware', () => {
     const headers = mockEntityModel()
     const queryParams = mockEntityModel()
     const params = mockEntityModel()
+    const user = mockEntityModel()
     jest.spyOn(validator, 'validate').mockReturnValue(undefined)
     const response = await sut.handle({
       body,
       headers,
       queryParams,
-      params
+      params,
+      user
     })
-    expect(response).toEqual(HttpHelper.ok(body, headers, queryParams, params))
+    expect(response).toEqual(HttpHelper.ok(body, headers, queryParams, params, user))
   })
 })

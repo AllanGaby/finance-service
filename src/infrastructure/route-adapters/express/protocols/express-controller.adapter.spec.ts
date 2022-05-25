@@ -32,7 +32,8 @@ describe('ExpressControllerAdapter', () => {
       body: request.body,
       params: request.params,
       headers: request.headers,
-      queryParams: request.query
+      queryParams: request.query,
+      user: request.user
     })
   })
 

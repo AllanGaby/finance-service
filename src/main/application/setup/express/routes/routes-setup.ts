@@ -6,6 +6,7 @@ import { CommonModuleRoute } from '@/main/factories/common/setup'
 export const RoutesSetup = async (app: Express): Promise<void> => {
   const config = ConfigSetup()
   const commonConfig = {
+    environment: config.environment,
     repositoryType: config.repositoryType,
     salt: config.security.salt,
     privateKey: await config.security.getPrivateKey(),
@@ -16,11 +17,14 @@ export const RoutesSetup = async (app: Express): Promise<void> => {
     logoFilePath: config.logoFilePath
   }
 
-  app.use('/authentication', AuthenticationModuleRoute({
+  const authenticationRoute = await AuthenticationModuleRoute({
     ...commonConfig,
     recoverPasswordEmailFilePath: 'public/views/ejs/request-recover-password-mail.ejs',
-    mail: config.mail
-  }))
+    mail: config.mail,
+    app
+  })
+
+  app.use('/authentication', authenticationRoute)
 
   app.use('/authentication', CommonModuleRoute(commonConfig))
 }

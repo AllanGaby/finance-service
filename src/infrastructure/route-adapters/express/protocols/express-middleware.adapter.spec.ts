@@ -27,13 +27,14 @@ describe('ExpressMiddlewareAdapter', () => {
   test('Should call middleware with correct params', async () => {
     const { sut, middleware, request, response, next } = makeSut()
     const handleSpy = jest.spyOn(middleware, 'handle')
-    const { body, headers, params, query } = request
+    const { body, headers, params, query, user } = request
     await sut(request, response, next)
     expect(handleSpy).toHaveBeenCalledWith({
       body,
       headers,
       params,
-      queryParams: query
+      queryParams: query,
+      user
     })
   })
 

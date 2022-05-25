@@ -1,4 +1,5 @@
 export * from './create-access-profile.dto.mock'
+export * from './create-access-session-by-provider.dto.mock'
 export * from './create-access-session.dto.mock'
 export * from './create-account.dto.mock'
 export * from './create-request-recover-password.dto.mock'

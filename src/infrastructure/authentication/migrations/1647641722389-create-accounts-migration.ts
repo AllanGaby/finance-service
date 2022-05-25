@@ -31,7 +31,8 @@ export class createAccountsMigration1647641722389 implements MigrationInterface 
         {
           name: 'password',
           type: 'varchar',
-          length: '100'
+          length: '100',
+          isNullable: true
         },
         {
           name: 'account_hash',

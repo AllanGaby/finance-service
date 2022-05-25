@@ -2,5 +2,6 @@ export enum FieldValidationType {
   Body = 'body',
   Headers = 'headers',
   Params = 'params',
-  QueryParams = 'queryParams'
+  QueryParams = 'queryParams',
+  User = 'user'
 }

@@ -17,13 +17,14 @@ import {
   makeUpdateAccountFieldsValidations
 } from '@/main/factories/authentication/fields-validations'
 import { AccountEntity, AccountRepositorySettings } from '@/infrastructure/authentication'
-import { Router } from 'express'
+import { Router, Express } from 'express'
 
 export type AccountRouteProps =
 CreateAccountRouteProps &
 UpdateAccountByIdRouteProps &
 DefaultDeleteGetListEntityWithAuthenticationRoutesProps & {
   logoFilePath: string
+  app: Express
 }
 
 export const makeAccountRoute = (
