@@ -1,3 +1,4 @@
+export * from './check-business-rule.middleware.factory'
 export * from './common-field-validation.middleware.factory'
 export * from './common-id.field-validation.middleware.factory'
 export * from './custom-filters-mapper.middleware.factory'

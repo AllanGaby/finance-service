@@ -5,9 +5,13 @@ import {
   AccessProfileColumnsToExportXLSX,
   RequestAccessProfileOrder
 } from '@/domain/authentication'
-import { CreateAccessProfileRouteProps, makeCreateAccessProfileRoute } from './create-access-profile.route'
-import { UpdateAccessProfileByIdRouteProps, makeUpdateAccessProfileByIdRoute } from './update-access-profile-by-id.route'
 import {
+  makeCreateAccessProfileController,
+  makeUpdateAccessProfileByIdController
+} from '@/main/factories/authentication/controllers'
+import {
+  makeCreateEntityWithAuthenticationRoute,
+  makeUpdateEntityByIdWithAuthenticationRoute,
   DefaultDeleteGetListEntityWithAuthenticationRoutesProps,
   makeDefaultDeleteGetListEntityWithAuthenticationRoutes,
   makeListEntitiesAndExportToXLSXFileWithAuthenticationRoute
@@ -20,9 +24,7 @@ import { AccessProfileEntity, AccessProfileRepositorySettings } from '@/infrastr
 import { Router } from 'express'
 
 export type AccessProfileRouteProps =
-CreateAccessProfileRouteProps &
-DefaultDeleteGetListEntityWithAuthenticationRoutesProps &
-UpdateAccessProfileByIdRouteProps & {
+DefaultDeleteGetListEntityWithAuthenticationRoutesProps & {
   logoFilePath: string
 }
 
@@ -30,11 +32,18 @@ export const makeAccessProfileRoute = (
   props: AccessProfileRouteProps
 ): Router => {
   props.repositorySettings = AccessProfileRepositorySettings
+  const entityName = 'AccessProfile'
+  const paramIdName = 'access_profile_id'
   return Router()
-    .use('/', makeCreateAccessProfileRoute(props, makeCreateAccessProfileFieldsValidations(), [AuthenticationAccessRules.CreateAccessProfiles]))
+    .use('/', makeCreateEntityWithAuthenticationRoute(
+      props,
+      AccessProfileEntity,
+      makeCreateAccessProfileFieldsValidations(),
+      [AuthenticationAccessRules.CreateAccessProfiles],
+      makeCreateAccessProfileController(props)))
     .use('/', makeListEntitiesAndExportToXLSXFileWithAuthenticationRoute({
       ...props,
-      entityName: 'AccessProfile',
+      entityName,
       validColumnsToExport: AccessProfileColumnsToExportXLSX
     },
     AccessProfileEntity,
@@ -43,14 +52,26 @@ export const makeAccessProfileRoute = (
     Object.values(RequestAccessProfileFilter),
     Object.values(RequestAccessProfileOrder)
     ))
-    .use('/', makeUpdateAccessProfileByIdRoute(props, 'access_profile_id', makeUpdateAccessProfileFieldsValidations(), [AuthenticationAccessRules.UpdateAccessProfiles]))
+    .use('/', makeUpdateEntityByIdWithAuthenticationRoute(
+      props,
+      AccessProfileEntity,
+      paramIdName,
+      entityName,
+      makeUpdateAccessProfileFieldsValidations(),
+      [AuthenticationAccessRules.UpdateAccessProfiles],
+      true,
+      makeUpdateAccessProfileByIdController({
+        ...props,
+        paramIdName
+      })
+    ))
     .use(makeDefaultDeleteGetListEntityWithAuthenticationRoutes(props, {
       validRepositoryColumns: Object.values(RepositoryAccessProfileFilter),
       validRequestColumns: Object.values(RequestAccessProfileFilter),
       validRepositoryOrders: Object.values(RequestAccessProfileOrder),
       entityClass: AccessProfileEntity,
-      paramIdName: 'access_profile_id',
-      entityName: 'AccessProfile',
+      paramIdName,
+      entityName,
       deleteAccessRules: [AuthenticationAccessRules.DeleteAccessProfiles],
       getByIdAccessRules: [AuthenticationAccessRules.ShowAccessProfiles],
       listAccessRules: [AuthenticationAccessRules.ListAccessProfiles]

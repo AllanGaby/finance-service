@@ -1,3 +1,4 @@
+export * from './copy-entity.dto'
 export * from './create-entity.dto'
 export * from './custom-filter-mapper.dto'
 export * from './entity-columns-to-export-csv-file.dto'

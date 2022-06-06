@@ -28,10 +28,13 @@ export const makeDefaultCRUDEntityRoutes = <EntityType extends EntityModel>(
     entityName,
     paramIdName,
     createFieldsValidation,
-    updateFieldsValidation
+    updateFieldsValidation,
+    validRepositoryColumns,
+    validRepositoryOrders,
+    validRequestColumns
   }: DefaultCRUDEntityRoutesOptions<EntityType>
 ): Router =>
     Router()
       .use('/', makeCreateEntityRoute<EntityType>(props, entityClass, createFieldsValidation))
-      .use(makeDefaultDeleteGetListEntityRoutes(props, { entityClass, paramIdName, entityName }))
+      .use(makeDefaultDeleteGetListEntityRoutes(props, { entityClass, paramIdName, entityName, validRepositoryColumns, validRepositoryOrders, validRequestColumns }))
       .use('/', makeUpdateEntityByIdRoute<EntityType>(props, entityClass, paramIdName, entityName, updateFieldsValidation))

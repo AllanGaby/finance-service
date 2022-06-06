@@ -6,7 +6,7 @@ import {
   makeGetEntityByIdRoute,
   ListEntitiesRouteProps,
   makeListEntitiesRoute
-} from '@/main/factories/common/routes/default-routes'
+} from '@/main/factories/common/routes/templates'
 import { Router } from 'express'
 import { EntityTarget } from 'typeorm'
 
@@ -19,6 +19,9 @@ export type DefaultDeleteGetListEntityRoutesOptions<EntityType extends EntityMod
   entityClass: EntityTarget<EntityType>
   paramIdName: string
   entityName: string
+  validRepositoryColumns: string[]
+  validRequestColumns: string[]
+  validRepositoryOrders: string[]
 }
 
 export const makeDefaultDeleteGetListEntityRoutes = <EntityType extends EntityModel>(
@@ -26,10 +29,13 @@ export const makeDefaultDeleteGetListEntityRoutes = <EntityType extends EntityMo
   {
     entityClass,
     entityName,
-    paramIdName
+    paramIdName,
+    validRepositoryColumns,
+    validRequestColumns,
+    validRepositoryOrders
   }: DefaultDeleteGetListEntityRoutesOptions<EntityType>
 ): Router =>
     Router()
       .use('/', makeDeleteEntityByIdRoute<EntityType>(props, entityClass, paramIdName))
       .use('/', makeGetEntityByIdRoute<EntityType>(props, entityClass, paramIdName, entityName))
-      .use('/', makeListEntitiesRoute<EntityType>(props, entityClass))
+      .use('/', makeListEntitiesRoute<EntityType>(props, entityClass, validRepositoryColumns, validRequestColumns, validRepositoryOrders))

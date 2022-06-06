@@ -18,5 +18,5 @@ UpdateSettingsByIdRouteProps
 
 export const makeSettingsRoute = (props: SettingsRouteProps): Router =>
   Router()
-    .use(makeListEntitiesWithAuthenticationRoute<SettingsEntity>(props, SettingsEntity, [CommonAccessRules.ListSettings]))
+    .use(makeListEntitiesWithAuthenticationRoute<SettingsEntity>(props, SettingsEntity, [CommonAccessRules.ListSettings], [], [], []))
     .use(makeUpdateSettingsByIdRoute(props, makeUpdateSettingsFieldsValidations(), [CommonAccessRules.UpdateSettings]))

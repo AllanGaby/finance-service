@@ -1,3 +1,4 @@
+export * from './copy-entity.dto.mock'
 export * from './custom-filter-mapper.dto.mock'
 export * from './entity-columns-to-export.dto.mock'
 export * from './entity-model-columns-to-export-csv-file.dto.mock'

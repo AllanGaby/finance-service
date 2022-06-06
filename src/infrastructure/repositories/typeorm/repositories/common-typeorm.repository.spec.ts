@@ -564,24 +564,37 @@ describe('CommonTypeORMRepository', () => {
       expect(conditional).toBeFalsy()
     })
 
-    test('Should return correct filter if textToSearch is provided', async () => {
-      const { sut } = makeSut()
-      sut.columnsToFilter = [
-        database.column(),
-        database.column(),
-        database.column(),
-        database.column(),
-        database.column()
-      ]
-      const textToSearch = datatype.uuid()
-      const conditional = sut.getSearchConditional(textToSearch)
-      const where = sut.columnsToFilter.reduce((where, column): string => {
-        if (where) {
-          return `${where} OR (${column} ilike '%${textToSearch}%')`
-        }
-        return `(${column} ilike '%${textToSearch}%')`
-      }, '')
-      expect(conditional).toBe(where)
+    describe('ColumnsToSearch is provided', () => {
+      test('Should return correct filter if textToSearch is provided', async () => {
+        const settings = mockTypeOrmRepositorySettingsModel()
+        const { sut } = makeSut(settings)
+        const textToSearch = datatype.uuid()
+        const conditional = sut.getSearchConditional(textToSearch)
+        const where = settings.columnsToSearch.reduce((where, column): string => {
+          if (where) {
+            return `${where} OR (${column} ilike '%${textToSearch}%')`
+          }
+          return `(${column} ilike '%${textToSearch}%')`
+        }, '')
+        expect(conditional).toBe(where)
+      })
+    })
+
+    describe('ColumnsToSearch not is provided', () => {
+      test('Should return correct filter if textToSearch is provided', async () => {
+        const settings = mockTypeOrmRepositorySettingsModel()
+        delete settings.columnsToSearch
+        const { sut } = makeSut(settings)
+        const textToSearch = datatype.uuid()
+        const conditional = sut.getSearchConditional(textToSearch)
+        const where = settings.columnsToFilter.reduce((where, column): string => {
+          if (where) {
+            return `${where} OR (${column} ilike '%${textToSearch}%')`
+          }
+          return `(${column} ilike '%${textToSearch}%')`
+        }, '')
+        expect(conditional).toBe(where)
+      })
     })
   })
 

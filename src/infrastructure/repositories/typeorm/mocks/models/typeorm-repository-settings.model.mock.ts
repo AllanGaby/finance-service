@@ -15,5 +15,12 @@ export const mockTypeOrmRepositorySettingsModel = (): TypeOrmRepositorySettingsM
     database.column(),
     database.column()
   ],
+  columnsToSearch: [
+    database.column(),
+    database.column(),
+    database.column(),
+    database.column(),
+    database.column()
+  ],
   useSoftDelete: datatype.boolean()
 })

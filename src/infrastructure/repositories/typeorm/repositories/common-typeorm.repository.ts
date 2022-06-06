@@ -43,6 +43,7 @@ implements CountEntitiesRepository<EntityType>,
  UpdateEntityRepository<EntityType> {
   public repositoryTypeORM: Repository<EntityType>
   public columnsToFilter: string[] = []
+  public columnsToSearch: string[] = []
   public join?: JoinOptions
   public completeJoin?: JoinOptions
   public useSoftDelete: boolean = false
@@ -55,6 +56,7 @@ implements CountEntitiesRepository<EntityType>,
     this.completeJoin = this.settings?.completeJoin
     this.useSoftDelete = this.settings?.useSoftDelete || false
     this.columnsToFilter = this.settings?.columnsToFilter || []
+    this.columnsToSearch = this.settings?.columnsToSearch || this.columnsToFilter
   }
 
   createRepositoryTypeORM (): Repository<EntityType> {
@@ -133,7 +135,8 @@ implements CountEntitiesRepository<EntityType>,
     if (!textToSearch) {
       return undefined
     }
-    return this.columnsToFilter.reduce((where, column): string => {
+
+    return this.columnsToSearch.reduce((where, column): string => {
       const fieldConditional = `(${column} ilike '%${textToSearch}%')`
       if (where) {
         return `${where} OR ${fieldConditional}`

@@ -1,3 +1,5 @@
+export * from './check-business-rule.use-case'
+export * from './copy-entity.use-case'
 export * from './create-entity.use-case'
 export * from './create-new-entity-version.use-case'
 export * from './custom-filter-mapper.use-case'

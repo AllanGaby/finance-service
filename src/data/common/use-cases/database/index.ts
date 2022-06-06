@@ -1,3 +1,4 @@
+export * from './db-copy-entity.use-case'
 export * from './db-create-entity.use-case'
 export * from './db-create-new-entity-version.use-case'
 export * from './db-delete-entity-by-id.use-case'
