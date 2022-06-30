@@ -53,7 +53,7 @@ export class DbCreateAccessSessionUseCase implements CreateEntityUseCase<AccessS
         access_token: accessSessionToken
       },
       subject: account.id
-    }, '10m')
+    }, '24h')
     const refreshToken = await this.createJWTAdapter.createJWT({
       payload: {
         access_token: accessSessionToken

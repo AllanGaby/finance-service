@@ -12,7 +12,7 @@ export const FinanceTransactionRepositorySettings: CommonRepositorySettingsModel
       company: 'finance_transaction.company',
       original_finance_transaction: 'finance_transaction.original_finance_transaction',
       invoice: 'finance_transaction.invoice',
-      finance_transactions: 'finance_transaction.finance_transactions'
+      transaction_tags: 'finance_transaction.transaction_tags'
     }
   },
   columnsToFilter: Object.values(RepositoryFinanceTransactionFilter),

@@ -1,6 +1,7 @@
 export * from './request-company-type.filter'
 export * from './request-company.filter'
 export * from './request-finance-account.filter'
+export * from './request-finance-transaction-tag.filter'
 export * from './request-finance-transaction.filter'
 export * from './request-finance-user-settings.filter'
 export * from './request-invoice.filter'

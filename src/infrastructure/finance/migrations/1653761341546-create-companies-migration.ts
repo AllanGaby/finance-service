@@ -22,10 +22,6 @@ export class createCompaniesMigration1653761341546 implements MigrationInterface
           type: 'uuid'
         },
         {
-          name: 'account_id',
-          type: 'uuid'
-        },
-        {
           name: 'created_at',
           type: 'timestamp with time zone',
           default: 'now()'

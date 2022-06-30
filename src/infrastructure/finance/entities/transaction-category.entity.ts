@@ -4,7 +4,7 @@ import { AccountEntity } from '@/infrastructure/authentication'
 import { DefaultEntity } from '@/infrastructure/repositories'
 import { Entity, Column, OneToOne, JoinColumn } from 'typeorm'
 
-@Entity('transaction_caterories')
+@Entity('transaction_categories')
 export class TransactionCategoryEntity extends DefaultEntity implements TransactionCategoryModel {
   @Column()
   account_id: string

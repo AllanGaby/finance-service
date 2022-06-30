@@ -18,7 +18,8 @@
     "sonar:scanner": "npm run test:ci && npx sonar-scanner -Dsonar.host.url=$SONAR_HOST -Dsonar.projectKey=FINANCE-SERVICE",
     "server:debug": "nodemox -L --watch ./public --inspect=0.0.0.0:$DEBUG_PORT --ignore node_modules public/main/application/http/server.js",
     "server:up": "nodemon --ignore node_modules public/main/application/http/server.js",
-    "server:up:prod": "nodemon --watch public/main public/main/application/http/server.js"
+    "server:up:prod": "nodemon --watch public/main public/main/application/http/server.js",
+    "start": "npm run build && npm run server:up:prod"
   },
   "keywords": [],
   "author": "Allan Gaby",

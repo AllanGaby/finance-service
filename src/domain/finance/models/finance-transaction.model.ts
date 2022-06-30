@@ -1,5 +1,5 @@
 import { EntityModel } from '@/domain/common'
-import { FinanceAccountModel, FinanceTransctionType, InvoiceModel, CompanyModel, TransactionCategoryModel } from '@/domain/finance'
+import { FinanceAccountModel, FinanceTransctionType, InvoiceModel, CompanyModel, TransactionCategoryModel, TransactionTagModel } from '@/domain/finance'
 
 export type FinanceTransactionModel = EntityModel & {
   title: string
@@ -21,4 +21,5 @@ export type FinanceTransactionModel = EntityModel & {
   company?: CompanyModel
   original_finance_transaction?: FinanceTransactionModel
   finance_transactions?: FinanceTransactionModel[]
+  transaction_tags?: TransactionTagModel[]
 }

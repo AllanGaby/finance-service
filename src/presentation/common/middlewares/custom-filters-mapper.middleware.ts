@@ -22,7 +22,7 @@ export class CustomFiltersMapperMiddleware implements MiddlewareProtocol<any, an
     })
     return HttpHelper.ok({
       ...request.body,
-      cursom_filters: customFilters
+      custom_filters: customFilters
     }, request.headers, request.queryParams, request.params)
   }
 }

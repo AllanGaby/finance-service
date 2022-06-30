@@ -1,4 +1,4 @@
-import { RepositoryAccountFilter } from '@/domain/authentication'
+import { RepositoryAccountFilter, SearchAccountFilter } from '@/domain/authentication'
 import { CommonRepositorySettingsModel } from '@/infrastructure/repositories'
 
 export const AccountRepositorySettings: CommonRepositorySettingsModel = {
@@ -12,5 +12,6 @@ export const AccountRepositorySettings: CommonRepositorySettingsModel = {
       providers: 'account.providers'
     }
   },
-  columnsToFilter: Object.values(RepositoryAccountFilter)
+  columnsToFilter: Object.values(RepositoryAccountFilter),
+  columnsToSearch: Object.values(SearchAccountFilter)
 }

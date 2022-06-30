@@ -109,5 +109,145 @@ export const AuthenticationModuleAccessRules: Array<CreateEntityDTO<Omit<ModuleA
   {
     rule_key: AuthenticationAccessRules.DeleteAccountAccessModule,
     title: 'Excluir módulos/aplicações dos acessos da conta de acesso'
+  },
+  {
+    rule_key: AuthenticationAccessRules.CreateFinanceAccount,
+    title: 'Adiciona novas contas financeiras para o usuário'
+  },
+  {
+    rule_key: AuthenticationAccessRules.UpdateFinanceAccount,
+    title: 'Atualizar dados de contas financeiras do usuário'
+  },
+  {
+    rule_key: AuthenticationAccessRules.ListFinanceAccount,
+    title: 'Listar as contas financeiras do usuário'
+  },
+  {
+    rule_key: AuthenticationAccessRules.ShowFinanceAccount,
+    title: 'Visualizar dados detalhados de contas financeiras do usuário'
+  },
+  {
+    rule_key: AuthenticationAccessRules.DeleteFinanceAccount,
+    title: 'Excluir contas financeiras do usuário'
+  },
+  {
+    rule_key: AuthenticationAccessRules.CreateCompanyType,
+    title: 'Adiciona novos tipos de empresa'
+  },
+  {
+    rule_key: AuthenticationAccessRules.UpdateCompanyType,
+    title: 'Atualizar dados de tipos de empresa'
+  },
+  {
+    rule_key: AuthenticationAccessRules.ListCompanyType,
+    title: 'Listar os tipos de empresa'
+  },
+  {
+    rule_key: AuthenticationAccessRules.ShowCompanyType,
+    title: 'Visualizar dados detalhados de tipos de empresa'
+  },
+  {
+    rule_key: AuthenticationAccessRules.DeleteCompanyType,
+    title: 'Excluir tipos de empresa'
+  },
+  {
+    rule_key: AuthenticationAccessRules.CreateCompany,
+    title: 'Adiciona novas empresas'
+  },
+  {
+    rule_key: AuthenticationAccessRules.UpdateCompany,
+    title: 'Atualizar dados de empresas'
+  },
+  {
+    rule_key: AuthenticationAccessRules.ListCompany,
+    title: 'Listar as empresas'
+  },
+  {
+    rule_key: AuthenticationAccessRules.ShowCompany,
+    title: 'Visualizar dados detalhados de empresas'
+  },
+  {
+    rule_key: AuthenticationAccessRules.DeleteCompany,
+    title: 'Excluir empresas'
+  },
+  {
+    rule_key: AuthenticationAccessRules.CreateFinanceTransaction,
+    title: 'Adiciona novas transações financeiras'
+  },
+  {
+    rule_key: AuthenticationAccessRules.UpdateFinanceTransaction,
+    title: 'Atualizar dados de transações financeiras'
+  },
+  {
+    rule_key: AuthenticationAccessRules.ListFinanceTransaction,
+    title: 'Listar as transações financeiras'
+  },
+  {
+    rule_key: AuthenticationAccessRules.ShowFinanceTransaction,
+    title: 'Visualizar dados detalhados de transações financeiras'
+  },
+  {
+    rule_key: AuthenticationAccessRules.DeleteFinanceTransaction,
+    title: 'Excluir transações financeiras'
+  },
+  {
+    rule_key: AuthenticationAccessRules.CreateInvoice,
+    title: 'Adiciona novas faturas'
+  },
+  {
+    rule_key: AuthenticationAccessRules.UpdateInvoice,
+    title: 'Atualizar dados de faturas'
+  },
+  {
+    rule_key: AuthenticationAccessRules.ListInvoice,
+    title: 'Listar as faturas'
+  },
+  {
+    rule_key: AuthenticationAccessRules.ShowInvoice,
+    title: 'Visualizar dados detalhados de faturas'
+  },
+  {
+    rule_key: AuthenticationAccessRules.DeleteInvoice,
+    title: 'Excluir faturas'
+  },
+  {
+    rule_key: AuthenticationAccessRules.CreateTransactionCategory,
+    title: 'Adiciona novas categorias de transações'
+  },
+  {
+    rule_key: AuthenticationAccessRules.UpdateTransactionCategory,
+    title: 'Atualizar dados de categorias de transações'
+  },
+  {
+    rule_key: AuthenticationAccessRules.ListTransactionCategory,
+    title: 'Listar as categorias de transações'
+  },
+  {
+    rule_key: AuthenticationAccessRules.ShowTransactionCategory,
+    title: 'Visualizar dados detalhados de categorias de transações'
+  },
+  {
+    rule_key: AuthenticationAccessRules.DeleteTransactionCategory,
+    title: 'Excluir categorias de transações'
+  },
+  {
+    rule_key: AuthenticationAccessRules.CreateTransactionTag,
+    title: 'Adiciona novas tags de transações'
+  },
+  {
+    rule_key: AuthenticationAccessRules.UpdateTransactionTag,
+    title: 'Atualizar dados de tags de transações'
+  },
+  {
+    rule_key: AuthenticationAccessRules.ListTransactionTag,
+    title: 'Listar as tags de transações'
+  },
+  {
+    rule_key: AuthenticationAccessRules.ShowTransactionTag,
+    title: 'Visualizar dados detalhados de tags de transações'
+  },
+  {
+    rule_key: AuthenticationAccessRules.DeleteTransactionTag,
+    title: 'Excluir tags de transações'
   }
 ]

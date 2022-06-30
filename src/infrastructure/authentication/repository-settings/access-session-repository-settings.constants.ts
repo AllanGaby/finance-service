@@ -1,4 +1,4 @@
-import { RepositoryAccessSessionFilter } from '@/domain/authentication'
+import { RepositoryAccessSessionFilter, SearchAccessSessionFilter } from '@/domain/authentication'
 import { CommonRepositorySettingsModel } from '@/infrastructure/repositories'
 
 export const AccessSessionRepositorySettings: CommonRepositorySettingsModel = {
@@ -8,5 +8,6 @@ export const AccessSessionRepositorySettings: CommonRepositorySettingsModel = {
       account: 'access_session.account'
     }
   },
-  columnsToFilter: Object.values(RepositoryAccessSessionFilter)
+  columnsToFilter: Object.values(RepositoryAccessSessionFilter),
+  columnsToSearch: Object.values(SearchAccessSessionFilter)
 }

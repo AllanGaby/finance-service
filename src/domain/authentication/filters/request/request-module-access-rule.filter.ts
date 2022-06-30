@@ -2,7 +2,7 @@ export enum RequestModuleAccessRuleFilter {
   Id = 'id',
   Title = 'title',
   Description = 'description',
-  Key = 'key',
+  Key = 'rule_key',
   ModuleId = 'module_id',
   ModuleName = 'module.name',
   ModuleKey = 'module.key',

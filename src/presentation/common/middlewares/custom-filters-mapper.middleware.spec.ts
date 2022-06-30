@@ -170,7 +170,7 @@ describe('CustomFiltersMapperMiddleware', () => {
       const response = await sut.handle(request)
       expect(response).toEqual(HttpHelper.ok({
         ...body,
-        cursom_filters: customFilters
+        custom_filters: customFilters
       }, headers, queryParams, params))
     })
   })

@@ -6,6 +6,6 @@ RUN mkdir public
 COPY ./public/ ./public/
 COPY ./private_key.pem ./
 COPY ./public_key.pem ./
-EXPOSE $API_PORT
+EXPOSE $PORT
 EXPOSE $DEBUG_PORT
 CMD npm run server:up:prod

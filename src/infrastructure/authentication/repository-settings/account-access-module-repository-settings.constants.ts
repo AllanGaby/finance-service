@@ -1,4 +1,4 @@
-import { RepositoryAccountAccessModuleFilter } from '@/domain/authentication'
+import { RepositoryAccountAccessModuleFilter, SearchAccountAccessModuleFilter } from '@/domain/authentication'
 import { CommonRepositorySettingsModel } from '@/infrastructure/repositories'
 
 export const AccountAccessModuleRepositorySettings: CommonRepositorySettingsModel = {
@@ -10,5 +10,6 @@ export const AccountAccessModuleRepositorySettings: CommonRepositorySettingsMode
       access_profile: 'account_access_module.access_profile'
     }
   },
-  columnsToFilter: Object.values(RepositoryAccountAccessModuleFilter)
+  columnsToFilter: Object.values(RepositoryAccountAccessModuleFilter),
+  columnsToSearch: Object.values(SearchAccountAccessModuleFilter)
 }

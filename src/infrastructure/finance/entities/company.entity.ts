@@ -14,7 +14,7 @@ export class CompanyEntity extends DefaultEntity implements CompanyTypeModel {
 
   @OneToOne(() => CompanyTypeEntity)
   @JoinColumn({
-    name: 'account_id'
+    name: 'company_type_id'
   })
   company_type?: CompanyTypeEntity
 }

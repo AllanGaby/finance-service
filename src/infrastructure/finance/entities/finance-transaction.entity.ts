@@ -1,8 +1,8 @@
 import 'module-alias/register'
 import { FinanceTransactionModel, FinanceTransctionType } from '@/domain/finance'
 import { DefaultEntity } from '@/infrastructure/repositories'
-import { CompanyEntity, InvoiceEntity, FinanceAccountEntity, TransactionCategoryEntity } from '@/infrastructure/finance'
-import { Entity, Column, OneToMany, OneToOne, JoinColumn } from 'typeorm'
+import { CompanyEntity, InvoiceEntity, FinanceAccountEntity, TransactionCategoryEntity, TransactionTagEntity } from '@/infrastructure/finance'
+import { Entity, Column, OneToMany, OneToOne, JoinColumn, ManyToMany, JoinTable } from 'typeorm'
 
 @Entity('finance_transactions')
 export class FinanceTransactionEntity extends DefaultEntity implements FinanceTransactionModel {
@@ -77,4 +77,18 @@ export class FinanceTransactionEntity extends DefaultEntity implements FinanceTr
 
   @OneToMany(() => FinanceTransactionEntity, financeTransaction => financeTransaction.original_finance_transaction)
   finance_transactions?: FinanceTransactionEntity[]
+
+  @ManyToMany(() => TransactionTagEntity)
+  @JoinTable({
+    name: 'finance_transaction_tags',
+    inverseJoinColumn: {
+      name: 'transaction_tag_id',
+      referencedColumnName: 'id'
+    },
+    joinColumn: {
+      name: 'finance_transaction_id',
+      referencedColumnName: 'id'
+    }
+  })
+  transaction_tags?: TransactionTagEntity[]
 }

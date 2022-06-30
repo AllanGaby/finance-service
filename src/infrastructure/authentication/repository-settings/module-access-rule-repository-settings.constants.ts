@@ -1,4 +1,4 @@
-import { RepositoryModuleAccessRuleFilter } from '@/domain/authentication'
+import { RepositoryModuleAccessRuleFilter, SearchModuleAccessRuleFilter } from '@/domain/authentication'
 import { CommonRepositorySettingsModel } from '@/infrastructure/repositories'
 
 export const ModuleAccessRuleRepositorySettings: CommonRepositorySettingsModel = {
@@ -8,5 +8,6 @@ export const ModuleAccessRuleRepositorySettings: CommonRepositorySettingsModel =
       module: 'module_access_rule.module'
     }
   },
-  columnsToFilter: Object.values(RepositoryModuleAccessRuleFilter)
+  columnsToFilter: Object.values(RepositoryModuleAccessRuleFilter),
+  columnsToSearch: Object.values(SearchModuleAccessRuleFilter)
 }

@@ -1,4 +1,4 @@
-import { RepositoryRequestRecoverPasswordFilter } from '@/domain/authentication'
+import { RepositoryRequestRecoverPasswordFilter, SearchRequestRecoverPasswordFilter } from '@/domain/authentication'
 import { CommonRepositorySettingsModel } from '@/infrastructure/repositories'
 
 export const RequestRecoverPasswordRepositorySettings: CommonRepositorySettingsModel = {
@@ -8,5 +8,6 @@ export const RequestRecoverPasswordRepositorySettings: CommonRepositorySettingsM
       account: 'request_recover_password.account'
     }
   },
-  columnsToFilter: Object.values(RepositoryRequestRecoverPasswordFilter)
+  columnsToFilter: Object.values(RepositoryRequestRecoverPasswordFilter),
+  columnsToSearch: Object.values(SearchRequestRecoverPasswordFilter)
 }

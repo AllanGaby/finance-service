@@ -4,12 +4,15 @@ import { ListEntitiesUseCaseProps, makeListEntitiesUseCase } from '@/main/factor
 import { EntityTarget } from 'typeorm'
 
 export type ListEntitiesControllerProps =
-ListEntitiesUseCaseProps
+ListEntitiesUseCaseProps & {
+  accountIdField?: string
+}
 
 export const makeListEntitiesController = <EntityType extends EntityModel>(
   props: ListEntitiesControllerProps,
   entityClass: EntityTarget<EntityType>
 ): ListEntitiesController<EntityType> =>
     new ListEntitiesController(
-      makeListEntitiesUseCase<EntityType>(props, entityClass)
+      makeListEntitiesUseCase<EntityType>(props, entityClass),
+      props.accountIdField
     )

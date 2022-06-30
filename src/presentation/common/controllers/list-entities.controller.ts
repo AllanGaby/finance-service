@@ -1,26 +1,40 @@
 import { ControllerProtocol, HttpRequest, HttpResponse, HttpHelper } from '@/protocols/http'
-import { EntityModel, ListEntitiesUseCase } from '@/domain/common'
+import { CustomFilterConditional, CustomFilterOperator, EntityModel, ListEntitiesUseCase } from '@/domain/common'
 import { ListEntitiesRequest, CustomFiltersRequest } from '@/presentation/common'
+import { AccessSessionHeaderRequest } from '@/presentation/authentication'
 
 type ListEntitiesResponse<EntityType extends EntityModel> = EntityType[] | Error | object
 
 export class ListEntitiesController<EntityType extends EntityModel> implements ControllerProtocol<any, ListEntitiesResponse<EntityType>, any, ListEntitiesRequest> {
   constructor (
-    private readonly listEntitiesUseCase: ListEntitiesUseCase<EntityType>
+    private readonly listEntitiesUseCase: ListEntitiesUseCase<EntityType>,
+    private readonly accountIdField?: string
   ) {}
 
-  async handle (request: HttpRequest<CustomFiltersRequest, any, ListEntitiesRequest>): Promise<HttpResponse<ListEntitiesResponse<EntityType>>> {
+  async handle (request: HttpRequest<CustomFiltersRequest, AccessSessionHeaderRequest, ListEntitiesRequest>): Promise<HttpResponse<ListEntitiesResponse<EntityType>>> {
     const {
       page,
       search,
       size
     } = request.queryParams
+    const { access_session: accessSession } = request.headers
+    const { custom_filters: customFilters } = request.body
+    if (accessSession && this.accountIdField) {
+      console.log(this.accountIdField, accessSession.account_id)
+      customFilters.push({
+        field: this.accountIdField,
+        conditional: CustomFilterConditional.equal,
+        operator: CustomFilterOperator.and,
+        value: accessSession.account_id
+      })
+    }
+    console.log(request.body.custom_filters)
     const list = await this.listEntitiesUseCase.list({
       page,
       textToSearch: search,
       recordsPerPage: size,
       order: request.body.orders,
-      filters: request.body.custom_filters
+      filters: customFilters
     })
     return HttpHelper.ok(list)
   }

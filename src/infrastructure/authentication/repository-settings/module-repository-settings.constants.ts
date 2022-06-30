@@ -1,4 +1,4 @@
-import { RepositoryModuleFilter } from '@/domain/authentication'
+import { RepositoryModuleFilter, SearchModuleFilter } from '@/domain/authentication'
 import { CommonRepositorySettingsModel } from '@/infrastructure/repositories'
 
 export const ModuleRepositorySettings: CommonRepositorySettingsModel = {
@@ -8,5 +8,6 @@ export const ModuleRepositorySettings: CommonRepositorySettingsModel = {
       access_rules: 'module.access_rules'
     }
   },
-  columnsToFilter: Object.values(RepositoryModuleFilter)
+  columnsToFilter: Object.values(RepositoryModuleFilter),
+  columnsToSearch: Object.values(SearchModuleFilter)
 }
