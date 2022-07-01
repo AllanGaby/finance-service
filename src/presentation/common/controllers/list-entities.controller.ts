@@ -20,7 +20,6 @@ export class ListEntitiesController<EntityType extends EntityModel> implements C
     const { access_session: accessSession } = request.headers
     const { custom_filters: customFilters } = request.body
     if (accessSession && this.accountIdField) {
-      console.log(this.accountIdField, accessSession.account_id)
       customFilters.push({
         field: this.accountIdField,
         conditional: CustomFilterConditional.equal,
@@ -28,7 +27,6 @@ export class ListEntitiesController<EntityType extends EntityModel> implements C
         value: accessSession.account_id
       })
     }
-    console.log(request.body.custom_filters)
     const list = await this.listEntitiesUseCase.list({
       page,
       textToSearch: search,
