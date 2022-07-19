@@ -1,9 +1,11 @@
+import { mockAccessSessionPayloadModel } from '@/domain/authentication'
 import { mockOrderDirection, mockCustomFilterConditional, mockCustomFilterOperator, mockCustomFilterModel } from '@/domain/common'
+import { AccessSessionHeaderRequest } from '@/presentation/authentication'
 import { ListEntitiesRequest, CustomFiltersRequest } from '@/presentation/common'
 import { HttpRequest } from '@/protocols/http'
 import { datatype, database } from 'faker'
 
-export const mockListEntitiesRequest = (): HttpRequest<CustomFiltersRequest, any, ListEntitiesRequest> => ({
+export const mockListEntitiesRequest = (): HttpRequest<CustomFiltersRequest, AccessSessionHeaderRequest, ListEntitiesRequest> => ({
   body: {
     custom_filters: [
       mockCustomFilterModel(),
@@ -11,6 +13,9 @@ export const mockListEntitiesRequest = (): HttpRequest<CustomFiltersRequest, any
       mockCustomFilterModel(),
       mockCustomFilterModel()
     ]
+  },
+  headers: {
+    access_session: mockAccessSessionPayloadModel()
   },
   queryParams: {
     page: datatype.number(),

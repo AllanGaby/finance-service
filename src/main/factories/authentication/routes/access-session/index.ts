@@ -20,7 +20,7 @@ export const makeAccessSessionRoute = async (
 ): Promise<Router> => {
   const createAccessSessionByGoogleRoute = await makeCreateAccessSessionByGoogleRoute(props, makeCreateAccessSessionByProviderFieldsValidations())
   return Router()
-    .use('/', createAccessSessionByGoogleRoute)
+    // .use('/', createAccessSessionByGoogleRoute)
     .use('/', makeLoginRoute(props, makeLoginFieldsValidations()))
     .use('/', makeRefreshAccessTokenRoute(props, makeRefreshAccessTokenFieldsValidations()))
     .use('/', makeDeleteAccessSessionRoute(props))

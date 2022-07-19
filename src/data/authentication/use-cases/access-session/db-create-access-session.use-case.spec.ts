@@ -123,7 +123,7 @@ describe('DbCreateAccessSessionUseCase', () => {
           access_token: accessSessionToken
         },
         subject: createAccessSessionDTO.id
-      }, '10m')
+      }, '24h')
     })
 
     test('Should call CreateJWTAdapter with correct value to create refreshToken', async () => {

@@ -23,23 +23,26 @@ export const makeCreateAccessSessionByGoogleRoute = async (
   if (props.environment === EnvironmentType.test) {
     return Router()
   }
-  const getCurrentSettingsUseCase = makeGetCurrentSettingsUseCase(props)
-  const settings = await getCurrentSettingsUseCase.getCurrentSettings()
-  props.app.use(passport.initialize())
-  passport.use(new OAuth2Strategy({
-    clientID: settings.google_client_id,
-    clientSecret: settings.google_client_secret,
-    callbackURL: settings.google_callback_url
-  }, (accessToken: string, refreshToken: string, profile: Profile, done) => {
-    return done(null, profile)
-  }))
-  return Router()
-    .get('/google/provider',
-      passport.authenticate('google', {
-        failureRedirect: '/',
-        scope: settings.google_scopes.split(','),
-        session: false
-      }),
-      ExpressMiddlewareAdapter(makeCommonFieldValidationMiddleware(fieldsValidation, FieldValidationType.User)),
-      ExpressControllerAdapter(makeCreateAccessSessionByProviderController(props)))
+  setTimeout(async () => {
+    const getCurrentSettingsUseCase = makeGetCurrentSettingsUseCase(props)    
+    const settings = await getCurrentSettingsUseCase.getCurrentSettings()
+    console.log(settings)
+    props.app.use(passport.initialize())
+    passport.use(new OAuth2Strategy({
+      clientID: settings.google_client_id,
+      clientSecret: settings.google_client_secret,
+      callbackURL: settings.google_callback_url
+    }, (accessToken: string, refreshToken: string, profile: Profile, done) => {
+      return done(null, profile)
+    }))
+    props.app.get('/google/provider',
+        passport.authenticate('google', {
+          failureRedirect: '/',
+          scope: settings.google_scopes.split(','),
+          session: false
+        }),
+        ExpressMiddlewareAdapter(makeCommonFieldValidationMiddleware(fieldsValidation, FieldValidationType.User)),
+        ExpressControllerAdapter(makeCreateAccessSessionByProviderController(props)))
+  }, 60000)
+  return undefined
 }
