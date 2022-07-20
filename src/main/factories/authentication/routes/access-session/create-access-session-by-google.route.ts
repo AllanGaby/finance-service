@@ -24,9 +24,8 @@ export const makeCreateAccessSessionByGoogleRoute = async (
     return Router()
   }
   setTimeout(async () => {
-    const getCurrentSettingsUseCase = makeGetCurrentSettingsUseCase(props)    
+    const getCurrentSettingsUseCase = makeGetCurrentSettingsUseCase(props)
     const settings = await getCurrentSettingsUseCase.getCurrentSettings()
-    console.log(settings)
     props.app.use(passport.initialize())
     passport.use(new OAuth2Strategy({
       clientID: settings.google_client_id,
@@ -36,13 +35,13 @@ export const makeCreateAccessSessionByGoogleRoute = async (
       return done(null, profile)
     }))
     props.app.get('/google/provider',
-        passport.authenticate('google', {
-          failureRedirect: '/',
-          scope: settings.google_scopes.split(','),
-          session: false
-        }),
-        ExpressMiddlewareAdapter(makeCommonFieldValidationMiddleware(fieldsValidation, FieldValidationType.User)),
-        ExpressControllerAdapter(makeCreateAccessSessionByProviderController(props)))
+      passport.authenticate('google', {
+        failureRedirect: '/',
+        scope: settings.google_scopes.split(','),
+        session: false
+      }),
+      ExpressMiddlewareAdapter(makeCommonFieldValidationMiddleware(fieldsValidation, FieldValidationType.User)),
+      ExpressControllerAdapter(makeCreateAccessSessionByProviderController(props)))
   }, 60000)
   return undefined
 }
